@@ -26,16 +26,16 @@ public class Tutorial8 extends TutorialSandbox {
 		orbFactory.setCosts(0f, 0f, 0f);
 		orbDist = new Vector2(UserSettingz.getFloatSetting("chargeRadius"), 0f).scl(2f);
 		starPos = new Vector2(0f,0f);
-		starPos.set(model.stars[0].position);
-		model.stars[0].populations[1] = model.stars[0].maxPop;
+		starPos.set(model.stars.get(0).position);
+		model.stars.get(0).populations[1] = model.stars.get(0).maxPop;
 		for (int i = 0; i < 10; i ++) {
 			orbDist.rotate(36f);
 			orbType = i == 0 ? OrbType.VOID : OrbType.ORB;
 			orbFactory.createOrb(orbType, players[1], new Vector2(starPos.x+orbDist.x, starPos.y+orbDist.y), orbDist.cpy().scl(2f).rotate(90f), -1f);
 		}
 		for (int i = 1; i < 3; i ++) {
-			starPos.set(model.stars[i].position);
-			model.stars[i].populations[0] = model.stars[i].maxPop*(0.1f+0.15f*i);
+			starPos.set(model.stars.get(i).position);
+			model.stars.get(i).populations[0] = model.stars.get(i).maxPop*(0.1f+0.15f*i);
 			for (int j = 0; j < 9; j ++) {
 				orbDist.rotate(40f);
 				orbFactory.createOrb(OrbType.ORB, players[0], new Vector2(starPos.x+orbDist.x, starPos.y+orbDist.y), orbDist.cpy().scl(2f).rotate(90f), -1f);

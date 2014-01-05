@@ -81,6 +81,11 @@ public class SpriteLayer extends Layer{
 		rotate(angle);
 		return this;
 	}
+
+    public SpriteLayer flipSprite(boolean x, boolean y) {
+        flip(x, y);
+        return this;
+    }
 	
 	@Override
 	public void rotate(float angle) {
@@ -88,7 +93,7 @@ public class SpriteLayer extends Layer{
 		image.setOrigin(getOriginX(), getOriginY());
 		image.rotate(angle);
 	}
-	
+
 	@Override
 	public void setRotation(float angle) {
 		super.setRotation(angle);
@@ -136,6 +141,10 @@ public class SpriteLayer extends Layer{
 	public void setScale(Vector2 scale) {
 		setScale(scale.x, scale.y);
 	}
+
+    public void setCenterAngle(float angle) {
+        setCenter(getCenter().setAngle(angle));
+    }
 	
 	@Override // Is this needed? Will the built-in clone do the same thing?
 	public SpriteLayer clone() throws CloneNotSupportedException {

@@ -37,8 +37,8 @@ public class Tutorial5 extends TutorialSandbox {
 	}
 
 	private void voidDemo() {
-		model.stars[0].populations[0] = 0f;
-		model.stars[0].populations[1] = 0f;
+		model.stars.get(0).populations[0] = 0f;
+		model.stars.get(0).populations[1] = 0f;
 		for (int i = 0; i < 6; i++) {
 			orbDist.rotate(60f);
 			orbFactory.createOrb(OrbType.ORB, players[0], new Vector2(starPos.x+orbDist.x, starPos.y+orbDist.y), orbDist.cpy().scl(2f).rotate(90f));

@@ -12,7 +12,7 @@ public class UserSettingz {
 		userPrefs = Gdx.app.getPreferences("StarCycle-user-preferences");
 		sessionPrefs = Gdx.app.getPreferences("StarCycle-session-preferences");
 		int clientSettingsVersion = userPrefs.getInteger("settingsVersion");
-		int currentSettingsVersion = 1;
+		int currentSettingsVersion = 3;
 		if (clientSettingsVersion != currentSettingsVersion) {
 			Gdx.app.log("UserSettingz", "rewriting settings file");
 			userPrefs.putInteger("settingsVersion", currentSettingsVersion);
@@ -20,6 +20,9 @@ public class UserSettingz {
 			userPrefs.putFloat("musicVolume", 0.5f);
 			userPrefs.putFloat("musicVolume", 0.5f);       // Soundz
 			userPrefs.putFloat("sfxVolume",0.5f);          // Soundz
+
+            userPrefs.putFloat("maxOrbs", 32f); // Star parameters
+            userPrefs.putFloat("angleThresh", MathUtils.PI2); // charge orb lock on threshold
 			
 			// padding in units of multiples of pixels per meter: padding = StarCycle.pixelsPerMeter * paddingMeters; 
 			userPrefs.putFloat("paddingMeters",0.5f);      // UI
@@ -27,7 +30,7 @@ public class UserSettingz {
 			userPrefs.putFloat("initAmmo", 80.0f);         // Player
 			userPrefs.putFloat("ammoDripRate", .04f);      // Player
 			userPrefs.putFloat("baseRadius", 1.75f);          // Player
-			
+
 			userPrefs.putFloat("gravScalar", 10f);     		// Level
 			userPrefs.putFloat("orbitSpeed", 0.02f);    	// Level
 			userPrefs.putFloat("starRadius", 0.45f);        // Level

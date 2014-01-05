@@ -39,7 +39,7 @@ public class Tutorial7 extends TutorialSandbox {
 		orbDist = new Vector2(UserSettingz.getFloatSetting("chargeRadius"), 0f).scl(2f);
 		starPos = new Vector2(0f,0f);
 		for (int i = 0; i < 2; i ++) {
-			starPos.set(model.stars[i].position);
+			starPos.set(model.stars.get(i).position);
 			for (int j = 0; j < 9; j ++) {
 				orbDist.rotate(40f);
 				orbFactory.createOrb(OrbType.ORB, players[1], new Vector2(starPos.x+orbDist.x, starPos.y+orbDist.y), orbDist.cpy().scl(2f).rotate(90f), -1f);
@@ -66,7 +66,7 @@ public class Tutorial7 extends TutorialSandbox {
 				shotWaiting = true;
 			}
 			else if (System.currentTimeMillis() >= launchTime) {
-				tutor.aimAtStar(model.stars[2]);
+				tutor.aimAtStar(model.stars.get(2));
 				tutor.launchPad.launch(OrbType.VOID);
 				voidShot = true;
 				shotWaiting = false;
@@ -78,7 +78,7 @@ public class Tutorial7 extends TutorialSandbox {
 				shotWaiting = true;
 			}
 			else if (System.currentTimeMillis() >= launchTime) {
-				tutor.vecAim(model.stars[2].position);
+				tutor.vecAim(model.stars.get(2).position);
 				tutor.launchPad.launch(OrbType.NOVA);
 				novaShot = true;
 			}
@@ -104,11 +104,11 @@ public class Tutorial7 extends TutorialSandbox {
 	private void resetDemo() {
 		tutor.base.level = 0;
 		tutor.base.baseButton.setLevel(0);
-		starPos.set(model.stars[2].position);
-		model.stars[2].populations[1] = 0f;
-		model.stars[2].populations[0] = model.stars[2].maxPop*0.75f;
+		starPos.set(model.stars.get(2).position);
+		model.stars.get(2).populations[1] = 0f;
+		model.stars.get(2).populations[0] = model.stars.get(2).maxPop*0.75f;
 		for (int i = 0; i < 2; i ++) {
-			model.stars[i].populations[1] = model.stars[i].maxPop*(0.25f+0.17f*i);
+			model.stars.get(i).populations[1] = model.stars.get(i).maxPop*(0.25f+0.17f*i);
 		}
 		for (int i = 0; i < 9; i ++) {
 			orbDist.rotate(40f);

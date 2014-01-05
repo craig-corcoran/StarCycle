@@ -70,14 +70,14 @@ public class Bot extends Player {
 
 	public void initializeModel(Model model) { // This can't happen in the constructor, as the model has not been constructed.
 		starPositions = model.starPositions;
-		targetStar = model.stars[0];
+		targetStar = model.stars.get(0);
         for (Vector2 starPosition : starPositions) {
             this.starDistances.add(baseOrigins[number].dst(starPosition));
         }
 	}
 	
 	@Override
-	public void update(float delta, Star[] stars, Vector2[] starPositions) {
+	public void update(float delta, ArrayList<Star> stars, Vector2[] starPositions) {
 		if (active) {
 			if (retargetCounter >= retargetPeriod) {
 				targetStar.targetted=false;
@@ -96,7 +96,7 @@ public class Bot extends Player {
 			
 			//launch voids!
 			if ((voidCounter >= voidPeriod) & 
-					((targetStar.orbNum[other] >= voidThreshold) || (targetStar.orbNum[this.number] >= voidThreshold)) & 
+					((targetStar.numOrbs[other] >= voidThreshold) || (targetStar.numOrbs[this.number] >= voidThreshold)) &
 					(this.starsCaptured >= UserSettingz.getFloatSetting("gravWellStars"))) {
 				if (MathUtils.random() < .3f ){
 					base.setPointer(new Vector2(MathUtils.random()*Base.maxPointerLength,(MathUtils.random()-0.5f)*Base.maxPointerLength*2));
@@ -106,7 +106,7 @@ public class Bot extends Player {
 			}
 			
 			// launch novas!
-			if ((novaCounter >= novaPeriod) & (targetStar.orbNum[other] >= novaThreshold) & 
+			if ((novaCounter >= novaPeriod) & (targetStar.numOrbs[other] >= novaThreshold) &
 					(this.starsCaptured >= UserSettingz.getFloatSetting("nukeStars"))) {
 				base.setPointer(new Vector2(MathUtils.random()*Base.maxPointerLength,(MathUtils.random()-0.5f)*Base.maxPointerLength*2));
 				screen.launch(Orb.OrbType.NOVA, this);
@@ -132,7 +132,7 @@ public class Bot extends Player {
 		base.setPointer(aimPos);
 	}
 	
-	private Star nearestStar(Star[] stars) {
+	private Star nearestStar(ArrayList<Star> stars) {
 		int nearest = 0;
 		starDistances.set(0, baseOrigins[number].dst(starPositions[0]));
 		for (int i=1; i < starDistances.size(); i++) {
@@ -141,7 +141,7 @@ public class Bot extends Player {
 				nearest = i;
 			}
 		}
-		return stars[nearest];
+		return stars.get(nearest);
 	}
 	
 }

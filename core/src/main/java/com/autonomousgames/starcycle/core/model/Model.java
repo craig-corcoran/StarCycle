@@ -4,11 +4,13 @@ import com.autonomousgames.starcycle.core.Soundz;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 public class Model {
 
@@ -37,7 +39,7 @@ public class Model {
 	public ArrayList<Orb> toDestroyList = new ArrayList<Orb>(); // and a to destroy list
 	public ArrayList<Explosion> explosions = new ArrayList<Explosion>();
 	public Player[] players;
-	public final Star[] stars;
+	public final ArrayList<Star> stars;
 	public final World world;
 	public final Level level;
 	public Vector2[] starPositions; // keep track of star positions centrally
@@ -53,9 +55,9 @@ public class Model {
 		level = new Level(world, lvl, players);
 		stars = level.stars;
 
-		starPositions = new Vector2[stars.length];
+		starPositions = new Vector2[stars.size()];
 		for (int i = 0; i < starPositions.length; i++) {
-			starPositions[i] = stars[i].position;
+			starPositions[i] = stars.get(i).position;
 		}
 	}
 
@@ -64,8 +66,8 @@ public class Model {
 		destroyCollided(); // remove collided orbs
 
 		level.updatePosition(delta);
-		for (int i = 0; i < stars.length; i++) {
-			starPositions[i].set(stars[i].position);
+		for (int i = 0; i < stars.size(); i++) {
+			starPositions[i].set(stars.get(i).position);
 		}
 	}
 
@@ -73,6 +75,18 @@ public class Model {
         for (int i=0; i < toDestroyList.size(); i++) {
             Orb orb = toDestroyList.get(i);
             world.destroyBody(orb.body);
+
+            if (orb.type == Orb.OrbType.ORB) {
+                orb.player.orbs.remove(orb);
+            }
+            if (orb.type == Orb.OrbType.NOVA) {
+                orb.player.novas.remove(orb);
+            }
+
+            if (orb.type == Orb.OrbType.VOID) {
+                orb.player.voids.remove(orb);
+            }
+
             Soundz.orbCrash.play(UserSettingz.getFloatSetting("sfxVolume"));
         }
         toDestroyList.clear();

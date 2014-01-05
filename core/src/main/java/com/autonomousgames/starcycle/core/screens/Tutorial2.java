@@ -4,8 +4,8 @@ import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.FakeOrb;
+import com.autonomousgames.starcycle.core.model.ImageOrb;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
-import com.autonomousgames.starcycle.core.model.MenuOrb;
 import com.autonomousgames.starcycle.core.model.Player;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
@@ -20,7 +20,7 @@ public class Tutorial2 extends TutorialSandbox {
 	private long[] timeouts = new long[]{1200, 1000}; // For switching aim/shoot textures.
 	private long[] lastchange = new long[]{0,0};
 	private long timeNow;
-    public ArrayList<MenuOrb> fakeOrbs = new ArrayList<MenuOrb>();
+    public ArrayList<ImageOrb> fakeOrbs = new ArrayList<ImageOrb>();
 	private Vector2 vec = new Vector2(-1.5f, 1.5f).div(1.41f); // Velocity vector for FakeOrbs
     private Vector2 fakePos = new Vector2(StarCycle.screenHeight*5f/14f*0.5f, StarCycle.screenHeight*9f/14f*0.5f);
     private long lastOrb = 0;
@@ -73,7 +73,7 @@ public class Tutorial2 extends TutorialSandbox {
         long orbCooldown = 400;
         if (infoGraphic.isLocked() && timeNow - lastOrb >= orbCooldown) {
             float fakeRadius = 10f;
-            fakeOrbs.add(new MenuOrb(Texturez.fakeorbTextures[0], fakeRadius, fakePos, StarCycle.screenWidth,
+            fakeOrbs.add(new ImageOrb(Texturez.fakeorbTextures[0], fakeRadius, fakePos, StarCycle.screenWidth,
                     StarCycle.screenHeight, new Vector2(0, 0), vec));
 			lastOrb = timeNow;
 		}
@@ -111,7 +111,7 @@ public class Tutorial2 extends TutorialSandbox {
 		super.render(delta);
 		// FakeOrbs must get drawn last to appear over infoGraphic.
 		batch.begin();
-        for (ListIterator<MenuOrb> itr = fakeOrbs.listIterator(); itr.hasNext();) {
+        for (ListIterator<ImageOrb> itr = fakeOrbs.listIterator(); itr.hasNext();) {
             FakeOrb orb = itr.next();
             orb.draw(batch);
             orb.update(delta);

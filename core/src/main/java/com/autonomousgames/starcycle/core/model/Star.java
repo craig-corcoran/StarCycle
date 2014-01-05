@@ -7,7 +7,7 @@ import com.autonomousgames.starcycle.core.ui.Layer;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
-import com.autonomousgames.starcycle.core.model.Void;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,29 +16,38 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
+import java.lang.*;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 
 public class Star extends Orbitable implements Collidable {
 	public static float captureRatio;
 	public final float radius;
 	public final float mass;
 	public final float maxPop;
+    public boolean targetted;
 	public Body body;
     private int numPlayers;
 	public float[] populations;
 	public float[] controlPercents = new float[]{0f, 0f};
 	public float popSum = 0;
-	public int[] orbNum = new int[]{0, 0};
-	public int[] voidNum = new int[]{0, 0};
-	private ArrayList<ChargeOrb> activeOrbs = new ArrayList<ChargeOrb>();
-	private ArrayList<Void> activeVoids = new ArrayList<Void>();
+    public Float rotSpeed;
+
+    public int[] numOrbs = new int[]{0, 0};
+    public int[] numVoids = new int[]{0, 0};
+
+    private final float ammoRate = UserSettingz.getFloatSetting("ammoRate");
+    private final float popRate = UserSettingz.getFloatSetting("popRate");
+
+    private LinkedList<ChargeOrb> activeOrbs = new LinkedList<ChargeOrb>();
+	private HashSet<Void> activeVoids = new HashSet<Void>();
+
 	public final int index;
 	private Player[] players;
 	private PathType pathMap = null;
 	private float startPercent;
-	// private boolean captured;
-	private float rotSpeed; // TODO Is this for physics or just for drawing? I added rotateSpeed for drawing, because I didn't want to mess anything up, but maybe these are deuplicates.
-	public boolean targetted = false; // TODO should this be here and not in bot? // Maybe time to delete. I believe this was for debugging so I could check when stars were targeted.
+
 	// Drawing stuff
 	LayeredButton starButton;
 	TextureRegion starImage;
@@ -52,13 +61,16 @@ public class Star extends Orbitable implements Collidable {
 	float minSideLen; // Smallest hexagon side length.
 	float scaleRange; // Scale percent, for maximum side length, over 100% of original size.
 	Vector2 sideDims; // Dimensions of hexagon side length.
-	int quadLayer0 = 6; // Starting layer of star image quadrants.
+	int quadLayer0 = 2; // Starting layer of star image quadrants.
 
+
+    final float maxOrbs;
 
 	// constructor for single stars. Constructed in Level.java
 	public Star(TextureRegion image, float radius, Vector2 position,
 			Player[] players, World world, int index, float rotSpeed) {
 		captureRatio = UserSettingz.getFloatSetting("captureRatio");
+        maxOrbs = UserSettingz.getFloatSetting("maxOrbs");
 		this.radius = radius;
 		this.starImage = image;
 		this.mass = this.radius * this.radius;
@@ -100,12 +112,8 @@ public class Star extends Orbitable implements Collidable {
 		starButton = new LayeredButton(position.cpy().scl(StarCycle.pixelsPerMeter));
 		Vector2 quadPos = imageDims.cpy().div(2f);
 		// These repeated layers could be replaced with single layers with higher alpha.
-		starButton.addLayer(new SpriteLayer(Texturez.gradientRound, imageDims.cpy().scl(2.5f)));
-		starButton.addLayer(new SpriteLayer(Texturez.gradientRound, imageDims.cpy().scl(2.5f)));
-		starButton.addLayer(new SpriteLayer(Texturez.gradientRound, imageDims.cpy().scl(2.5f)));
-		starButton.addLayer(new SpriteLayer(Texturez.gradientRound, imageDims.cpy().scl(2.5f)));
-		starButton.addLayer(new SpriteLayer(Texturez.launchBlip, imageDims.cpy().scl(142 / 128f)).setSpriteColor(Color.BLACK));
-		starButton.addLayer(new SpriteLayer(Texturez.launchBlip, imageDims.cpy().scl(142 / 128f)).setSpriteColor(Color.BLACK));
+		starButton.addLayer(new SpriteLayer(Texturez.circle, imageDims.cpy().scl(2.15f)).setSpriteColor(Texturez.night));
+		starButton.addLayer(new SpriteLayer(Texturez.circle, imageDims).setSpriteColor(Texturez.night));
 		// The main star visual is drawn as four quadrants.
 		for (int i = 0; i < 4; i++) {
 			starButton.addLayer(new SpriteLayer(image, quadPos.cpy().rotate(90f*i), imageDims, Texturez.night, (90f*i)));
@@ -150,7 +158,7 @@ public class Star extends Orbitable implements Collidable {
 				controlButtons.get(i).deactivate();
 			}
 			// If the the star has become fully controlled:
-			if (newPercent == 1f && controlPercents[i] != 1f) {
+			if (newPercent >= 0.99f && controlPercents[i] < 0.99f) {
 				// Tint the star image.
 				for (int j = quadLayer0; j < quadLayer0 + 4; j ++) {
 					starButton.getLayer(j).setColor(players[i].colors[0]);
@@ -159,9 +167,9 @@ public class Star extends Orbitable implements Collidable {
 			}
 			// If the player has control: 
 			if (captureRatio <= newPercent && controlPercents[i] < captureRatio) {
-				// Tint the background gradient.
-				starButton.getLayer(2).setColor(players[i].colors[0]);
-				starButton.getLayer(3).setColor(players[i].colors[0]);
+				// Tint the inner portion.
+                starButton.getLayer(0).setColor(players[i].colors[0]);
+				starButton.getLayer(1).setColor(players[i].colors[0]);
 				starButton.lock();
 			}
 			// Update the control percent with the stored value.
@@ -180,11 +188,11 @@ public class Star extends Orbitable implements Collidable {
 				controlButtons.get(i).deactivate();
 			}
 		}
-		// If neither player has control, reset the gradients:
+		// If neither player has control, reset the inner portion:
 		if (controlPercents[0] < captureRatio && controlPercents[1] < captureRatio && starButton.isLocked()) {
 			starButton.unlock();
-			starButton.getLayer(2).setColor(Color.WHITE);
-			starButton.getLayer(3).setColor(Color.WHITE);
+            starButton.getLayer(0).setColor(Texturez.night);
+			starButton.getLayer(1).setColor(Texturez.night);
 		}
 		// Update the button position and angle, then draw:
 		starButton.setCenter(position.cpy().scl(StarCycle.pixelsPerMeter));
@@ -232,6 +240,35 @@ public class Star extends Orbitable implements Collidable {
 		}
 	}
 
+    private Player player;
+    private float rate;
+    private float incAmmoThresh = 4f;
+    private float initVelScal = 5f;
+    private float[] playerIncome = {0f, 0f};
+    public void updateControl() {
+        for (int i = 0; i < players.length; i++) { // TODO iterator
+            player = players[i];
+            addPop(popRate*numOrbs[i], i);
+
+            rate = ammoRate * numOrbs[i];
+            player.ammo += rate;
+            playerIncome[i] += rate;
+
+            if (playerIncome[i] > incAmmoThresh) {
+                Gdx.app.log("star","player income" + playerIncome[i]);
+                // emit fake income orb
+                playerIncome[i] -= incAmmoThresh;
+                player.incomeOrbs.add(new ImageOrb(Texturez.bgMote, StarCycle.screenHeight/60f, this.getButtonCenter(),
+                        StarCycle.screenWidth, StarCycle.screenHeight, new Vector2(MathUtils.random(-initVelScal,initVelScal),
+                                                                                   MathUtils.random(-initVelScal,initVelScal)),
+                                                                       new Vector2()));
+            }
+        }
+
+//
+// TODO sometimes emit (fake) income orb here
+    }
+
 	void updatePosition(float delta) {
 
 		if (pathMap != null) {
@@ -262,22 +299,26 @@ public class Star extends Orbitable implements Collidable {
 	public void addOrb(Orb orb) {
 		if (orb.type == Orb.OrbType.ORB) {
 			activeOrbs.add(((ChargeOrb) orb));
-			orbNum[orb.player.number]++;
+            if (activeOrbs.size() > maxOrbs) {
+                activeOrbs.getFirst().removeSelf(); // if above capacity remove oldest (fifo linked list)
+            }
+            numOrbs[orb.player.number]++;
 		}
+
 		else if (orb.type == Orb.OrbType.VOID) {
-			activeVoids.add(((Void) orb));
-			voidNum[orb.player.number]++;
+			activeVoids.add((Void) orb);
+            numVoids[orb.player.number]++; // keep player counts for easy access by bot
 		}
 	}
 
 	public void removeOrb(Orb orb) {
 		if (orb.type == Orb.OrbType.ORB) {
-			activeOrbs.remove((orb));
-			orbNum[orb.player.number]--;
+			activeOrbs.remove(orb);
+            numOrbs[orb.player.number]--;
 		}
 		else if (orb.type == Orb.OrbType.VOID) {
-			activeVoids.remove((orb));
-			voidNum[orb.player.number]--;
+			activeVoids.remove(orb);
+            numVoids[orb.player.number]--;
 		}
 	}
 

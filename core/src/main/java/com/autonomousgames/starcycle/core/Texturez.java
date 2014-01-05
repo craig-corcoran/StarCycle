@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -97,43 +98,45 @@ public class Texturez {
 	public static final AtlasRegion voidRing = atlas.findRegion("voidring");
 
 	public static final AtlasRegion[] fakeorbTextures = new AtlasRegion[] {fakeblueOrbTexture, fakeredOrbTexture};
-	
-	// LAUNCHPAD UI (UPDATED)
-	public static final AtlasRegion launchBackground = atlas.findRegion("launchpad-bg");
-	private static final AtlasRegion launchArcMask = atlas.findRegion("launchpad-arcmask");
-	private static final AtlasRegion launchArcDivs = atlas.findRegion("launchpad-divs");
-	public static final AtlasRegion launchBezel = atlas.findRegion("launchpad-bezel");
-	public static final AtlasRegion[] launchTextures = new AtlasRegion[]{launchArcMask, launchArcDivs};
-	public static final AtlasRegion launchButton = atlas.findRegion("launchpad-button");
-	public static final AtlasRegion launchBlip = atlas.findRegion("launchpad-blip");
-	private static final AtlasRegion launchArc0a = atlas.findRegion("launchpad-arc0a");
-	private static final AtlasRegion launchArc0b = atlas.findRegion("launchpad-arc0b");
-	private static final AtlasRegion launchArc0c = atlas.findRegion("launchpad-arc0c");
-	private static final AtlasRegion launchArc1a = atlas.findRegion("launchpad-arc1a");
-	private static final AtlasRegion launchArc1b = atlas.findRegion("launchpad-arc1b");
-	private static final AtlasRegion launchArc1c = atlas.findRegion("launchpad-arc1c");
-	public static final AtlasRegion[] launchArcs = new AtlasRegion[]{launchArc0a, launchArc0b, launchArc0c, launchArc1a, launchArc1b, launchArc1c};
+
+    // LAUNCHPAD (NEW)
+    private static final AtlasRegion launchBackground = atlas.findRegion("launchpad-bg");
+    private static final AtlasRegion launchFill = atlas.findRegion("launchpad-fillmeter");
+    private static final AtlasRegion launchMeter = atlas.findRegion("launchpad-bordermeter");
+    private static final AtlasRegion launchButton1 = atlas.findRegion("launchpad-orb");
+    private static final AtlasRegion launchButton2 = atlas.findRegion("launchpad-powerup");
+    private static final AtlasRegion launchTriangle = atlas.findRegion("launchpad-mark");
+    public static final AtlasRegion[] launchTextures = new AtlasRegion[]{launchBackground, launchFill, launchMeter, launchButton1, launchButton2, launchTriangle};
+
+	// LAUNCHPAD (OLD)
+	public static final AtlasRegion launchBlip = atlas.findRegion("launchpad-blip"); // Is this being used anywhere?
 
 	// AIMING UI (UPDATED)
 	private static final AtlasRegion handle = atlas.findRegion("handle");
 	private static final AtlasRegion chevron0 = atlas.findRegion("chevron0");
 	private static final AtlasRegion chevron1 = atlas.findRegion("chevron1");
 	public static final AtlasRegion[] aimer = new  AtlasRegion[]{handle, chevron0, chevron1};
-	
+
+    // BACKGROUND (NEW)
+    public static final AtlasRegion mainMenuBG = atlas.findRegion("starcycle-bg");
+    public static final AtlasRegion selectBG = atlas.findRegion("levelselect");
+    private static final String[] bgBlockNames = new String[]{"disco", "nebula", "hexnut"};
+    public static final int[] bgBlockDims = new int[]{6, 6};
+    public static final ArrayList<TextureRegion[]> bgBlocks = new ArrayList<TextureRegion[]>();
+    private static final String[] bgStripNames = new String[]{"bubbles", "bacon", "lobe", "ribbon", "triangles"};
+    public static final int[] bgStripDims = new int[]{6, 2};
+    public static final ArrayList<TextureRegion[]> bgStrips = new ArrayList<TextureRegion[]>();
+    public static final int[] bgStarsDims = new int[]{8, 13};
+    public static final TextureRegion[] bgStars = bgTile("stardust", bgStarsDims[0], bgStarsDims[1]);
+
 	// BACKGROUND
-	private static final String[] bgBlockNames = new String[]{"purp","blue","green"};
-	public static final ArrayList<TextureRegion[]> bgBlocks = new ArrayList<TextureRegion[]>();
-	public static final int[] bgBlockDims = new int[]{6, 6}; 
+//	private static final String[] bgBlockNames = new String[]{"purp","blue","green"};
 	public static final AtlasRegion bgMote = atlas.findRegion("mote");
 	public static final AtlasRegion bgPent = atlas.findRegion("pent");
 	private static final AtlasRegion bgJagged1 = atlas.findRegion("jaggedband1");
 	private static final AtlasRegion bgJagged2 = atlas.findRegion("jaggedband2");
 	private static final AtlasRegion bgCurve = atlas.findRegion("smoothband");
-	private static final AtlasRegion bgBubbles = atlas.findRegion("bubbles");
-	private static final AtlasRegion bgLobe = atlas.findRegion("lobe");
-	public static final AtlasRegion[] bgStrips = new AtlasRegion[]{bgJagged1,bgJagged2,bgCurve,bgBubbles,bgLobe};
-	public static final AtlasRegion mainMenuBG = atlas.findRegion("starcycle-bg");
-	public static final AtlasRegion selectBG = atlas.findRegion("levelselect");
+//	public static final AtlasRegion[] bgStrips = new AtlasRegion[]{bgJagged1,bgJagged2,bgCurve,bgBubbles,bgLobe};
 
 	
 	// FONTS
@@ -193,7 +196,9 @@ public class Texturez {
 
 	// BASIC UI
 	public static final AtlasRegion line = atlas.findRegion("line");
-	public static final AtlasRegion block = atlas.findRegion("block"); 
+	public static final AtlasRegion block = atlas.findRegion("block");
+    public static final AtlasRegion circle = atlas.findRegion("solidcircle");
+    public static final AtlasRegion gradientRound = atlas.findRegion("gradient-round");
 	
 	// IN-GAME PAUSE UI
 	public static final AtlasRegion menuIcon = atlas.findRegion("icon-menu");
@@ -203,16 +208,8 @@ public class Texturez {
 	public static final AtlasRegion trophy = atlas.findRegion("icon-trophy");
 	public static final AtlasRegion thumbsDown = atlas.findRegion("icon-thumb");
 	
-	// STARS, CONTROL, & GRADIENTS
+	// STARS
 	public static final AtlasRegion hexStar = atlas.findRegion("starquarter");
-//	public static final AtlasRegion starTexture = atlas.findRegion("star0v4");
-//	public static final AtlasRegion starTexture2 = atlas.findRegion("star0v4");  // What is this?
-//	private static final AtlasRegion controlMaluma = atlas.findRegion("control-maluma");
-//	private static final AtlasRegion controlTakete = atlas.findRegion("control-takete");
-//	private static final AtlasRegion controlTarget = atlas.findRegion("control-target");
-//	private static final AtlasRegion controlDerelict = atlas.findRegion("control-derelict");
-//	private static final AtlasRegion controlClockwork = atlas.findRegion("control-clockwork");
-	public static final AtlasRegion gradientRound = atlas.findRegion("gradient-round");
 
 	// BASE SHAPES
 	public static final AtlasRegion baseMaluma0 = atlas.findRegion("base-maluma0");
@@ -325,10 +322,14 @@ public class Texturez {
 		skinMap.get(BaseType.CLOCKWORK).put(TextureType.NOVA1, novaClockwork1);
 //		skinMap.get(BaseType.CLOCKWORK).put(TextureType.CONTROL, controlClockwork);
 		
-		// moved to StarCycle for now
-//		// PARSE EXPLOSION TEXTURES
 
 //		// PARSE BACKGROUND TILES
+        for (String bgBlockName : bgBlockNames) {
+            bgBlocks.add(bgTile(bgBlockName, bgBlockDims[0], bgBlockDims[1]));
+        }
+        for (String bgStripName : bgStripNames) {
+            bgStrips.add(bgTile(bgStripName, bgStripDims[0], bgStripDims[1]));
+        }
 //		bgRings = new TextureRegion[36];
 //		AtlasRegion bgRingstexture = atlas.findRegion("purp");
 //		TextureRegion[][] nestedTiles = bgRingstexture.split(bgRingstexture.getRegionWidth()/6, bgRingstexture.getRegionHeight()/6);

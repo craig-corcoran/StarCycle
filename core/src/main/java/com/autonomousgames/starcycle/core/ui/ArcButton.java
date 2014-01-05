@@ -1,5 +1,6 @@
 package com.autonomousgames.starcycle.core.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
@@ -15,7 +16,7 @@ public class ArcButton extends LayeredButton {
 	
 	
 	public ArcButton(Vector2 center, Vector2 angles, Vector2 radii) {
-		super(center, new Vector2(radii.y, radii.y).mul(2f));
+		super(center, new Vector2(radii.y, radii.y).scl(2f));
 		arcCenter = new Vector2(radii.y, radii.y);
 		this.angles = angles;
 		this.radii = radii;

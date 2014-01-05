@@ -62,7 +62,7 @@ public class CampaignSelect extends LevelSelectScreen {
         ArrayList<LayeredButton> levelButtons = new ArrayList<LayeredButton>();
         levelButtons.add(level1);
 		
-		BaseButton level2 = new BaseButton(BaseType.DERELICT, Texturez.neutral, posMap.get(SinglePlayerLevel.LEVEL2), baseDims);
+		BaseButton level2 = new BaseButton(BaseType.TARGET, Texturez.floral, posMap.get(SinglePlayerLevel.LEVEL2), baseDims);
 		level2.addBottomLayer(new SpriteLayer(Texturez.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
 		if (UserSettingz.getFloatSetting(SinglePlayerLevel.LEVEL2.toString()) != 1f) {
 			level2.addBottomLayer(new SpriteLayer(Texturez.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
@@ -71,15 +71,15 @@ public class CampaignSelect extends LevelSelectScreen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				nextLvlConfig = LevelType.CONCENTRIC;
-				skins = new BaseType[] {BaseType.MALUMA, BaseType.DERELICT};
-				colors = new Color[][] {Texturez.cool, Texturez.neutral};
+				skins = new BaseType[] {BaseType.MALUMA, BaseType.TARGET};
+				colors = new Color[][] {Texturez.cool, Texturez.floral};
 				nextLvlSinglePlayer = SinglePlayerLevel.LEVEL2;
 				botType = BotType.MEDIUM;
 			}
 		});
 		levelButtons.add(level2);
 		
-		BaseButton level3 = new BaseButton(BaseType.TARGET, Texturez.floral, posMap.get(SinglePlayerLevel.LEVEL3), baseDims);
+		BaseButton level3 = new BaseButton(BaseType.DERELICT, Texturez.neutral, posMap.get(SinglePlayerLevel.LEVEL3), baseDims);
 		level3.addBottomLayer(new SpriteLayer(Texturez.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
 		if (UserSettingz.getFloatSetting(SinglePlayerLevel.LEVEL3.toString()) != 1f) {
 			level3.addBottomLayer(new SpriteLayer(Texturez.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
@@ -88,8 +88,8 @@ public class CampaignSelect extends LevelSelectScreen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				nextLvlConfig = LevelType.DOUBLEBINARY;
-				skins = new BaseType[] {BaseType.MALUMA, BaseType.TARGET};
-				colors = new Color[][] {Texturez.cool, Texturez.floral};
+				skins = new BaseType[] {BaseType.MALUMA, BaseType.DERELICT};
+				colors = new Color[][] {Texturez.cool, Texturez.neutral};
 				nextLvlSinglePlayer = SinglePlayerLevel.LEVEL3;
 				botType = BotType.MEDIUM;
 			}
@@ -105,7 +105,7 @@ public class CampaignSelect extends LevelSelectScreen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				nextLvlConfig = LevelType.TREFOIL;
-				skins = new BaseType[] {BaseType.MALUMA, BaseType.TARGET};
+				skins = new BaseType[] {BaseType.MALUMA, BaseType.CLOCKWORK};
 				colors = new Color[][] {Texturez.cool, Texturez.metallic};
 				nextLvlSinglePlayer = SinglePlayerLevel.LEVEL4;
 				botType = BotType.PWN;

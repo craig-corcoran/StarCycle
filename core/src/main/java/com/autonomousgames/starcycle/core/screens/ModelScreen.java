@@ -222,12 +222,12 @@ public abstract class ModelScreen extends GameScreen{
         for (Player player : players) {
             player.draw(batch);
         }
-		for (int i = 0; i < model.stars.length; i++) {
-			model.stars[i].draw(batch);
+		for (int i = 0; i < model.stars.size(); i++) {
+			model.stars.get(i).draw(batch);
 		}
-		for (int i=0; i < model.explosions.size(); i++) {
-			model.explosions.get(i).draw(batch,delta,model.explosions);
-		}
+		//for (int i=0; i < model.explosions.size(); i++) {
+		//	model.explosions.get(i).draw(batch,delta,model.explosions);
+		//}
 		batch.end();
 	}
 	

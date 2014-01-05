@@ -2,8 +2,8 @@ package com.autonomousgames.starcycle.core.model;
 
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.UserSettingz;
-import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.screens.ModelScreen;
+import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,14 +18,13 @@ public class Player {
 
 	public final int number;
 	public float ammo;
-	public float income;
 	public boolean win;
 	public Base base;
 	public boolean frozen = false; // Prevents launching any orbs.
 	public ArrayList<Orb> orbs = new ArrayList<Orb>(); // each player has an orb list
-	public ArrayList<Orb> voids = new ArrayList<Orb>(); // each player has a void list
-	public ArrayList<Orb> novas = new ArrayList<Orb>(); // each player has a nova list
-    public ArrayList<FakeOrb> incomeOrbs = new ArrayList<FakeOrb>();
+	public ArrayList<Void> voids = new ArrayList<Void>(); // each player has a void list
+	public ArrayList<Nova> novas = new ArrayList<Nova>(); // each player has a nova list
+    public ArrayList<ImageOrb> incomeOrbs = new ArrayList<ImageOrb>();
 	public ArrayList<WinOrb> winOrbs = new ArrayList<WinOrb>();
 	public int starsCaptured;
 	//public final BitmapFont font;
@@ -58,17 +57,19 @@ public class Player {
 		this.baseVisible = baseVisible;
 		this.launchpadVisible = launchpadVisible;
 		this.base = new Base(this, baseOrigins[number], baseRadius, ui, baseVisible);
-		launchPad = new LaunchPad(screen, ui, this, launchpadVisible); // create ui buttons for player
+		launchPad = new LaunchPad(screen, this, launchpadVisible); // create ui buttons for player
 	}
 	
 	public Player(int num, BaseType basetype, Color[] colors, ModelScreen screen, 
 			Stage ui, boolean UIVisible) {
 		this(num, basetype, colors, screen, ui, UIVisible, UIVisible);
 	}
-	
-	public void update(float delta, Star[] stars, Vector2[] starPositions) {
-		income = ammoDripRate; // Reset income
-		
+
+    private Vector2 difference = new Vector2();
+    private float minDiff = 80f;
+	public void update(float delta, ArrayList<Star> stars, Vector2[] starPositions) {
+
+        ammo += ammoDripRate;
 		starsCaptured = 0;
         for (Star star : stars) {
             if (star.populations[number] > Star.captureRatio * star.maxPop) {
@@ -76,26 +77,26 @@ public class Player {
             }
         }
 		// check if player has conquered the star cluster
-		win = (starsCaptured == stars.length);
+		win = (starsCaptured == stars.size());
 		
 		//update player orb positions and get income
-        for (ListIterator<Orb> itr = orbs.listIterator(); itr.hasNext();) {
-            Orb o = itr.next();
-            o.update(delta, starPositions, itr);
+        for (Orb o: orbs) {
+            o.update(delta, starPositions);
         }
 
-        for (ListIterator<Orb> itr = voids.listIterator(); itr.hasNext();) {
-            Orb v = itr.next();
-            v.update(delta, starPositions, itr);
+        for (Void v: voids) {
+            v.update(delta, starPositions);
         }
 
-        for (ListIterator<Orb> itr = novas.listIterator(); itr.hasNext();) {
-            Orb n = itr.next();
-            n.update(delta, starPositions, itr);
+        for (Orb n: novas) {
+            n.update(delta, starPositions);
         }
-		
-		ammo += income;
-		
+
+        // add ammo from stars
+        for (Star star: stars) {
+            star.updateControl();
+        }
+
 		if (ammoCap) {
 			ammo = Math.min(ammo, maxAmmo);
 		}
@@ -104,12 +105,20 @@ public class Player {
 		}
 		launchPad.update(delta);
 		
-		// update income orb list to move toward launchpad
-        for (ListIterator<FakeOrb> itr = incomeOrbs.listIterator(); itr.hasNext();) {
-            Gdx.app.log("player", "updating income orbs");
-            FakeOrb fakeOrb = itr.next();
-            fakeOrb.acceleration = launchPad.corner.cpy().scl(1 / StarCycle.pixelsPerMeter).sub(fakeOrb.position).scl(0.0001f);
-            fakeOrb.update(delta);
+		// update income orb list to move toward base
+        for (ListIterator<ImageOrb> itr = incomeOrbs.listIterator(); itr.hasNext();) {
+            ImageOrb fakeOrb = itr.next();
+
+            difference.set((base.buttonLoc.x - fakeOrb.position.x), (base.buttonLoc.y - fakeOrb.position.y));
+            if ((difference.len() < minDiff) | (!fakeOrb.insideView())) {
+                Gdx.app.log("player", "removing orb");
+                itr.remove();
+            }
+            else {
+                difference = difference.nor();
+                fakeOrb.acceleration.set(0.8f * difference.x, 0.8f * difference.y);
+                fakeOrb.update(delta);
+            }
         }
 	}
 
@@ -157,9 +166,15 @@ public class Player {
 		
 		base.draw(batch);
 
+        for (ImageOrb incomeOrb: incomeOrbs) {
+            incomeOrb.draw(batch);
+        }
+
         for (FakeOrb winOrb : winOrbs) {
             winOrb.draw(batch);
         }
+
+
 	}
 
 	public void dispose() {
@@ -182,6 +197,6 @@ public class Player {
 	public void disableIncome() {
 		stopDrip();
 		ammo = 0f;
-		launchPad.drawAmmo = false;
+//		launchPad.drawAmmo = false;
 	}
 }

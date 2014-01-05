@@ -56,6 +56,7 @@ public class LogHandler {
 						Gdx.app.log("LogHandler", httpResponse.getResultAsString());
 					}
 		        }
+
 				@Override
 				public void failed(Throwable t) {
 					Gdx.app.log("loghandler", "request failed");

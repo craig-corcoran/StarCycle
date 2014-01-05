@@ -25,18 +25,18 @@ public class Tutorial6 extends TutorialSandbox {
 		orbFactory.setCosts(0f, 0f, -1f);
 		orbDist = new Vector2(UserSettingz.getFloatSetting("chargeRadius"), 0f).scl(2f);
 		for (int i = 0; i < 2; i++) {
-			starPos = new Vector2(model.stars[(i+1)%2].position);
+			starPos = new Vector2(model.stars.get((i+1)%2).position);
 			for (int j = 0; j < 9; j++) {
 				orbDist.rotate(40f);
 				orbFactory.createOrb(OrbType.ORB, players[i], new Vector2(starPos.x+orbDist.x, starPos.y+orbDist.y), orbDist.cpy().scl(2f).rotate(90f), -1f);
 			}
-			model.stars[(i+1)%2].populations[i]=model.stars[(i+1)%2].maxPop*(0.45f+i*0.55f);
+			model.stars.get((i+1)%2).populations[i]=model.stars.get((i+1)%2).maxPop*(0.45f+i*0.55f);
 		}
 	}
 
 	@Override
 	boolean checkWin() {
-		return (model.stars[0].orbNum[1] == 0);
+		return (model.stars.get(0).numOrbs[1] == 0);
 	}
 	
 	@Override

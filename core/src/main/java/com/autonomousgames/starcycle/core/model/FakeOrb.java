@@ -17,7 +17,7 @@ public abstract class FakeOrb {
     public FakeOrb(Float radius, Vector2 position, float vpWidth, float vpHeight) {
         this.radius = radius;
         this.position = position.cpy();
-        this.vpWidth = vpWidth;
+        this.vpWidth = vpWidth; // viewport width and height
         this.vpHeight = vpHeight;
     }
 
@@ -31,12 +31,16 @@ public abstract class FakeOrb {
 	}
     public abstract void draw(SpriteBatch batch);
 
+    public boolean insideView() {
+        return ((position.x > 0 - radius) & (position.y > 0 - radius)
+                & (position.x < vpWidth + radius)
+                & (position.y < vpHeight + radius));
+    }
+
 	public void update(float delta) {
-		if (((position.x > 0 - radius) & (position.y > 0 - radius)
-				& (position.x < vpWidth + radius)
-				& (position.y < vpHeight + radius))) {
-			velocity.add(acceleration);
-			position.add(velocity); 
-		}
+        if (insideView()) {
+            velocity.add(acceleration);
+            position.add(velocity);
+        }
 	}
 }

@@ -1,11 +1,11 @@
 package com.autonomousgames.starcycle.core;
 
-import com.autonomousgames.starcycle.core.screens.*;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.autonomousgames.starcycle.core.screens.*;
 
 import java.util.HashMap;
 
@@ -17,7 +17,7 @@ public class StarCycle implements ApplicationListener {
 	public static float meterHeight;
 	public static Vector2 meterScreenCenter;
 	public static Vector2 pixelScreenCenter;
-	private com.autonomousgames.starcycle.core.screens.GameScreen screen;
+	private GameScreen screen;
 	public static com.autonomousgames.starcycle.core.LogHandler logHandler;
 	public static long startTime;
 	public static StarCycle sc = new StarCycle(); // TODO is this a bad idea during restarts/regaining context
@@ -29,7 +29,7 @@ public class StarCycle implements ApplicationListener {
 	public void create() {
 		json.setOutputType(JsonWriter.OutputType.json);
 		pixelsPerMeter = Gdx.graphics.getHeight()/10f;
-		padding = pixelsPerMeter * UserSettingz.getFloatSetting("paddingMeters"); // relative padding size for UI buttons
+		padding = pixelsPerMeter * com.autonomousgames.starcycle.core.UserSettingz.getFloatSetting("paddingMeters"); // relative padding size for UI buttons
 		screenWidth = Gdx.graphics.getWidth();
 		screenHeight = Gdx.graphics.getHeight();
 		meterWidth = screenWidth/pixelsPerMeter;
@@ -37,9 +37,9 @@ public class StarCycle implements ApplicationListener {
 		
 		meterScreenCenter = new Vector2(meterWidth/2f, meterHeight/2f);
 		pixelScreenCenter = new Vector2(screenWidth/2f, screenHeight/2f);
-		screen = new SplashScreen();
+		screen = new com.autonomousgames.starcycle.core.screens.SplashScreen();
 		
-		logHandler = new LogHandler();
+		logHandler = new com.autonomousgames.starcycle.core.LogHandler();
 		startTime = System.currentTimeMillis();
 		HashMap<String,Object> logMap = new HashMap<String,Object>();
 		logMap.put("currentScreen", screen.toString());
@@ -74,7 +74,7 @@ public class StarCycle implements ApplicationListener {
 			logMap.put("currentTime", System.currentTimeMillis());
 			logHandler.logScreen(json.toJson(logMap));
 			// dispose the current screen
-			Soundz.screenswitchSound.play(UserSettingz.getFloatSetting("sfxVolume")); 
+			Soundz.screenswitchSound.play(UserSettingz.getFloatSetting("sfxVolume"));
 					
 			screen.dispose();
 
@@ -85,7 +85,7 @@ public class StarCycle implements ApplicationListener {
 			case SINGLEPLAYER:
 				screen = new SinglePlayer(screen.nextLvlConfig, screen.skins, screen.colors,
 										  ((CampaignSelect)screen).nextLvlSinglePlayer,
-										  ((CampaignSelect)screen).botType); 
+										  ((CampaignSelect)screen).botType);
 				break;
 			case TUTORIAL1:
 				screen = new Tutorial1();

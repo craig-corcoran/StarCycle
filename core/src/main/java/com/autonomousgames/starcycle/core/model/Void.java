@@ -32,11 +32,7 @@ public class Void extends ChargeOrb implements Collidable {
     @Override
     public void collision(Collidable obj){
         if (!(model.toDestroyList.contains(this))) {
-            model.toDestroyList.add(this);
             super.removeSelf();
-        } else {
-            Gdx.app.log("void collision", " void added to destroy list twice");
         }
-        removeSelf();
     }
 }

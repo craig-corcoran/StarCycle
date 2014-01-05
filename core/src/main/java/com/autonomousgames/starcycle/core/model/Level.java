@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
+import javax.lang.model.type.ArrayType;
 import java.util.ArrayList;
 
 public class Level {
@@ -16,7 +17,7 @@ public class Level {
 
 	public float totalEnergy;
 	private final World world;
-	public Star[] stars;
+	public ArrayList<Star> stars = new ArrayList<Star>();
 	//private Player[] players;
 
 	public static enum LevelType {
@@ -40,18 +41,18 @@ public class Level {
 		switch (lvl) {
 		case SINGLE:
 			numStars = 1;
-			stars = new Star[numStars];
+			stars = new ArrayList<Star>(numStars);
 			addStaticStar(players, 0, center, 1.5f * starRadius);
 			break;
 		case DOUBLE:
 			numStars = 2;
-			stars = new Star[numStars];
+			stars = new ArrayList<Star>(numStars);
 			addStaticStar(players, 0, centerRight, 1.5f * starRadius);
 			addStaticStar(players, 1, centerLeft, 1.5f * starRadius);
 			break;
 		case TRIPLE:
 			numStars = 3;
-			stars = new Star[numStars];
+			stars = new ArrayList<Star>(numStars);
 			Vector2 farCenter = new Vector2((1 / 3f) * StarCycle.meterWidth, (1 / 2f) * StarCycle.meterHeight);
 			
 			addStaticStar(players, 0, centerRight, 1.5f * starRadius);
@@ -60,7 +61,7 @@ public class Level {
 			break;
 		case QUAD:
 			numStars = 4;
-			stars = new Star[numStars];
+			stars = new ArrayList<Star>(numStars);
 			Vector2 lowerRight = new Vector2((1 / 2f) * StarCycle.meterWidth,
 					(2 / 3f) * StarCycle.meterHeight);
 			Vector2 upperFarRight = new Vector2((1 / 3f) * StarCycle.meterWidth, (5f / 6f) * StarCycle.meterHeight);
@@ -75,7 +76,7 @@ public class Level {
 			break;
 		case DOUBLEBINARY:
 			numStars = 4;
-			stars = new Star[numStars];
+			stars = new ArrayList<Star>(numStars);
 			
 			DoubleEllipticalPath binaryPath1 = new DoubleEllipticalPath(2.3f,
 					3.1f, center, 1.15f, 1.15f, 0f, -3f);
@@ -89,14 +90,14 @@ public class Level {
 			break;
 		case TREFOIL:
 			numStars = 4;
-			stars = new Star[numStars];
+			stars = new ArrayList<Star>(numStars);
 			
 			addStaticStar(players, 0, center, 1.5f * starRadius);
 			addStarGroup(players, 1, 3, center, starRadius, ellipsePath, 0f, orbitSpeed);
 			break;
 		case VENNDIAGRAM:
 			numStars = 4;
-			stars = new Star[numStars];
+			stars = new ArrayList<Star>(numStars);
 			
 			Vector2 lowCenter = new Vector2((0.55f) * StarCycle.meterWidth,
 					(0.6f) * StarCycle.meterHeight);
@@ -112,7 +113,7 @@ public class Level {
 			break;
 		case CONCENTRIC:
 			numStars = 4;
-			stars = new Star[numStars];
+			stars = new ArrayList<Star>(numStars);
 			
 			EllipticalPath innerEllipse = new EllipticalPath(1.15f, 1.25f, center);
 			EllipticalPath outerEllipse = new EllipticalPath(3.5f, 4f, center);
@@ -122,23 +123,23 @@ public class Level {
 			break;
 		case NOSTARS:
 			numStars = 1;
-			stars = new Star[numStars];
+			stars = new ArrayList<Star>(numStars);
 			addStaticStar(players, 0, players[0].baseOrigins[0], 0f);
 			break;
 		} 
 	}
 
 	private void addStaticStar(Player[] players, int starIndex, Vector2 pos, float radius) {
-		stars[starIndex] = (new Star(Texturez.hexStar, radius, pos, players,
+		stars.add(starIndex, new Star(Texturez.hexStar, radius, pos, players,
 				world, starIndex, 0f));
 	}
 
 	private void addPathedStar(Player[] players, int starIndex, Vector2 center, float radius, 
 								PathType pathMap, float startPercent, float rotSpeed) {
 		
-		stars[starIndex] = (new Star(Texturez.hexStar, radius, center, players, 
+		stars.add(starIndex, new Star(Texturez.hexStar, radius, center, players,
 											world, starIndex, pathMap, startPercent, rotSpeed));
-		pathedObjList.add(stars[starIndex]);
+		pathedObjList.add(stars.get(starIndex));
 	}
 
 	private void addStarGroup(Player[] players, int startingIndex, int groupSize, Vector2 center, float radius, 

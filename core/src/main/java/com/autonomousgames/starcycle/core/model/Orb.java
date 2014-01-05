@@ -34,8 +34,8 @@ public class Orb implements Collidable {
 	Vector2 position;
 	Vector2 force = new Vector2();
 
-	ArrayList<Orb> orbList;
-	Star[] starList;
+	ArrayList orbList;
+    ArrayList<Star> starList;
 	World world;
 	Model model;
 	float gravScalar;
@@ -121,28 +121,22 @@ public class Orb implements Collidable {
 		}
 	}
 
-    public void update(float delta, Vector2[] starPositions, ListIterator<Orb> itr) {
+    public void update(float delta, Vector2[] starPositions) {
 		age += delta;
 
 		if ((age > lifeSpan) & (lifeSpan != -1f)) { // remove expired orbs
-			removeSelf(itr);
-			world.destroyBody(body);
-		} else {
+			removeSelf();
+		}
+        else {
 			angle += rotVel;
 			position = body.getPosition();
 			force = getGravForce(starPositions);
             Vector2 vel = body.getLinearVelocity();
-			force.scl(delta);
+			force.scl(delta); // adjust force applied for time interval
 			body.setLinearVelocity(vel.x + force.x, vel.y + force.y);
-			orbButton.setCenter(position.cpy().scl(StarCycle.pixelsPerMeter));
+			orbButton.setCenter(position.x*StarCycle.pixelsPerMeter, position.y*StarCycle.pixelsPerMeter);
 			orbButton.setRotation(angle);
-			// body.applyForceToCenter(force); // .scl(body.getMass()));
 		}
-		// Fade out over the last second. This assumes 60 fps and delta = 1/30f.
-//		if (lifeSpan < age + 2f && lifeSpan != -1f) {
-//			radius = maxRadius * (lifeSpan-age) / 2f;
-//			
-//		}
 	}
 
     public Vector2 getGravForce(Vector2[] starPositions) {
@@ -152,7 +146,7 @@ public class Orb implements Collidable {
 		for (int i = 0; i < starPositions.length; i++) {
 
             Vector2 starpos = starPositions[i];
-            Star star = starList[i];
+            Star star = starList.get(i);
 			// because we assume the orbs dont affect stars, we can treat all orbs as having mass 1.
 			// be careful using the vector2 methods as they change vectors in place
             float dist = position.dst(starpos);
@@ -178,20 +172,12 @@ public class Orb implements Collidable {
 
 	@Override
 	public void collision(Collidable obj) {
-        if (!(model.toDestroyList.contains(this))) {
-            model.toDestroyList.add(this);
-            removeSelf();
-        } else {
-            Gdx.app.log("ORB collision", " ORB added to destroy list twice");
-        }
         removeSelf();
 	}
 
     public void removeSelf() {
-        orbList.remove(this);
+        if (!(model.toDestroyList.contains(this))) {
+            model.toDestroyList.add(this);
+        }
     }
-
-    public void removeSelf(ListIterator<Orb> itr) {
-        itr.remove();
-	}
 }

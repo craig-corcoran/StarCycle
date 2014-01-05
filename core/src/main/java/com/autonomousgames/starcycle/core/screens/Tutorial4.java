@@ -29,7 +29,7 @@ public class Tutorial4 extends TutorialSandbox {
 
 	@Override
 	boolean checkWin() {
-		return (model.stars[0].orbNum[0] >= 7);
+		return (model.stars.get(0).numOrbs[0] >= 7);
 	}
 	
 	@Override
