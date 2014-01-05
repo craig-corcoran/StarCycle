@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.autonomousgames.starcycle.android"
+    android:versionCode="6"
+    android:versionName=".06"
+    android:installLocation="preferExternal">
+	<compatible-screens>
+	    <!-- This section is very restrictive to our potential user base. 
+	    It only allows 7+ inch high resolution tablets.
+	    See: http://developer.android.com/guide/topics/manifest/compatible-screens-element.html  -->
+    	<screen android:screenSize="large" android:screenDensity="mdpi" />
+    	<screen android:screenSize="large" android:screenDensity="hdpi" />
+    	<screen android:screenSize="large" android:screenDensity="xhdpi" />
+    	<!-- Special case for Nexus 7 -->
+    	<screen android:screenSize="large" android:screenDensity="213" />
+    	
+    	<screen android:screenSize="xlarge" android:screenDensity="mdpi" />
+    	<screen android:screenSize="xlarge" android:screenDensity="hdpi" />
+    	<screen android:screenSize="xlarge" android:screenDensity="xhdpi" />
+    	
+	</compatible-screens>
+	<uses-configuration android:reqTouchScreen="finger" />
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="19" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application 
+        android:icon="@drawable/icon" android:label="StarCycle"
+        android:allowBackup="false">
+        <activity
+            android:name=".StarCycleActivity"
+            android:label="StarCycle"
+            android:screenOrientation="landscape"
+            android:hardwareAccelerated="true"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:multiprocess="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    
+    </application>
+</manifest>
