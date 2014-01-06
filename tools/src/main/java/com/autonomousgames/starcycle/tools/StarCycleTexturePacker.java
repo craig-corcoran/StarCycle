@@ -1,5 +1,4 @@
-/*
-package com.autonomousgames.starcycle.core;
+package com.autonomousgames.starcycle.tools;
 
 import com.badlogic.gdx.tools.imagepacker.TexturePacker2;
 import com.badlogic.gdx.tools.imagepacker.TexturePacker2.Settings;
@@ -18,4 +17,4 @@ public class StarCycleTexturePacker {
     	TexturePacker2.process(settings, assetsDir + "/images",
     						   assetsDir + "/packed-images", "packed-textures");
     }
-}*/
+}
