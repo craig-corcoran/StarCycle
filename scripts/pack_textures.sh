@@ -17,10 +17,10 @@ pack_textures() {
     echo "USING CLASSPATH: $CLASSPATH"
 
     echo "COMPILING"
-    /opt/java/bin/javac -g -d $SC_DIR/tools/src/main/java/com/autonomousgames/starcycle/tools $SC_DIR/tools/src/main/java/com/autonomousgames/starcycle/tools/StarCycleTexturePacker.java
+    $JAVA_HOME/bin/javac -g -d $SC_DIR/tools/src/main/java/com/autonomousgames/starcycle/tools $SC_DIR/tools/src/main/java/com/autonomousgames/starcycle/tools/StarCycleTexturePacker.java
 
     echo "RUNNING"
-    /opt/java/bin/java com.autonomousgames.starcycle.tools.StarCycleTexturePacker
+    $JAVA_HOME/bin/java com.autonomousgames.starcycle.tools.StarCycleTexturePacker
 
     echo "CLEANING UP"
     rm -r $SC_DIR/assets/images
