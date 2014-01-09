@@ -15,7 +15,7 @@ public class AboutScreen extends MenuScreen {
 	
 	public AboutScreen() {
 		Gdx.input.setInputProcessor(new MenuController(this));
-		
+
 		StandardButton backButton = new StandardButton(backPosition, backSize, Texturez.backIcon, padding);
 		backButton.setRotation(90f);
 		backButton.addListener(new ScreenDoneClickListener(this, ScreenType.MAINMENU));

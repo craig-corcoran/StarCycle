@@ -141,7 +141,6 @@ public class StarCycle implements ApplicationListener {
 	}
 	@Override
 	public void resume() {
-
 	}
 	
 }
