@@ -143,6 +143,7 @@ public class StarCycle implements ApplicationListener {
 	}
 	@Override
 	public void resume() {
+        Texturez.resetFonts();
 	}
 
     public void makeBackground() {

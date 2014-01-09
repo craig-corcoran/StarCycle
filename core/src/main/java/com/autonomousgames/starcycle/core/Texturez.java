@@ -349,6 +349,12 @@ public class Texturez {
 	public static Vector2 model2pixel(float x, float y) {
 		return model2pixel(new Vector2(x, y));
 	}
+
+    public static void resetFonts() {
+        gridnikMedium = gridnikGenerator.generateFont(22);
+        gridnikLarge = gridnikGenerator.generateFont(42);
+        latoLightLarge = latoLightGenerator.generateFont(52);
+    }
 }
 	
 
