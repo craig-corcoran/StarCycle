@@ -82,13 +82,13 @@ public abstract class ModelScreen extends GameScreen{
 			}
 		});
 		
-		mainMenuButton = new StandardButton(new Vector2(StarCycle.screenWidth/2f, side), iconSize, Texturez.pauseUI[0], padding);
+		mainMenuButton = new StandardButton(new Vector2(StarCycle.screenWidth/2f, side), iconSize.cpy().scl(0.8f), Texturez.pauseUI[0], padding);
 		mainMenuButton.addListener(new ScreenDoneClickListener(this,ScreenType.MAINMENU));
 		mainMenuButton.setRotation(90f);
         mainMenuButton.setColor(Texturez.navy);
 		
 		resumeButton = new LayeredButton(new Vector2(StarCycle.screenWidth/2f, side*3f), iconSize.cpy().scl(2f));
-        resumeButton.addLayer(new SpriteLayer(Texturez.block, new Vector2(StarCycle.screenHeight, StarCycle.screenWidth)).setSpriteColor(Color.BLACK).setSpriteAlpha(0.6f));
+        resumeButton.addLayer(new SpriteLayer(Texturez.block, new Vector2(StarCycle.screenHeight, StarCycle.screenWidth).scl(1.1f)).setSpriteColor(Color.BLACK).setSpriteAlpha(0.6f));
 		resumeButton.addLayer(new SpriteLayer(Texturez.gradientRound, iconSize.cpy().scl(2f)), LayerType.DOWN);
 //		resumeButton.addLayer(new SpriteLayer(Texturez.pauseUI[1], iconSize.cpy().scl(0.35f)));
 		resumeButton.addLayer(new SpriteLayer(Texturez.pauseUI[2], iconSize.cpy().scl(1.75f)).setRotationSpeed(30f).setSpriteColor(Texturez.spinach));

@@ -61,7 +61,7 @@ public class Star extends Orbitable implements Collidable {
 	float minSideLen; // Smallest hexagon side length.
 	float scaleRange; // Scale percent, for maximum side length, over 100% of original size.
 	Vector2 sideDims; // Dimensions of hexagon side length.
-	int quadLayer0 = 2; // Starting layer of star image quadrants.
+	int quadLayer0; // Starting layer of star image quadrants.
 
 
     final float maxOrbs;
@@ -111,10 +111,11 @@ public class Star extends Orbitable implements Collidable {
 		imageDims = new Vector2(radius, radius).scl(StarCycle.pixelsPerMeter);
 		starButton = new LayeredButton(position.cpy().scl(StarCycle.pixelsPerMeter));
 		Vector2 quadPos = imageDims.cpy().div(2f);
-		// These repeated layers could be replaced with single layers with higher alpha.
-		starButton.addLayer(new SpriteLayer(Texturez.circle, imageDims.cpy().scl(2.15f)).setSpriteColor(Texturez.night));
-		starButton.addLayer(new SpriteLayer(Texturez.circle, imageDims).setSpriteColor(Texturez.night));
+        starButton.addLayer(new SpriteLayer(Texturez.gradientRound, imageDims.cpy().scl(2.75f)));
+//		starButton.addLayer(new SpriteLayer(Texturez.circle, imageDims.cpy().scl(2.15f)).setSpriteColor(Color.BLACK));
+		starButton.addLayer(new SpriteLayer(Texturez.circle, imageDims).setSpriteColor(Color.BLACK));
 		// The main star visual is drawn as four quadrants.
+        quadLayer0 = starButton.getLayerNum();
 		for (int i = 0; i < 4; i++) {
 			starButton.addLayer(new SpriteLayer(image, quadPos.cpy().rotate(90f*i), imageDims, Texturez.night, (90f*i)));
 		}
@@ -168,8 +169,8 @@ public class Star extends Orbitable implements Collidable {
 			// If the player has control: 
 			if (captureRatio <= newPercent && controlPercents[i] < captureRatio) {
 				// Tint the inner portion.
-                starButton.getLayer(0).setColor(players[i].colors[0]);
-				starButton.getLayer(1).setColor(players[i].colors[0]);
+                starButton.getLayer(1).setColor(players[i].colors[0]);
+//				starButton.getLayer(2).setColor(players[i].colors[0]);
 				starButton.lock();
 			}
 			// Update the control percent with the stored value.
@@ -187,12 +188,13 @@ public class Star extends Orbitable implements Collidable {
 			for (int i = 0; i < players.length; i ++) {
 				controlButtons.get(i).deactivate();
 			}
+            starButton.getLayer(1).setColor(Color.BLACK);
 		}
 		// If neither player has control, reset the inner portion:
 		if (controlPercents[0] < captureRatio && controlPercents[1] < captureRatio && starButton.isLocked()) {
 			starButton.unlock();
-            starButton.getLayer(0).setColor(Texturez.night);
-			starButton.getLayer(1).setColor(Texturez.night);
+            starButton.getLayer(1).setColor(Color.BLACK);
+//			starButton.getLayer(2).setColor(Color.BLACK);
 		}
 		// Update the button position and angle, then draw:
 		starButton.setCenter(position.cpy().scl(StarCycle.pixelsPerMeter));
