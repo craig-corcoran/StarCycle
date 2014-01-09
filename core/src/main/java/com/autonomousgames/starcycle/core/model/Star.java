@@ -113,7 +113,7 @@ public class Star extends Orbitable implements Collidable {
 		Vector2 quadPos = imageDims.cpy().div(2f);
         starButton.addLayer(new SpriteLayer(Texturez.gradientRound, imageDims.cpy().scl(2.75f)));
 //		starButton.addLayer(new SpriteLayer(Texturez.circle, imageDims.cpy().scl(2.15f)).setSpriteColor(Color.BLACK));
-		starButton.addLayer(new SpriteLayer(Texturez.circle, imageDims).setSpriteColor(Color.BLACK));
+		starButton.addLayer(new SpriteLayer(Texturez.circle, imageDims.cpy().scl(0.8f)).setSpriteColor(Color.BLACK));
 		// The main star visual is drawn as four quadrants.
         quadLayer0 = starButton.getLayerNum();
 		for (int i = 0; i < 4; i++) {

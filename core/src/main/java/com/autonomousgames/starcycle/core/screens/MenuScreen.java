@@ -15,9 +15,11 @@ import java.util.ListIterator;
 public class MenuScreen extends GameScreen {
 
 	public ArrayList<ImageOrb> fakeOrbs = new ArrayList<ImageOrb>();
+    boolean drawFakeOrbs = true;
 	
 	public MenuScreen() {
 		super();
+        background = StarCycle.sc.getBackground();
 		Gdx.input.setInputProcessor(new MenuController(this));
 	}
 
@@ -25,11 +27,9 @@ public class MenuScreen extends GameScreen {
 	public void render(float delta) {
 		
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		
-		batch.disableBlending();
 		batch.begin();
-		batch.draw(Texturez.mainMenuBG, 0f, 0f, StarCycle.screenWidth,StarCycle.screenHeight);
-		batch.enableBlending();
+        background.update();
+        background.draw(batch);
         for (ListIterator<ImageOrb> itr = fakeOrbs.listIterator(); itr.hasNext();){
             FakeOrb o = itr.next();
             o.draw(batch);
@@ -51,8 +51,10 @@ public class MenuScreen extends GameScreen {
         Vector2 vec = new Vector2(x, StarCycle.screenHeight - y);
         int textureSwitch = (Math.random() > .5) ? 1 : 0;
         boolean left = (textureSwitch == 1) ? true : false;
-		fakeOrbs.add(new ImageOrb(Texturez.fakeorbTextures[textureSwitch], StarCycle.screenHeight/60f, vec,
-                StarCycle.screenWidth, StarCycle.screenHeight, left));
+        if (drawFakeOrbs) {
+		    fakeOrbs.add(new ImageOrb(Texturez.fakeorbTextures[textureSwitch], StarCycle.screenHeight/60f, vec,
+                    StarCycle.screenWidth, StarCycle.screenHeight, left));
+        }
 	}
 	public String toString(){
 		return "MenuScreen";

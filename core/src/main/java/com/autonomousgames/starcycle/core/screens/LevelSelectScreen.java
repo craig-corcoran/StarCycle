@@ -15,20 +15,20 @@ public class LevelSelectScreen extends MenuScreen {
 		backButton.addListener(new ScreenDoneClickListener(this, ScreenType.STARTMENU));
 		
 		ui.addActor(backButton);
+        drawFakeOrbs = false;
 	}
 	
-	@Override
-	public void render(float delta) {
-		//super.render() is not called on purpose to skip out on fakeorb stuff
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		batch.disableBlending();
-		batch.begin();
-		batch.draw(Texturez.selectBG, 0f, 0f, StarCycle.screenHeight*2f,StarCycle.screenHeight);
-		batch.enableBlending();
-		batch.end();
-		ui.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-		ui.draw();
-	}
+//	@Override
+//	public void render(float delta) {
+//		//super.render() is not called on purpose to skip out on fakeorb stuff
+//		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+//		batch.begin();
+//        background.update();
+//        background.draw(batch);
+//		batch.end();
+//		ui.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+//		ui.draw();
+//	}
 	
 	public String toString(){
 		return "LevelSelectScreen";

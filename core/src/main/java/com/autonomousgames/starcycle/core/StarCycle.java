@@ -1,5 +1,6 @@
 package com.autonomousgames.starcycle.core;
 
+import com.autonomousgames.starcycle.core.model.BackgroundManager;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
@@ -24,6 +25,7 @@ public class StarCycle implements ApplicationListener {
 	public static float padding;
 	public com.autonomousgames.starcycle.core.UserSettingz settings;
 	public static Json json = new Json();
+    public BackgroundManager background;
 
 	@Override
 	public void create() {
@@ -38,7 +40,7 @@ public class StarCycle implements ApplicationListener {
 		meterScreenCenter = new Vector2(meterWidth/2f, meterHeight/2f);
 		pixelScreenCenter = new Vector2(screenWidth/2f, screenHeight/2f);
 		screen = new com.autonomousgames.starcycle.core.screens.SplashScreen();
-		
+
 		logHandler = new com.autonomousgames.starcycle.core.LogHandler();
 		startTime = System.currentTimeMillis();
 		HashMap<String,Object> logMap = new HashMap<String,Object>();
@@ -142,5 +144,13 @@ public class StarCycle implements ApplicationListener {
 	@Override
 	public void resume() {
 	}
-	
+
+    public void makeBackground() {
+        background = new BackgroundManager();
+    }
+
+    public BackgroundManager getBackground() {
+        return background;
+    }
+
 }

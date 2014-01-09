@@ -31,7 +31,6 @@ public abstract class ModelScreen extends GameScreen{
 	public boolean debugPaused = false;
 	protected ScreenType screentype;
 	GL10 gl = Gdx.graphics.getGL10();
-	BackgroundManager background = new BackgroundManager();
 	private Json json = new Json();
 	private BaseButton winBase;
 	private final Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
@@ -48,6 +47,7 @@ public abstract class ModelScreen extends GameScreen{
 	private long gameStartTime;
 	
 	public ModelScreen(LevelType lvl, ScreenType screentype, BaseType[] skins, Color[][] colors) {
+        background = StarCycle.sc.getBackground();
 		json.setOutputType(JsonWriter.OutputType.json);
 		nextLvlConfig = lvl;
 		this.screentype = screentype;
@@ -217,7 +217,7 @@ public abstract class ModelScreen extends GameScreen{
 	void renderSprites(float delta) {
 //		batch.getProjectionMatrix().set(cam.combined);
 		batch.begin();
-		
+
 		background.draw(batch);
         if (gameOver) {
             winBase.draw(batch, 1f);
