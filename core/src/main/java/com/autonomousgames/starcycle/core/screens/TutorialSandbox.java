@@ -89,5 +89,11 @@ public abstract class TutorialSandbox extends ModelScreen {
 	public String toString(){
 		return "Tutorial";
 	}
+
+    @Override
+    public void dispose() {
+        background.noDraw = false;
+        super.dispose();
+    }
 }
 

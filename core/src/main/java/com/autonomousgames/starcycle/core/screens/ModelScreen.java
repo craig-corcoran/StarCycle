@@ -31,7 +31,6 @@ public abstract class ModelScreen extends GameScreen{
 	public boolean debugPaused = false;
 	protected ScreenType screentype;
 	GL10 gl = Gdx.graphics.getGL10();
-	BackgroundManager background = new BackgroundManager();
 	private Json json = new Json();
 	private BaseButton winBase;
 	private final Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
@@ -48,6 +47,7 @@ public abstract class ModelScreen extends GameScreen{
 	private long gameStartTime;
 	
 	public ModelScreen(LevelType lvl, ScreenType screentype, BaseType[] skins, Color[][] colors) {
+        background = StarCycle.sc.getBackground();
 		json.setOutputType(JsonWriter.OutputType.json);
 		nextLvlConfig = lvl;
 		this.screentype = screentype;
@@ -72,7 +72,8 @@ public abstract class ModelScreen extends GameScreen{
 		}
 		
 		// add pause button
-		pauseButton = new LayeredButton(new Vector2(StarCycle.screenWidth/2f, StarCycle.screenHeight/2f),new Vector2(StarCycle.screenWidth/3f, StarCycle.screenHeight)); 
+        Vector2 pauseSize = new Vector2(StarCycle.screenWidth/2f, StarCycle.screenHeight/2f);
+		pauseButton = new LayeredButton(pauseSize, new Vector2(StarCycle.screenWidth/3f, StarCycle.screenHeight));
 		pauseButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -81,14 +82,16 @@ public abstract class ModelScreen extends GameScreen{
 			}
 		});
 		
-		mainMenuButton = new StandardButton(new Vector2(StarCycle.screenWidth/2f, side), iconSize, Texturez.pauseUI[0], padding);
+		mainMenuButton = new StandardButton(new Vector2(StarCycle.screenWidth/2f, side), iconSize.cpy().scl(0.8f), Texturez.pauseUI[0], padding);
 		mainMenuButton.addListener(new ScreenDoneClickListener(this,ScreenType.MAINMENU));
 		mainMenuButton.setRotation(90f);
+        mainMenuButton.setColor(Texturez.navy);
 		
-		resumeButton = new LayeredButton(new Vector2(StarCycle.screenWidth/2f, side*3f), iconSize);
-		resumeButton.addLayer(new SpriteLayer(Texturez.gradientRound, iconSize.cpy().scl(1.5f)), LayerType.DOWN);
-		resumeButton.addLayer(new SpriteLayer(Texturez.pauseUI[1], iconSize.cpy().scl(0.35f)));
-		resumeButton.addLayer(new SpriteLayer(Texturez.pauseUI[2], iconSize.cpy().scl(1.2f)).setRotationSpeed(30f));
+		resumeButton = new LayeredButton(new Vector2(StarCycle.screenWidth/2f, side*3f), iconSize.cpy().scl(2f));
+        resumeButton.addLayer(new SpriteLayer(Texturez.block, new Vector2(StarCycle.screenHeight, StarCycle.screenWidth).scl(1.1f)).setSpriteColor(Color.BLACK).setSpriteAlpha(0.6f));
+		resumeButton.addLayer(new SpriteLayer(Texturez.gradientRound, iconSize.cpy().scl(2f)), LayerType.DOWN);
+//		resumeButton.addLayer(new SpriteLayer(Texturez.pauseUI[1], iconSize.cpy().scl(0.35f)));
+		resumeButton.addLayer(new SpriteLayer(Texturez.pauseUI[2], iconSize.cpy().scl(1.75f)).setRotationSpeed(30f).setSpriteColor(Texturez.spinach));
 		resumeButton.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
@@ -103,6 +106,7 @@ public abstract class ModelScreen extends GameScreen{
 		backButton = new StandardButton(new Vector2(StarCycle.screenWidth/2f, side*5f), new Vector2( iconSize.x, iconSize.y*0.75f), Texturez.pauseUI[3], padding);
 		backButton.addListener(new ScreenDoneClickListener(this,this.backScreen));
 		backButton.setRotation(90f);
+        backButton.setColor(Texturez.red);
 		
 		ui.addActor(pauseButton);
 	}
@@ -146,8 +150,8 @@ public abstract class ModelScreen extends GameScreen{
 	public void addPauseBanner() {
 		if (!paused && !gameOver){
 			paused = true;
+            ui.addActor(resumeButton);
 			ui.addActor(backButton);
-			ui.addActor(resumeButton);
 			ui.addActor(mainMenuButton);
 		}
 	}
@@ -213,7 +217,7 @@ public abstract class ModelScreen extends GameScreen{
 	void renderSprites(float delta) {
 //		batch.getProjectionMatrix().set(cam.combined);
 		batch.begin();
-		
+
 		background.draw(batch);
         if (gameOver) {
             winBase.draw(batch, 1f);
