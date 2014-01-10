@@ -33,6 +33,8 @@ public abstract class GameScreen implements Screen {
 
 	public GameScreen(){
 		cam.position.set(StarCycle.meterWidth / 2f, StarCycle.meterHeight / 2f, 0f);
+        background = StarCycle.sc.getBackground();
+
 	}
 
 	@Override

@@ -13,7 +13,7 @@ public class StartMenu extends MenuScreen {
 	public StartMenu() {
 		
 		float padding = StarCycle.pixelsPerMeter/2f; // padding around text-only buttons
-		
+
 		StandardButton backButton = new StandardButton(backPosition, backSize, Texturez.backIcon, padding);
 		backButton.setRotation(90f);
 		backButton.addListener(new ScreenDoneClickListener(this, ScreenType.MAINMENU));

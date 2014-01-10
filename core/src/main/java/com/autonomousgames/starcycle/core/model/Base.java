@@ -167,4 +167,10 @@ public class Base {
 		baseButton.setCenter(newPos.cpy().scl(UIScaleFactor));
 		aimer.setCenter(newPos.cpy().scl(UIScaleFactor));
 	}
+
+    public void translateBase(float x, float y) {
+        x = x/UIScaleFactor;
+        y = y/UIScaleFactor;
+        moveBase(new Vector2(origin.x + x, origin.y + y));
+    }
 }

@@ -47,7 +47,6 @@ public abstract class ModelScreen extends GameScreen{
 	private long gameStartTime;
 	
 	public ModelScreen(LevelType lvl, ScreenType screentype, BaseType[] skins, Color[][] colors) {
-        background = StarCycle.sc.getBackground();
 		json.setOutputType(JsonWriter.OutputType.json);
 		nextLvlConfig = lvl;
 		this.screentype = screentype;

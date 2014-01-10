@@ -90,7 +90,7 @@ public class StarCycle implements ApplicationListener {
 										  ((CampaignSelect)screen).botType);
 				break;
 			case TUTORIAL1:
-				screen = new Tutorial1();
+				screen = new Tutorial0();
 				break;
 			case TUTORIAL2:
 				screen = new Tutorial2();

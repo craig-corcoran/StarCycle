@@ -8,12 +8,15 @@ import com.autonomousgames.starcycle.core.ui.ArcButton;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
+import java.util.ArrayList;
 
 public class LaunchPad {
 
@@ -59,6 +62,7 @@ public class LaunchPad {
     ArcButton orbButton;
     ArcButton pw1Button;
     ArcButton pw2Button;
+    ArrayList<LayeredButton> buttons = new ArrayList<LayeredButton>();
 
     public boolean streamOrbs = false;
 
@@ -155,6 +159,11 @@ public class LaunchPad {
         pw2Button.rotate(angle);
         pw2Button.deactivate();
 
+        buttons.add(bgButton);
+        buttons.add(orbButton);
+        buttons.add(pw1Button);
+        buttons.add(pw2Button);
+
         if (visible) {
             screen.ui.addActor(bgButton);
             screen.ui.addActor(orbButton);
@@ -224,6 +233,25 @@ public class LaunchPad {
 
     public Vector2 getPos() {
         return position.cpy();
+    }
+
+    public void setPos(float x, float y) {
+        position.set(x,y);
+        for (int i = 0; i < buttons.size(); i ++) {
+            buttons.get(i).setCenter(position);
+        }
+    }
+
+    public void setPos(Vector2 pos) {
+        setPos(pos.x, pos.y);
+    }
+
+    public void movePos(Vector2 pos) {
+        movePos(pos.x, pos.y);
+    }
+
+    public void movePos(float x, float y) {
+        setPos(position.x + x, position.y + y);
     }
 
 }
