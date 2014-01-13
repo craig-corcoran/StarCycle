@@ -86,15 +86,15 @@ public class LaunchPad {
 
         bgButton = new LayeredButton(position);
 //        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[0], bgdPos, bgdDim));
-        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[1], metPos, metDim, Color.BLACK, -45f));
-        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[1], metPos, metDim, player.colors[0], -45f));
+        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[1], metPos, metDim, Color.BLACK, -45f), LayerType.ACTIVE);
+        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[1], metPos, metDim, player.colors[0], -45f), LayerType.ACTIVE);
         for (int i = 0; i < 8; i ++) {
-            bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[5], triPos.cpy().rotate(-topAngs[i]), triDim, player.colors[1], -topAngs[i]));
+            bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[5], triPos.cpy().rotate(-topAngs[i]), triDim, player.colors[1], -topAngs[i]), LayerType.ACTIVE);
         }
         for (int i = 0; i < 3; i ++) {
-            bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[5], triPos.cpy().rotate(-botAngs[i]), triDim, player.colors[1], -botAngs[i] + 180f));
+            bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[5], triPos.cpy().rotate(-botAngs[i]), triDim, player.colors[1], -botAngs[i] + 180f), LayerType.ACTIVE);
         }
-        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[2], metPos, metDim, player.colors[1], -45f));
+        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[2], metPos, metDim, player.colors[1], -45f), LayerType.ACTIVE);
         bgButton.rotate(angle);
         meter = ((SpriteLayer) bgButton.getLayer(1));
 
@@ -252,6 +252,15 @@ public class LaunchPad {
 
     public void movePos(float x, float y) {
         setPos(position.x + x, position.y + y);
+    }
+
+    public void showMeter(boolean visible) {
+        if (visible) {
+            bgButton.activate();
+        }
+        else {
+            bgButton.deactivate();
+        }
     }
 
 }

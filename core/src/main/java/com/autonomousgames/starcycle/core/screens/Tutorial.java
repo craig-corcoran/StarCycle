@@ -37,7 +37,7 @@ public abstract class Tutorial extends ModelScreen {
     int currentBorder = 0;
 
     public Tutorial () {
-        super(Level.LevelType.NOSTARS, ScreenType.TUTORIAL, new BaseType[]{BaseType.MALUMA, BaseType.TAKETE}, new Color[][]{Texturez.cool, Texturez.warm});
+        super(Level.LevelType.NOSTARS, ScreenType.TUTORIAL, new BaseType[]{BaseType.MALUMA, BaseType.MALUMA}, new Color[][]{Texturez.cool, Texturez.cool});
         Gdx.input.setInputProcessor(new GameController(this, 1)); // only one active touch interface
 
         swiper.addListener(new DragListener() {
@@ -84,13 +84,13 @@ public abstract class Tutorial extends ModelScreen {
 
     }
 
-    @Override
-    void setPlayers() {
-        numPlayers = 1;
-        players = new Player[numPlayers];
-        players[0] = new Player(0, skins[0], colors[0], this, ui, true, true);
-        players[0].altWin = true;
-    }
+//    @Override
+//    void setPlayers() {
+//        numPlayers = 1;
+//        players = new Player[numPlayers];
+//        players[0] = new Player(0, skins[0], colors[0], this, ui, true, true);
+//        players[0].altWin = true;
+//    }
 
     public abstract void moveDraggables(float dy);
 

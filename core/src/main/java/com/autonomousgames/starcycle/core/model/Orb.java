@@ -43,6 +43,7 @@ public class Orb implements Collidable {
 	AtlasRegion[] textures;
 	Vector2 imageDims;
 	LayeredButton orbButton;
+    Vector2 visOffset = new Vector2(0f, 0f);
 
 	public static enum OrbType {
 		ORB, VOID, NOVA
@@ -134,7 +135,7 @@ public class Orb implements Collidable {
             Vector2 vel = body.getLinearVelocity();
 			force.scl(delta); // adjust force applied for time interval
 			body.setLinearVelocity(vel.x + force.x, vel.y + force.y);
-			orbButton.setCenter(position.x*StarCycle.pixelsPerMeter, position.y*StarCycle.pixelsPerMeter);
+			orbButton.setCenter(position.x*StarCycle.pixelsPerMeter + visOffset.x, position.y*StarCycle.pixelsPerMeter + visOffset.y);
 			orbButton.setRotation(angle);
 		}
 	}
@@ -180,4 +181,9 @@ public class Orb implements Collidable {
             model.toDestroyList.add(this);
         }
     }
+
+    public void moveVisual(float x, float y) {
+        visOffset.add(x, y);
+    }
+
 }

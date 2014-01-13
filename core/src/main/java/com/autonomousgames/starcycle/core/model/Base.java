@@ -161,13 +161,16 @@ public class Base {
 	public Vector2 getBaseSize() {
 		return baseDims.cpy();
 	}
-	
+
+
+    // This takes meters.
 	public void moveBase(Vector2 newPos) {
 		origin.set(newPos.x, newPos.y);
 		baseButton.setCenter(newPos.cpy().scl(UIScaleFactor));
 		aimer.setCenter(newPos.cpy().scl(UIScaleFactor));
 	}
 
+    // This takes pixels.
     public void translateBase(float x, float y) {
         x = x/UIScaleFactor;
         y = y/UIScaleFactor;
