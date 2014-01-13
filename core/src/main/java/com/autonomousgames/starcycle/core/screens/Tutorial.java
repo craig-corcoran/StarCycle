@@ -27,7 +27,7 @@ public abstract class Tutorial extends ModelScreen {
     float yDown = 0f;
     float yPrev = 0f;
     float dy = 0f;
-    float dragThreshold = sh*0.4f;
+    float dragThreshold = sh*0.25f;
     boolean moving = false;
     int moves = 15;
     int move = 0;
@@ -36,9 +36,10 @@ public abstract class Tutorial extends ModelScreen {
 
     int currentBorder = 0;
 
-    public Tutorial () {
-        super(Level.LevelType.NOSTARS, ScreenType.TUTORIAL, new BaseType[]{BaseType.MALUMA, BaseType.MALUMA}, new Color[][]{Texturez.cool, Texturez.cool});
-        Gdx.input.setInputProcessor(new GameController(this, 1)); // only one active touch interface
+    public Tutorial (Level.LevelType lvlType, ScreenType screenType, ScreenType nextScreen, ScreenType prevScreen, BaseType[] skins, Color[][] colors) {
+        super(lvlType, screenType, skins, new Color[][]{Texturez.cool, Texturez.cool});
+        this.nextScreen = nextScreen;
+        Gdx.input.setInputProcessor(new GameController(this, 2)); // only one active touch interface
 
         swiper.addListener(new DragListener() {
 
@@ -96,13 +97,17 @@ public abstract class Tutorial extends ModelScreen {
 
     public abstract void sendDraggables(float y);
 
-    LayeredButton border() {
+    void borders(int borderNum) {
         float bw = sh * 0.05f;
-        LayeredButton button = new LayeredButton(swipeCenter, swipeSize);
-        button.addLayer(new SpriteLayer(Texturez.block, new Vector2(0f, sh * 0.425f), new Vector2(sw * 0.3f, bw), Texturez.night, 0f));
-        button.addLayer(new SpriteLayer(Texturez.block, new Vector2(sw * 0.15f - bw / 2f, 0f), new Vector2(bw, sh * 0.9f), Texturez.night, 0f));
-        button.addLayer(new SpriteLayer(Texturez.block, new Vector2(0f, -sh * 0.425f), new Vector2(sw * 0.3f, bw), Texturez.night, 0f));
-        return button;
+        for (int i = 0; i < borderNum; i++) {
+            LayeredButton button = new LayeredButton(swipeCenter, swipeSize);
+            button.addLayer(new SpriteLayer(Texturez.block, new Vector2(0f, sh * 0.425f), new Vector2(sw * 0.3f, bw), Texturez.night, 0f));
+            button.addLayer(new SpriteLayer(Texturez.block, new Vector2(sw * 0.15f - bw / 2f, 0f), new Vector2(bw, sh * 0.9f), Texturez.night, 0f));
+            button.addLayer(new SpriteLayer(Texturez.block, new Vector2(0f, -sh * 0.425f), new Vector2(sw * 0.3f, bw), Texturez.night, 0f));
+            button.moveCenter(0f, sh*i);
+            draggables.add(button);
+            ui.addActor(button);
+        }
     }
 
 }

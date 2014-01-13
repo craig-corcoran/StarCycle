@@ -43,4 +43,9 @@ public abstract class FakeOrb {
             position.add(velocity);
         }
 	}
+
+    public void move(float x, float y) {
+        position.add(x, y);
+    }
+
 }

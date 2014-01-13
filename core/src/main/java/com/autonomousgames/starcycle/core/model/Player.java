@@ -38,6 +38,7 @@ public class Player {
     private float winOrbAngle = 0;
     private boolean winner = false;
     public boolean altWin = false;
+    public boolean showIncomeOrbs = true;
     private final float basePad = StarCycle.meterHeight * (1 / 4.2f);
 	Vector2[] baseOrigins = {
 			new Vector2(StarCycle.meterWidth - basePad, basePad),

@@ -53,7 +53,11 @@ public class Tutorial8 extends TutorialSandbox {
 		players[1] = new Bot(1,BaseType.TAKETE, Texturez.warm, this, ui, false, false);
 		tutor = (Bot) players[1];
 		tutor.setBotType(BotType.DEAD);
-		tutor.disableIncome();
+//		tutor.disableIncome();
+        tutor.showIncomeOrbs = false;
+        players[0].showIncomeOrbs = false;
+        players[0].launchPad.showMeter(false);
+        players[1].launchPad.showMeter(false);
 	}
 
 }

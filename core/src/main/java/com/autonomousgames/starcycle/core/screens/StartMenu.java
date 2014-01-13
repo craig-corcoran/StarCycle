@@ -28,7 +28,7 @@ public class StartMenu extends MenuScreen {
 		
 		StandardButton tutorialButton = new StandardButton(new Vector2(ui.getWidth()*3f/4f, ui.getHeight()/2f), iconSize.div(2f), Texturez.questionIcon, padding);
 		tutorialButton.setRotation(90f);
-		tutorialButton.addListener(new ScreenDoneClickListener(this,ScreenType.TUTORIAL1));
+		tutorialButton.addListener(new ScreenDoneClickListener(this,ScreenType.TUTORIAL0));
 
 		ui.addActor(backButton);
 		ui.addActor(multiPlayerButton);

@@ -24,7 +24,7 @@ import java.util.LinkedList;
 public class Star extends Orbitable implements Collidable {
 	public static float captureRatio;
 	public final float radius;
-	public final float mass;
+	public float mass;
 	public final float maxPop;
     public boolean targetted;
 	public Body body;
@@ -83,6 +83,7 @@ public class Star extends Orbitable implements Collidable {
 
 		populations = new float[numPlayers]; // populations are initialized to
 		// zero
+
 
 		// create the box2d star body
         BodyDef starBodyDef = new BodyDef();
@@ -256,14 +257,15 @@ public class Star extends Orbitable implements Collidable {
             player.ammo += rate;
             playerIncome[i] += rate;
 
-            if (playerIncome[i] > incAmmoThresh) {
+            if (player.showIncomeOrbs && playerIncome[i] > incAmmoThresh) {
                 Gdx.app.log("star","player income" + playerIncome[i]);
                 // emit fake income orb
                 playerIncome[i] -= incAmmoThresh;
-                player.incomeOrbs.add(new ImageOrb(Texturez.bgMote, StarCycle.screenHeight/60f, this.getButtonCenter(),
+                Color color = (MathUtils.random(1f) < 0.67f) ? player.colors[0] : player.colors[1];
+                player.incomeOrbs.add(new ImageOrb(Texturez.bgMote, StarCycle.screenHeight/360f, this.getButtonCenter(),
                         StarCycle.screenWidth, StarCycle.screenHeight, new Vector2(MathUtils.random(-initVelScal,initVelScal),
                                                                                    MathUtils.random(-initVelScal,initVelScal)),
-                                                                       new Vector2()));
+                                                                       new Vector2()).tint(color));
             }
         }
 
@@ -282,7 +284,7 @@ public class Star extends Orbitable implements Collidable {
 		else {
 			position = body.getPosition();
 			body.setTransform(position.x, position.y, 0f);
-		}
+        }
 	}
 
 	// stars unaffected by contact
@@ -340,5 +342,10 @@ public class Star extends Orbitable implements Collidable {
 	public Vector2 getButtonCenter() {
 		return starButton.getCenter();
 	}
+
+    public void moveStar(float x, float y) {
+        position = body.getPosition();
+        body.setTransform(position.x + x, position.y + y, 0f);
+    }
 
 }
