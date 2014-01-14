@@ -69,6 +69,7 @@ public class Player {
 
     private Vector2 difference = new Vector2();
     private float minDiff = 80f;
+    private float r = 0;
 	public void update(float delta, ArrayList<Star> stars, Vector2[] starPositions) {
 
         ammo += ammoDripRate;
@@ -106,22 +107,25 @@ public class Player {
 			base.update(delta);
 		}
 		launchPad.update(delta);
-		
-		// update income orb list to move toward base
+
+        // update income orb list to move toward base
         for (ListIterator<ImageOrb> itr = incomeOrbs.listIterator(); itr.hasNext();) {
             ImageOrb fakeOrb = itr.next();
 
             difference.set((base.buttonLoc.x - fakeOrb.position.x), (base.buttonLoc.y - fakeOrb.position.y));
-            if ((difference.len() < minDiff) | (!fakeOrb.insideView())) {
+            r = difference.len();
+            if ((r < minDiff) | (!fakeOrb.insideView()) | (fakeOrb.age > fakeOrb.lifespan)){
                 Gdx.app.log("player", "removing orb");
                 itr.remove();
             }
             else {
                 difference = difference.nor();
-                fakeOrb.acceleration.set(0.8f * difference.x, 0.8f * difference.y);
+                fakeOrb.acceleration.set(30000f/(r*r) * difference.x, 30000f/(r*r) * difference.y);
                 fakeOrb.update(delta);
             }
         }
+
+
 	}
 
     public void updateWinOrbs(Float delta)	{
