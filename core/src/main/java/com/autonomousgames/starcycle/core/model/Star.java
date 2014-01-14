@@ -245,8 +245,8 @@ public class Star extends Orbitable implements Collidable {
 
     private Player player;
     private float rate;
-    private float incAmmoThresh = 4f;
-    private float initVelScal = 5f;
+    private float incAmmoThresh = 2f;
+    private float initVelScal = 2.2f;
     private float[] playerIncome = {0f, 0f};
     public void updateControl() {
         for (int i = 0; i < players.length; i++) { // TODO iterator
