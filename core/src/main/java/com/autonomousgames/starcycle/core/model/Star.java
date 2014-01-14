@@ -346,6 +346,7 @@ public class Star extends Orbitable implements Collidable {
     public void moveStar(float x, float y) {
         position = body.getPosition();
         body.setTransform(position.x + x, position.y + y, 0f);
+        position = body.getPosition();
     }
 
 }

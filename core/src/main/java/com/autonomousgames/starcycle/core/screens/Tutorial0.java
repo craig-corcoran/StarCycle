@@ -35,13 +35,13 @@ public class Tutorial0 extends Tutorial {
     float sinceLastShot;
 
     public Tutorial0() {
-        super(Level.LevelType.NOSTARS, ScreenType.TUTORIAL0, ScreenType.TUTORIAL3, ScreenType.STARTMENU, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.MALUMA}, new Color[][]{Texturez.cool, Texturez.cool});
+        super(Level.LevelType.DOUBLE, ScreenType.TUTORIAL0, ScreenType.TUTORIAL3, ScreenType.STARTMENU, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.MALUMA}, new Color[][]{Texturez.cool, Texturez.cool});
 
-//        for (int i = 0; i < model.stars.size(); i ++) {
-//            Star star = model.stars.get(i);
-//            star.mass = 0f;
-//            star.moveStar(0f, sh * 3f);
-//        }
+        for (int i = 0; i < model.stars.size(); i ++) {
+            Star star = model.stars.get(i);
+            star.mass = 0f;
+            star.moveStar(0f, sh * 3f / StarCycle.pixelsPerMeter);
+        }
 
         pauseButton.deactivate();
 
@@ -168,9 +168,9 @@ public class Tutorial0 extends Tutorial {
         fakeBasePos0.add(0f,y);
         fakeBasePos1.add(0f,y);
 
-//        for (int i = 0; i < model.stars.size(); i ++) {
-//            model.stars.get(i).moveStar(0f, y/StarCycle.pixelsPerMeter);
-//        }
+        for (int i = 0; i < model.stars.size(); i ++) {
+            model.stars.get(i).moveStar(0f, y/StarCycle.pixelsPerMeter);
+        }
     }
 
     @Override
