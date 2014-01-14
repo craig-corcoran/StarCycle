@@ -8,12 +8,15 @@ import com.autonomousgames.starcycle.core.ui.ArcButton;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
+import java.util.ArrayList;
 
 public class LaunchPad {
 
@@ -59,6 +62,7 @@ public class LaunchPad {
     ArcButton orbButton;
     ArcButton pw1Button;
     ArcButton pw2Button;
+    ArrayList<LayeredButton> buttons = new ArrayList<LayeredButton>();
 
     public boolean streamOrbs = false;
 
@@ -82,15 +86,15 @@ public class LaunchPad {
 
         bgButton = new LayeredButton(position);
 //        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[0], bgdPos, bgdDim));
-        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[1], metPos, metDim, Color.BLACK, -45f));
-        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[1], metPos, metDim, player.colors[0], -45f));
+        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[1], metPos, metDim, Color.BLACK, -45f), LayerType.ACTIVE);
+        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[1], metPos, metDim, player.colors[0], -45f), LayerType.ACTIVE);
         for (int i = 0; i < 8; i ++) {
-            bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[5], triPos.cpy().rotate(-topAngs[i]), triDim, player.colors[1], -topAngs[i]));
+            bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[5], triPos.cpy().rotate(-topAngs[i]), triDim, player.colors[1], -topAngs[i]), LayerType.ACTIVE);
         }
         for (int i = 0; i < 3; i ++) {
-            bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[5], triPos.cpy().rotate(-botAngs[i]), triDim, player.colors[1], -botAngs[i] + 180f));
+            bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[5], triPos.cpy().rotate(-botAngs[i]), triDim, player.colors[1], -botAngs[i] + 180f), LayerType.ACTIVE);
         }
-        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[2], metPos, metDim, player.colors[1], -45f));
+        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[2], metPos, metDim, player.colors[1], -45f), LayerType.ACTIVE);
         bgButton.rotate(angle);
         meter = ((SpriteLayer) bgButton.getLayer(1));
 
@@ -154,6 +158,11 @@ public class LaunchPad {
         pw2Button.addLayer(new SpriteLayer(pw2Txt[1], pw2TxtPos, pw2TxtDim, player.colors[1], 0f).setRotationSpeed(trs), LayerType.FREE);
         pw2Button.rotate(angle);
         pw2Button.deactivate();
+
+        buttons.add(bgButton);
+        buttons.add(orbButton);
+        buttons.add(pw1Button);
+        buttons.add(pw2Button);
 
         if (visible) {
             screen.ui.addActor(bgButton);
@@ -224,6 +233,34 @@ public class LaunchPad {
 
     public Vector2 getPos() {
         return position.cpy();
+    }
+
+    public void setPos(float x, float y) {
+        position.set(x,y);
+        for (int i = 0; i < buttons.size(); i ++) {
+            buttons.get(i).setCenter(position);
+        }
+    }
+
+    public void setPos(Vector2 pos) {
+        setPos(pos.x, pos.y);
+    }
+
+    public void movePos(Vector2 pos) {
+        movePos(pos.x, pos.y);
+    }
+
+    public void movePos(float x, float y) {
+        setPos(position.x + x, position.y + y);
+    }
+
+    public void showMeter(boolean visible) {
+        if (visible) {
+            bgButton.activate();
+        }
+        else {
+            bgButton.deactivate();
+        }
     }
 
 }

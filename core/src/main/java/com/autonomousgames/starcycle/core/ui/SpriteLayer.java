@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -61,6 +62,59 @@ public class SpriteLayer extends Layer{
 		}
 		return this;
 	}
+
+    // The sprite will move relative to the button center, then go back to it's original position:
+    public SpriteLayer slideAndReturn(Vector2 newPos, float time) {
+        final Vector2 startPos = getCenter();
+        final int steps = MathUtils.round(time*60f);
+        float stepSize = newPos.dst(startPos)/(steps); // Time in seconds.
+        final Vector2 stepVec = new Vector2(newPos).sub(startPos).nor().scl(stepSize);
+
+        Action slideAction = new Action(){
+            int step = 0;
+
+            public boolean act(float delta) {
+                if (step < steps) {
+                    setCenter(getCenter().add(stepVec));
+                    step++;
+                }
+                else {
+                    step = 0;
+                    setCenter(startPos);
+                }
+                return false;
+            }
+        };
+        this.addAction(slideAction);
+        return this;
+    }
+
+    public SpriteLayer blink(float on, float off) {
+        final int onPeriod = MathUtils.round(on * 60f);
+        final int offPeriod = MathUtils.round(off * 60f);
+
+        Action blink = new Action(){
+            int step = 0;
+            int period = onPeriod + offPeriod;
+
+            public boolean act(float delta) {
+                if (step == onPeriod) {
+                    specialDraw = false;
+                }
+                else if (step == 0) {
+                    specialDraw = true;
+                }
+                step = (step + 1)%(period);
+                return false;
+            }
+        };
+        this.addAction(blink);
+        return this;
+    }
+
+    public SpriteLayer blink(float eachPeriod) {
+        return blink(eachPeriod, eachPeriod);
+    }
 	
 	@Override
 	public void setLayerColor(Color tint) {

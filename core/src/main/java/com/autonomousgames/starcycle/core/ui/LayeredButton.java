@@ -197,6 +197,10 @@ public class LayeredButton extends Group {
         return alpha;
     }
 
+    public int getLayerNum() {
+        return layers.size();
+    }
+
     public Layer getLayer(int i) {
         return layers.get(i);
     }

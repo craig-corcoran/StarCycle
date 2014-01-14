@@ -2,6 +2,7 @@ package com.autonomousgames.starcycle.core.screens;
 
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.UserSettingz;
+import com.autonomousgames.starcycle.core.model.BackgroundManager;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
 import com.badlogic.gdx.Screen;
@@ -28,9 +29,12 @@ public abstract class GameScreen implements Screen {
 	public LevelType nextLvlConfig;
 	public BaseType[] skins = new BaseType[] {null, null};
 	public Color[][] colors = new Color[][] {new Color[] {null, null}, new Color[] {null, null}};
+    BackgroundManager background;
 
 	public GameScreen(){
 		cam.position.set(StarCycle.meterWidth / 2f, StarCycle.meterHeight / 2f, 0f);
+        background = StarCycle.sc.getBackground();
+
 	}
 
 	@Override

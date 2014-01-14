@@ -37,6 +37,8 @@ public class Player {
 	private float ammoDripRate;
     private float winOrbAngle = 0;
     private boolean winner = false;
+    public boolean altWin = false;
+    public boolean showIncomeOrbs = true;
     private final float basePad = StarCycle.meterHeight * (1 / 4.2f);
 	Vector2[] baseOrigins = {
 			new Vector2(StarCycle.meterWidth - basePad, basePad),
@@ -77,7 +79,7 @@ public class Player {
             }
         }
 		// check if player has conquered the star cluster
-		win = (starsCaptured == stars.size());
+        if (!altWin) {win = (starsCaptured == stars.size());}
 		
 		//update player orb positions and get income
         for (Orb o: orbs) {

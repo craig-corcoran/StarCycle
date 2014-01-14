@@ -32,10 +32,11 @@ public class Texturez {
 	private static final AtlasRegion tutorial0 = atlas.findRegion("holdinghands");
 	private static final AtlasRegion tutorial1 = atlas.findRegion("aim1");
 	private static final AtlasRegion tutorial2 = atlas.findRegion("aim2");
-	private static final AtlasRegion tutorial3 = atlas.findRegion("shoot1");
-	private static final AtlasRegion tutorial4 = atlas.findRegion("shoot2");
-	private static final AtlasRegion tutorial5 = atlas.findRegion("dontcrash");
-	public static final AtlasRegion[] tutorialImages = new AtlasRegion[] {tutorial0, tutorial1, tutorial2, tutorial3, tutorial4, tutorial5};
+    private static final AtlasRegion tutorial3 = atlas.findRegion("autofire");
+	private static final AtlasRegion tutorial4 = atlas.findRegion("shoot1");
+	private static final AtlasRegion tutorial5 = atlas.findRegion("shoot2");
+	private static final AtlasRegion tutorial6 = atlas.findRegion("dontcrash");
+	public static final AtlasRegion[] tutorialImages = new AtlasRegion[] {tutorial0, tutorial1, tutorial2, tutorial3, tutorial4, tutorial5, tutorial6};
 	
 	
 	// COLORS
@@ -187,11 +188,6 @@ public class Texturez {
 	public static final AtlasRegion threeSpheres = atlas.findRegion("tutorial1");
 	public static final AtlasRegion nebula0 = atlas.findRegion("nebulacloud");
 	public static final AtlasRegion nebula1 = atlas.findRegion("nebulacloud2");
-//	public static final AtlasRegion[] nebulaeTutorial = new AtlasRegion[] {nebulaTutorial0, nebulaTutorial1};
-//	private static final AtlasRegion nebulaCloud0 = atlas.findRegion("cloud0");
-//	private static final AtlasRegion nebulaCloud1 = atlas.findRegion("cloud1");
-//	private static final AtlasRegion nebulaCloud2 = atlas.findRegion("cloud2");
-//	private static final AtlasRegion nebulaCloud3 = atlas.findRegion("cloud3");
 //	public static final AtlasRegion[] nebulae = new AtlasRegion[] {nebulaCloud0, nebulaCloud1, nebulaCloud2, nebulaCloud3};
 
 	// BASIC UI
@@ -330,26 +326,7 @@ public class Texturez {
         for (String bgStripName : bgStripNames) {
             bgStrips.add(bgTile(bgStripName, bgStripDims[0], bgStripDims[1]));
         }
-//		bgRings = new TextureRegion[36];
-//		AtlasRegion bgRingstexture = atlas.findRegion("purp");
-//		TextureRegion[][] nestedTiles = bgRingstexture.split(bgRingstexture.getRegionWidth()/6, bgRingstexture.getRegionHeight()/6);
-//		for (int i = 0; i < 40; i++){
-//			bgtile[i] = nestedTiles[0][i];		
-//		}
-//		
-//		int numSpecs = 30;
-//		bgspecs = new TextureRegion[numSpecs];
-//		AtlasRegion bgspecstexture = atlas.findRegion("bg-specs");
-//		TextureRegion[][] nestedSpecs = bgspecstexture.split(bgspecstexture.getRegionWidth()/6,bgspecstexture.getRegionHeight()/5);
-//		for (int i = 0; i < numSpecs; i++){
-//			bgspecs[i] = nestedSpecs[i/6][i%6];
-//		}
-//		
-//		bgspecs2 = new TextureRegion[numSpecs];
-//		TextureRegion[][] nestedSpecs2 = bgspecstexture.split(bgspecstexture.getRegionWidth()/6,bgspecstexture.getRegionHeight()/5);
-//		for (int i = 0; i < numSpecs; i++){
-//			bgspecs2[i] = nestedSpecs2[i/6][i%6];
-//		}
+
 	}
 	private static TextureRegion[] bgTile(String name, int rows, int cols) {
 		final TextureRegion[] texture = new TextureRegion[rows*cols];
@@ -373,6 +350,12 @@ public class Texturez {
 	public static Vector2 model2pixel(float x, float y) {
 		return model2pixel(new Vector2(x, y));
 	}
+
+    public static void resetFonts() {
+        gridnikMedium = gridnikGenerator.generateFont(22);
+        gridnikLarge = gridnikGenerator.generateFont(42);
+        latoLightLarge = latoLightGenerator.generateFont(52);
+    }
 }
 	
 

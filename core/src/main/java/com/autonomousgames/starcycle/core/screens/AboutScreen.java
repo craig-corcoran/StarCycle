@@ -15,7 +15,7 @@ public class AboutScreen extends MenuScreen {
 	
 	public AboutScreen() {
 		Gdx.input.setInputProcessor(new MenuController(this));
-		
+
 		StandardButton backButton = new StandardButton(backPosition, backSize, Texturez.backIcon, padding);
 		backButton.setRotation(90f);
 		backButton.addListener(new ScreenDoneClickListener(this, ScreenType.MAINMENU));
@@ -43,18 +43,18 @@ public class AboutScreen extends MenuScreen {
 		ui.addActor(kubatkoText);
 	}
 	
-	@Override
-	public void render(float delta) {
-		//super.render() is not called on purpose to skip out on fakeorb stuff
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		
-		batch.disableBlending();
-		batch.begin();
-		batch.draw(Texturez.mainMenuBG, 0f, 0f, StarCycle.screenWidth,StarCycle.screenHeight);
-		batch.enableBlending();
-		batch.end();
-		ui.draw();
-	}
+//	@Override
+//	public void render(float delta) {
+//		//super.render() is not called on purpose to skip out on fakeorb stuff
+//		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+//
+//		batch.disableBlending();
+//		batch.begin();
+//		batch.draw(Texturez.mainMenuBG, 0f, 0f, StarCycle.screenWidth,StarCycle.screenHeight);
+//		batch.enableBlending();
+//		batch.end();
+//		ui.draw();
+//	}
 	public String toString(){
 		return "AboutScreen";
 	}
