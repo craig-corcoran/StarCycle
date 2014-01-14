@@ -26,8 +26,8 @@ public abstract class FakeOrb {
 		this.position = position.cpy();
 		this.vpWidth = vpWidth;
 		this.vpHeight = vpHeight;
-        this.velocity = velocity;
-        this.acceleration = acceleration;
+        this.velocity = velocity.cpy();
+        this.acceleration = acceleration.cpy();
 	}
     public abstract void draw(SpriteBatch batch);
 
@@ -43,4 +43,9 @@ public abstract class FakeOrb {
             position.add(velocity);
         }
 	}
+
+    public void move(float x, float y) {
+        position.add(x, y);
+    }
+
 }

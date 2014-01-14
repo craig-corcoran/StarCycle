@@ -74,7 +74,7 @@ public class Tutorial2 extends TutorialSandbox {
         if (infoGraphic.isLocked() && timeNow - lastOrb >= orbCooldown) {
             float fakeRadius = 10f;
             fakeOrbs.add(new ImageOrb(Texturez.fakeorbTextures[0], fakeRadius, fakePos, StarCycle.screenWidth,
-                    StarCycle.screenHeight, new Vector2(0, 0), vec));
+                    StarCycle.screenHeight, vec, new Vector2(0, 0)));
 			lastOrb = timeNow;
 		}
 		super.update(delta);

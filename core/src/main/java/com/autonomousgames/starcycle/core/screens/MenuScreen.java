@@ -19,7 +19,6 @@ public class MenuScreen extends GameScreen {
 	
 	public MenuScreen() {
 		super();
-        background = StarCycle.sc.getBackground();
 		Gdx.input.setInputProcessor(new MenuController(this));
 	}
 

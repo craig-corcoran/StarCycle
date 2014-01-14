@@ -122,9 +122,9 @@ public class Level {
 			addStarGroup(players, 2, 2, center, starRadius * 1.2f, outerEllipse, 0.25f, -1f * orbitSpeed);
 			break;
 		case NOSTARS:
-			numStars = 1;
+			numStars = 0;
 			stars = new ArrayList<Star>(numStars);
-			addStaticStar(players, 0, players[0].baseOrigins[0], 0f);
+//			addStaticStar(players, 0, players[0].baseOrigins[0], 0f);
 			break;
 		} 
 	}

@@ -22,7 +22,7 @@ public class Tutorial3 extends TutorialSandbox {
 
 
     public Tutorial3() {
-		super(LevelType.DOUBLE, ScreenType.TUTORIAL3, ScreenType.TUTORIAL4, ScreenType.TUTORIAL2);
+		super(LevelType.DOUBLE, ScreenType.TUTORIAL3, ScreenType.TUTORIAL4, ScreenType.TUTORIAL0);
 //		infoGraphic.addLayer(new SpriteLayer(Texturez.tutorialImages[5], 
 //				new Vector2(StarCycle.screenHeight, StarCycle.screenHeight*0.5f)).rotateSprite(90f));
 		Vector2 signSize = iconSize.cpy().scl(0.5f);
@@ -31,6 +31,7 @@ public class Tutorial3 extends TutorialSandbox {
 		
 		timeNow = System.currentTimeMillis();
 		players[1].launchPad.streamOrbs = true;
+        players[1].showIncomeOrbs = false;
 		lastSwitch = timeNow;
 		lastFire = timeNow;
 	}

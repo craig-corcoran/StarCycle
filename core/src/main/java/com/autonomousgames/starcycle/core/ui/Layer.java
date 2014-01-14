@@ -1,5 +1,6 @@
 package com.autonomousgames.starcycle.core.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -11,6 +12,7 @@ public abstract class Layer extends Actor{
 	Vector2 size;
 	public LayerType type;
 	LayeredButton button;
+    boolean specialDraw = true;
 	
 	public Layer(Vector2 relPos, Vector2 dims) {
 		size = new Vector2(dims.x, dims.y);
@@ -64,9 +66,8 @@ public abstract class Layer extends Actor{
 		this.button = button;
 	}
 	
-	// Any special layers should override this method. (And not call super!)
+	// Any special layers should modulate the specialDraw flag or override this method.
 	public boolean drawCondition() {
-		assert false : "This must be overridden.";
-		return true;
+		return specialDraw;
 	}
 }

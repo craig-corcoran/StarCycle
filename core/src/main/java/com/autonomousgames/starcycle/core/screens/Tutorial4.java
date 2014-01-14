@@ -14,7 +14,7 @@ public class Tutorial4 extends TutorialSandbox {
 	public Tutorial4() {
 		super(LevelType.SINGLE, ScreenType.TUTORIAL4, ScreenType.TUTORIAL5, ScreenType.TUTORIAL3);
 		players[0].base.setPointer(StarCycle.pixelScreenCenter.cpy().div(StarCycle.pixelsPerMeter).sub(players[0].base.origin));
-		infoGraphic.addLayer(new SpriteLayer(Texturez.tutorialImages[5],
+		infoGraphic.addLayer(new SpriteLayer(Texturez.tutorialImages[6],
 				new Vector2(StarCycle.screenHeight, 0.5f*StarCycle.screenHeight)).rotateSprite(90f));
 	}
 
@@ -24,7 +24,9 @@ public class Tutorial4 extends TutorialSandbox {
 		orbFactory.setLife(10f, 10f);
 		infoGraphic.deactivate();
 		// Basic launchpad with no ammo or income.
-		players[0].disableIncome();
+//		players[0].disableIncome();
+        players[0].launchPad.showMeter(false);
+        orbFactory.setCosts(0f, 0f, 0f);
 	}
 
 	@Override
@@ -37,6 +39,7 @@ public class Tutorial4 extends TutorialSandbox {
 		numPlayers = 1;
 		players = new Player[numPlayers];
 		players[0] = new Player(0, BaseType.MALUMA, Texturez.cool, this, ui, true, true);
+        players[0].showIncomeOrbs = false;
 	}
 
 }

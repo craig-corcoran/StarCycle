@@ -32,10 +32,11 @@ public class Texturez {
 	private static final AtlasRegion tutorial0 = atlas.findRegion("holdinghands");
 	private static final AtlasRegion tutorial1 = atlas.findRegion("aim1");
 	private static final AtlasRegion tutorial2 = atlas.findRegion("aim2");
-	private static final AtlasRegion tutorial3 = atlas.findRegion("shoot1");
-	private static final AtlasRegion tutorial4 = atlas.findRegion("shoot2");
-	private static final AtlasRegion tutorial5 = atlas.findRegion("dontcrash");
-	public static final AtlasRegion[] tutorialImages = new AtlasRegion[] {tutorial0, tutorial1, tutorial2, tutorial3, tutorial4, tutorial5};
+    private static final AtlasRegion tutorial3 = atlas.findRegion("autofire");
+	private static final AtlasRegion tutorial4 = atlas.findRegion("shoot1");
+	private static final AtlasRegion tutorial5 = atlas.findRegion("shoot2");
+	private static final AtlasRegion tutorial6 = atlas.findRegion("dontcrash");
+	public static final AtlasRegion[] tutorialImages = new AtlasRegion[] {tutorial0, tutorial1, tutorial2, tutorial3, tutorial4, tutorial5, tutorial6};
 	
 	
 	// COLORS

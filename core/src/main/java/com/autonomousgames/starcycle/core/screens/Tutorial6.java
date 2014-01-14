@@ -30,13 +30,14 @@ public class Tutorial6 extends TutorialSandbox {
 				orbDist.rotate(40f);
 				orbFactory.createOrb(OrbType.ORB, players[i], new Vector2(starPos.x+orbDist.x, starPos.y+orbDist.y), orbDist.cpy().scl(2f).rotate(90f), -1f);
 			}
-			model.stars.get((i+1)%2).populations[i]=model.stars.get((i+1)%2).maxPop*(0.45f+i*0.55f);
+			model.stars.get((i+1)%2).populations[i]=model.stars.get((i+1)%2).maxPop*(0.4f+i*0.6f);
 		}
+        orbFactory.setCosts(0f, 0f, 0f);
 	}
 
 	@Override
 	boolean checkWin() {
-		return (model.stars.get(0).numOrbs[1] == 0);
+		return (tutor.orbs.size() == 0);
 	}
 	
 	@Override
@@ -44,11 +45,14 @@ public class Tutorial6 extends TutorialSandbox {
 		numPlayers = 2;
 		players = new Player[numPlayers];
 		players[0] = new Player(0, BaseType.MALUMA, Texturez.cool, this, ui, true, true);
-		players[0].disableIncome();
+//		players[0].disableIncome();
 		players[1] = new Bot(1,BaseType.TAKETE, Texturez.warm, this, ui, false, false);
 		tutor = (Bot) players[1];
 		tutor.setBotType(BotType.DEAD);
-		tutor.disableIncome();
+//		tutor.disableIncome();
+        tutor.showIncomeOrbs = false;
+        players[0].showIncomeOrbs = false;
+        players[0].launchPad.showMeter(false);
 	}
 
 }
