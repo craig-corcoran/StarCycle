@@ -92,8 +92,8 @@ public class StarCycle implements ApplicationListener {
 			case TUTORIAL0:
 				screen = new Tutorial0();
 				break;
-			case TUTORIAL2:
-				screen = new Tutorial2();
+			case TUTORIAL1:
+				screen = new Tutorial1();
 				break;
 			case TUTORIAL3:
 				screen = new Tutorial3();

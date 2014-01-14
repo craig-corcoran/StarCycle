@@ -4,6 +4,8 @@ import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.controllers.GameController;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
+import com.autonomousgames.starcycle.core.model.FakeOrb;
+import com.autonomousgames.starcycle.core.model.ImageOrb;
 import com.autonomousgames.starcycle.core.model.Level;
 import com.autonomousgames.starcycle.core.model.Player;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
@@ -16,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 public abstract class Tutorial extends ModelScreen {
 
@@ -33,13 +36,15 @@ public abstract class Tutorial extends ModelScreen {
     int move = 0;
     float moveStep = 0f;
     ArrayList<LayeredButton> draggables = new ArrayList<LayeredButton>();
+    public ArrayList<ImageOrb> fakeOrbs = new ArrayList<ImageOrb>();
 
     int currentBorder = 0;
+    ScreenType prevScreen;
 
     public Tutorial (Level.LevelType lvlType, ScreenType screenType, ScreenType nextScreen, ScreenType prevScreen, BaseType[] skins, Color[][] colors) {
-        super(lvlType, screenType, skins, new Color[][]{Texturez.cool, Texturez.cool});
+        super(lvlType, screenType, skins, colors);
         this.nextScreen = nextScreen;
-        Gdx.input.setInputProcessor(new GameController(this, 2)); // only one active touch interface
+        this.prevScreen = prevScreen;
 
         swiper.addListener(new DragListener() {
 
@@ -93,9 +98,54 @@ public abstract class Tutorial extends ModelScreen {
 //        players[0].altWin = true;
 //    }
 
-    public abstract void moveDraggables(float dy);
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+        if (moving) {
+            moveDraggables(moveStep);
+            move++;
+            if (move == moves) {
+                moving = false;
+                move = 0;
+            }
+        }
+    }
 
-    public abstract void sendDraggables(float y);
+    @Override
+    public void render(float delta) {
+        super.render(delta);
+        batch.begin();
+        for (ListIterator<ImageOrb> itr = fakeOrbs.listIterator(); itr.hasNext();) {
+            FakeOrb orb = itr.next();
+            orb.draw(batch);
+            orb.update(delta);
+        }
+        batch.end();
+    }
+
+    public void moveDraggables(float y) {
+        for (int i = 0; i < draggables.size(); i++) {
+            draggables.get(i).moveCenter(0f, y);
+        }
+        for (ListIterator<ImageOrb> itr = fakeOrbs.listIterator(); itr.hasNext();) {
+            itr.next().move(0f, y);
+        }
+        for (int i = 0; i < model.stars.size(); i ++) {
+            model.stars.get(i).moveStar(0f, y/StarCycle.pixelsPerMeter);
+        }
+        for (int i = 0; i < numPlayers; i ++) {
+            players[i].base.translateBase(0f,y);
+            players[i].launchPad.movePos(0f,y);
+            for (int j = 0; j < players[i].orbs.size(); j ++) {
+                players[i].orbs.get(j).moveVisual(0f, y);
+            }
+        }
+    }
+
+    public void sendDraggables(float y) {
+        moving = true;
+        moveStep = y/moves;
+    }
 
     void borders(int borderNum) {
         float bw = sh * 0.05f;

@@ -3,7 +3,9 @@ package com.autonomousgames.starcycle.core.screens;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.UserSettingz;
+import com.autonomousgames.starcycle.core.controllers.GameController;
 import com.autonomousgames.starcycle.core.model.*;
+import com.autonomousgames.starcycle.core.ui.BaseButton;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
@@ -20,12 +22,10 @@ public class Tutorial0 extends Tutorial {
     LayeredButton holdImage;
     LayeredButton aim;
     LayeredButton shoot;
-
+    LayeredButton fakeAim;
 
     Vector2 tileSize = new Vector2(sh*0.4f, sw*0.3f-sh*0.05f);
 
-
-    public ArrayList<ImageOrb> fakeOrbs = new ArrayList<ImageOrb>();
     Vector2 fakeBasePos0 = new Vector2(tileSize.y*153f/420f, sh*0.1f+tileSize.x*270/420f + sh);
     Vector2 fakeBasePos1 = new Vector2(fakeBasePos0).add(0f, sh);
     Vector2 orbVel0 = new Vector2(-2f, 1.9f);
@@ -35,12 +35,14 @@ public class Tutorial0 extends Tutorial {
     float sinceLastShot;
 
     public Tutorial0() {
-        super(Level.LevelType.DOUBLE, ScreenType.TUTORIAL0, ScreenType.TUTORIAL3, ScreenType.STARTMENU, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.MALUMA}, new Color[][]{Texturez.cool, Texturez.cool});
+        super(Level.LevelType.DOUBLE, ScreenType.TUTORIAL0, ScreenType.TUTORIAL1, ScreenType.STARTMENU, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.MALUMA}, new Color[][]{Texturez.cool, Texturez.cool});
+
+        Gdx.input.setInputProcessor(new GameController(this, 2));
 
         for (int i = 0; i < model.stars.size(); i ++) {
             Star star = model.stars.get(i);
             star.mass = 0f;
-            star.moveStar(0f, sh * 3f / StarCycle.pixelsPerMeter);
+            star.moveStar(sw*0.25f/StarCycle.pixelsPerMeter, sh * 3f / StarCycle.pixelsPerMeter);
         }
 
         pauseButton.deactivate();
@@ -75,6 +77,18 @@ public class Tutorial0 extends Tutorial {
         ui.addActor(shoot);
         draggables.add(shoot);
 
+        BaseButton fakeTakete = new BaseButton(Base.BaseType.TAKETE, Texturez.warm, new Vector2(sw*0.5f, sh*3.5f), new Vector2(1f, 1f).scl(UserSettingz.getFloatSetting("baseRadius")*StarCycle.pixelsPerMeter));
+        ui.addActor(fakeTakete);
+        draggables.add(fakeTakete);
+
+        fakeAim = new LayeredButton(fakeTakete.getCenter());
+        fakeAim.addLayer(new SpriteLayer(Texturez.aimer[0], new Vector2(-UserSettingz.getFloatSetting("baseRadius")*StarCycle.pixelsPerMeter*0.92f, 0f), players[0].base.handleImDims,Texturez.warm[1], -90f));
+        for (int i = 0; i < 2; i ++) {
+            fakeAim.addLayer(new SpriteLayer(Texturez.aimer[i+1], new Vector2(UserSettingz.getFloatSetting("baseRadius")*StarCycle.pixelsPerMeter*0.92f, 0f), players[0].base.chevronImDims,Texturez.warm[i], -90f));
+        }
+        ui.addActor(fakeAim);
+        draggables.add(fakeAim);
+
         ui.addActor(swiper);
 
         players[1].base.moveBase(players[0].base.origin);
@@ -93,15 +107,6 @@ public class Tutorial0 extends Tutorial {
         if (!moving && currentBorder == 3) {
             isDone = true;
         };
-
-        if (moving) {
-            moveDraggables(moveStep);
-            move++;
-            if (move == moves) {
-                moving = false;
-                move = 0;
-            }
-        }
 
         sinceLastShot = Math.min(sinceLastShot + delta, coolDown);
         if (sinceLastShot >= coolDown) {
@@ -128,18 +133,6 @@ public class Tutorial0 extends Tutorial {
     }
 
     @Override
-    public void render(float delta) {
-        super.render(delta);
-        batch.begin();
-        for (ListIterator<ImageOrb> itr = fakeOrbs.listIterator(); itr.hasNext();) {
-            FakeOrb orb = itr.next();
-            orb.draw(batch);
-            orb.update(delta);
-        }
-        batch.end();
-    }
-
-    @Override
     void setPlayers() {
         numPlayers = 2;
         players = new Player[numPlayers];
@@ -152,31 +145,8 @@ public class Tutorial0 extends Tutorial {
 
     @Override
     public void moveDraggables(float y) {
-        players[0].launchPad.movePos(0f,y);
-        for (int i = 0; i < numPlayers; i ++) {
-            players[i].base.translateBase(0f,y);
-            for (int j = 0; j < players[i].orbs.size(); j ++) {
-                players[i].orbs.get(j).moveVisual(0f, y);
-            }
-        }
-       for (int i = 0; i < draggables.size(); i++) {
-           draggables.get(i).moveCenter(0f, y);
-       }
-        for (ListIterator<ImageOrb> itr = fakeOrbs.listIterator(); itr.hasNext();) {
-            itr.next().move(0f, y);
-        }
+        super.moveDraggables(y);
         fakeBasePos0.add(0f,y);
         fakeBasePos1.add(0f,y);
-
-        for (int i = 0; i < model.stars.size(); i ++) {
-            model.stars.get(i).moveStar(0f, y/StarCycle.pixelsPerMeter);
-        }
     }
-
-    @Override
-    public void sendDraggables(float y) {
-        moving = true;
-        moveStep = y/moves;
-    }
-
 }
