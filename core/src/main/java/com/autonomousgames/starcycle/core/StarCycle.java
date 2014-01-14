@@ -18,14 +18,15 @@ public class StarCycle implements ApplicationListener {
 	public static float meterHeight;
 	public static Vector2 meterScreenCenter;
 	public static Vector2 pixelScreenCenter;
-	private GameScreen screen;
+    private static BackgroundManager background;
+    private GameScreen screen;
 	public static com.autonomousgames.starcycle.core.LogHandler logHandler;
 	public static long startTime;
-	public static StarCycle sc = new StarCycle(); // TODO is this a bad idea during restarts/regaining context
+	//public static StarCycle sc = new StarCycle(); // TODO is this a bad idea during restarts/regaining context
 	public static float padding;
 	public com.autonomousgames.starcycle.core.UserSettingz settings;
 	public static Json json = new Json();
-    public BackgroundManager background;
+    // public BackgroundManager background;
 
 	@Override
 	public void create() {
@@ -146,12 +147,11 @@ public class StarCycle implements ApplicationListener {
         Texturez.resetFonts();
 	}
 
-    public void makeBackground() {
+    public static void makeBackground() {
         background = new BackgroundManager();
     }
 
-    public BackgroundManager getBackground() {
+    public static BackgroundManager getBackground() {
         return background;
     }
-
 }

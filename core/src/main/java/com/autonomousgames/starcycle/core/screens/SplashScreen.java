@@ -20,7 +20,7 @@ public class SplashScreen extends GameScreen {
 		splashWidth = splashHeight * (Texturez.splashTexture.getRegionWidth()/ ((float)Texturez.splashTexture.getRegionHeight()));
 		nextScreen = ScreenType.MAINMENU;
 		displayedTime = 0;
-        StarCycle.sc.makeBackground();
+        StarCycle.makeBackground();
 		//Soundz.bootupSound.play((Float) UserSettingz.getSetting("sfxVolume"));
 		
 	}

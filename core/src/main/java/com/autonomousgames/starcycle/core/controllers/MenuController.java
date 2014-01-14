@@ -24,7 +24,8 @@ public class MenuController extends LogController {
 		super.keyDown(keycode);
 		if (keycode == Keys.BACK){
 			if (screen instanceof MainMenu){
-				StarCycle.sc.dispose();
+                Gdx.app.exit();
+				//StarCycle.sc.dispose();
         	}
 			else{
 				screen.nextScreen = ScreenType.MAINMENU;
