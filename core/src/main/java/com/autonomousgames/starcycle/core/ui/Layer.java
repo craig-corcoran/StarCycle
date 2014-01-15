@@ -70,4 +70,8 @@ public abstract class Layer extends Actor{
 	public boolean drawCondition() {
 		return specialDraw;
 	}
+
+    public void toggleSpecial() {
+        specialDraw = !specialDraw;
+    }
 }

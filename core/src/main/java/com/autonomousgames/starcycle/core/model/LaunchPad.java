@@ -28,8 +28,6 @@ public class LaunchPad {
     Vector2 position;
     float angle;
     float radi = StarCycle.screenHeight / 3f;
-    Vector2 bgdDim = new Vector2(1f,1f).scl(radi*528f/512f);
-    Vector2 bgdPos = new Vector2(1f,1f).scl(radi*518f/1024f);
     float[] topAngs = new float[]{11.851f, 26.358f, 38.692f, 48.269f, 55.560f, 61.137f, 65.457f, 68.857f};
     float[] botAngs = new float[]{34.896f, 57.584f, 68.857f};
     Vector2 triDim = new Vector2(20f, 32f).scl(radi/512f);
@@ -85,7 +83,6 @@ public class LaunchPad {
         angle =  (player.number == 0) ? 180f : 0f;
 
         bgButton = new LayeredButton(position);
-//        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[0], bgdPos, bgdDim));
         bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[1], metPos, metDim, Color.BLACK, -45f), LayerType.ACTIVE);
         bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[1], metPos, metDim, player.colors[0], -45f), LayerType.ACTIVE);
         for (int i = 0; i < 8; i ++) {
@@ -98,10 +95,8 @@ public class LaunchPad {
         bgButton.rotate(angle);
         meter = ((SpriteLayer) bgButton.getLayer(1));
 
-        orbButton = new ArcButton(position, orbAng, orbTch);
-        orbButton.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, player.colors[1], 0f), LayerType.ACTIVEUP);
+        orbButton = getOrbButton(position, angle, player.colors, !(player instanceof Bot));
         if (!(player instanceof Bot)) {
-            orbButton.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, player.colors[0], 0f), LayerType.DOWN);
             orbButton.addListener(new InputListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -115,49 +110,24 @@ public class LaunchPad {
                 }
             });
         }
-        else {
-            orbButton.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, player.colors[1], 0f), LayerType.DOWN);
-        }
-        orbButton.addLayer(new SpriteLayer(orbTxt[0], orbTxtPos, txtDim, player.colors[0], 0f).setRotationSpeed(trs), LayerType.FREE);
-        orbButton.addLayer(new SpriteLayer(orbTxt[1], orbTxtPos, txtDim, player.colors[1], 0f).setRotationSpeed(trs), LayerType.FREE);
-        orbButton.rotate(angle);
 
-        pw1Button = new ArcButton(position, pw1Ang, powTch);
-        pw1Button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw1Pos, powDim, player.colors[1], 0f), LayerType.ACTIVEUP);
+        pw1Button = getPw1Button(position, angle, player.colors, !(player instanceof Bot));
         if (!(player instanceof Bot)) {
-            pw1Button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw1Pos, powDim, player.colors[0], 0f), LayerType.DOWN);
             pw1Button.addListener(new ClickListener() {
                 public void clicked(InputEvent event, float x, float y) {
                     launch(Orb.OrbType.VOID);
                 }
             });
         }
-        else {
-            pw1Button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw1Pos, powDim, player.colors[1], 0f), LayerType.DOWN);
-        }
-        pw1Button.addLayer(new SpriteLayer(Texturez.voidRing, pw1TxtPos, txtDim.cpy().scl(2.5f), player.colors[0], 0f), LayerType.FREE);
-        pw1Button.addLayer(new SpriteLayer(pw1Txt[0], pw1TxtPos, txtDim, player.colors[0], 0f).setRotationSpeed(trs), LayerType.FREE);
-        pw1Button.addLayer(new SpriteLayer(pw1Txt[1], pw1TxtPos, txtDim, player.colors[1], 0f).setRotationSpeed(trs), LayerType.FREE);
-        pw1Button.rotate(angle);
-        pw1Button.deactivate();
 
-        pw2Button = new ArcButton(position, pw2Ang, powTch);
-        pw2Button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw2Pos, powDim, player.colors[1], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.ACTIVEUP);
+        pw2Button = getPw2Button(position, angle, player.colors, !(player instanceof Bot));
         if (!(player instanceof Bot)) {
-            pw2Button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw2Pos, powDim, player.colors[0], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.DOWN);
             pw2Button.addListener(new ClickListener() {
                 public void clicked(InputEvent event, float x, float y) {
                     launch(Orb.OrbType.NOVA);
                 }
             });
         }
-        else {
-            pw2Button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw2Pos, powDim, player.colors[1], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.DOWN);
-        }
-        pw2Button.addLayer(new SpriteLayer(pw2Txt[0], pw2TxtPos, pw2TxtDim, player.colors[0], 0f).setRotationSpeed(trs), LayerType.FREE);
-        pw2Button.addLayer(new SpriteLayer(pw2Txt[1], pw2TxtPos, pw2TxtDim, player.colors[1], 0f).setRotationSpeed(trs), LayerType.FREE);
-        pw2Button.rotate(angle);
-        pw2Button.deactivate();
 
         buttons.add(bgButton);
         buttons.add(orbButton);
@@ -263,4 +233,55 @@ public class LaunchPad {
         }
     }
 
+    public ArcButton getOrbButton(Vector2 position, float angle, Color[] colors, boolean touchable) {
+        ArcButton button = new ArcButton(position, orbAng, orbTch);
+        button.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, colors[1], 0f), LayerType.UP);
+        if (touchable) {        pw2Button.deactivate();
+
+            button.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, colors[0], 0f), LayerType.DOWN);
+        }
+        else {
+            button.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, colors[1], 0f), LayerType.SPECIAL);
+            button.getLayer(1).toggleSpecial();
+        }
+        button.addLayer(new SpriteLayer(orbTxt[0], orbTxtPos, txtDim, colors[0], 0f).setRotationSpeed(trs), LayerType.UNLOCKED);
+        button.addLayer(new SpriteLayer(orbTxt[1], orbTxtPos, txtDim, colors[1], 0f).setRotationSpeed(trs), LayerType.UNLOCKED);
+        button.rotate(angle);
+        return button;
+    }
+
+    public ArcButton getPw1Button(Vector2 position, float angle, Color[] colors, boolean touchable) {
+        ArcButton button = new ArcButton(position, pw1Ang, powTch);
+        button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw1Pos, powDim, colors[1], 0f), LayerType.ACTIVEUP);
+        if (touchable) {
+            button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw1Pos, powDim, colors[0], 0f), LayerType.DOWN);
+        }
+        else {
+            button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw1Pos, powDim, colors[1], 0f), LayerType.SPECIAL);
+            button.getLayer(1).toggleSpecial();
+        }
+        button.addLayer(new SpriteLayer(Texturez.voidRing, pw1TxtPos, txtDim.cpy().scl(2.5f), colors[0], 0f), LayerType.FREE);
+        button.addLayer(new SpriteLayer(pw1Txt[0], pw1TxtPos, txtDim, colors[0], 0f).setRotationSpeed(trs), LayerType.FREE);
+        button.addLayer(new SpriteLayer(pw1Txt[1], pw1TxtPos, txtDim, colors[1], 0f).setRotationSpeed(trs), LayerType.FREE);
+        button.rotate(angle);
+        button.deactivate();
+        return button;
+    }
+
+    public ArcButton getPw2Button(Vector2 position, float angle, Color[] colors, boolean touchable) {
+        ArcButton button = new ArcButton(position, pw2Ang, powTch);
+        button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw2Pos, powDim, colors[1], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.ACTIVEUP);
+        if (touchable) {
+            button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw2Pos, powDim, colors[0], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.DOWN);
+        }
+        else {
+            button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw2Pos, powDim, colors[1], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.SPECIAL);
+            button.getLayer(1).toggleSpecial();
+        }
+        button.addLayer(new SpriteLayer(pw2Txt[0], pw2TxtPos, pw2TxtDim, colors[0], 0f).setRotationSpeed(trs), LayerType.FREE);
+        button.addLayer(new SpriteLayer(pw2Txt[1], pw2TxtPos, pw2TxtDim, colors[1], 0f).setRotationSpeed(trs), LayerType.FREE);
+        button.rotate(angle);
+        button.deactivate();
+        return button;
+    }
 }
