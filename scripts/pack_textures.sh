@@ -7,11 +7,20 @@ pack_textures() {
     if [ -d $SC_DIR/assets ]; then
         rm -r $SC_DIR/assets
     fi
+    if [ -d $SC_DIR/current ]; then
+        rm -r $SC_DIR/current
+    fi
 
-    echo "COPYING ASSETS FROM DROPBOX (ASSUMING ~/Dropbox/assets)"
-    cp -r ~/Dropbox/assets $SC_DIR/assets
+    if [ -d ~/Dropbox ]; then
+        echo "COPYING ASSETS FROM DROPBOX (ASSUMING ~/Dropbox/assets)"
+        cp -r ~/Dropbox/assets $SC_DIR/assets
+    else
+        mkdir $SC_DIR/assets
+        s3cmd get --recursive s3://autonomousgames/assets/current $SC_DIR
+        mv $SC_DIR/current $SC_DIR/assets
+    fi
+    
     export TPCLASSDIR=$(pwd)/$line/tools/src/main/java/com/autonomousgames/starcycle/tools
-
     export CLASSPATH="$HOME/.m2/repository/com/badlogicgames/gdx/gdx-tools/0.9.9/gdx-tools-0.9.9.jar:$TPCLASSDIR"
 
     echo "USING CLASSPATH: $CLASSPATH"
