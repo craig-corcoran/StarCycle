@@ -16,6 +16,7 @@ public abstract class GameScreen implements Screen {
 	
 	public boolean isDone = false;
 	public ScreenType nextScreen = null;
+    public boolean silentSwitch = false;
 	// basic elements needed to draw sprites and have a user interface
 	final SpriteBatch batch = new SpriteBatch(250);
 	public final Stage ui = new Stage(StarCycle.screenWidth, StarCycle.screenHeight, true, batch);

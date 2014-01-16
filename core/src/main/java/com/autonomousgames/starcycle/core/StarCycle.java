@@ -26,6 +26,7 @@ public class StarCycle implements ApplicationListener {
 	public com.autonomousgames.starcycle.core.UserSettingz settings;
 	public static Json json = new Json();
     public BackgroundManager background;
+    boolean startAtEnd;
 
 	@Override
 	public void create() {
@@ -76,8 +77,16 @@ public class StarCycle implements ApplicationListener {
 			logMap.put("currentTime", System.currentTimeMillis());
 			logHandler.logScreen(json.toJson(logMap));
 			// dispose the current screen
-			Soundz.screenswitchSound.play(UserSettingz.getFloatSetting("sfxVolume"));
-					
+            if (!screen.silentSwitch) {
+			    Soundz.screenswitchSound.play(UserSettingz.getFloatSetting("sfxVolume"));
+            }
+			if (screen instanceof Tutorial) {
+                startAtEnd = ((Tutorial) screen).startAtEnd;
+            }
+            else
+            {
+                startAtEnd = false;
+            }
 			screen.dispose();
 
 			switch (screen.nextScreen) {
@@ -90,7 +99,7 @@ public class StarCycle implements ApplicationListener {
 										  ((CampaignSelect)screen).botType);
 				break;
 			case TUTORIAL0:
-				screen = new Tutorial0();
+				screen = new Tutorial0(startAtEnd);
 				break;
 			case TUTORIAL1:
 				screen = new Tutorial1();

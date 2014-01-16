@@ -42,6 +42,7 @@ public class Tutorial1 extends Tutorial {
         super.update(delta);
         if (!moving && currentBorder == 0) {
             nextScreen = prevScreen;
+            startAtEnd = true;
             isDone = true;
         };
     }

@@ -70,6 +70,8 @@ public class LaunchPad {
     float voidCost = UserSettingz.getFloatSetting("gravWellCost");
     float novaCost = UserSettingz.getFloatSetting("nukeCost");
 
+    public boolean manualLvl = false;
+
     public LaunchPad (ModelScreen screen, Player player, boolean visible) {
 
         this.screen = screen;
@@ -114,7 +116,7 @@ public class LaunchPad {
         pw1Button = getPw1Button(position, angle, player.colors, !(player instanceof Bot));
         if (!(player instanceof Bot)) {
             pw1Button.addListener(new ClickListener() {
-                public void clicked(InputEvent event, float x, float y) {
+                public void clicked(InputEvent event, float x, float  y) {
                     launch(Orb.OrbType.VOID);
                 }
             });
@@ -153,18 +155,20 @@ public class LaunchPad {
             }
         }
 
-        if (player.starsCaptured >= voidStars && !(pw1Button.isActive())) {
-            pw1Button.activate();
-        }
-        else if (player.starsCaptured < voidStars && pw1Button.isActive()) {
-            pw1Button.deactivate();
-        }
+        if (!manualLvl) {
+            if (player.starsCaptured >= voidStars && !(pw1Button.isActive())) {
+                pw1Button.activate();
+            }
+            else if (player.starsCaptured < voidStars && pw1Button.isActive()) {
+                pw1Button.deactivate();
+            }
 
-        if (player.starsCaptured >= novaStars && !(pw2Button.isActive())) {
-            pw2Button.activate();
-        }
-        else if (player.starsCaptured < novaStars && pw2Button.isActive()) {
-            pw2Button.deactivate();
+            if (player.starsCaptured >= novaStars && !(pw2Button.isActive())) {
+                pw2Button.activate();
+            }
+            else if (player.starsCaptured < novaStars && pw2Button.isActive()) {
+                pw2Button.deactivate();
+            }
         }
 
         if (player.ammo >= orbCost && orbButton.isLocked()) {

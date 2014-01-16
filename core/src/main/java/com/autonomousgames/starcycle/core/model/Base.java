@@ -41,6 +41,8 @@ public class Base {
 	private static float baseRotationSpeed;
 	
 	public int level;
+    int maxLevel = 2;
+    public boolean manualLvl = false;
 
     public enum BaseType {
 		MALUMA, TAKETE, TARGET, DERELICT, CLOCKWORK
@@ -111,22 +113,23 @@ public class Base {
 			angleOfBaseRotation -= 360;
 		}
 
-        int maxLevel = 2;
-        if (Math.min(maxLevel, player.starsCaptured) != level) {
-			if (Math.min(maxLevel, player.starsCaptured) > level) {
-				if (player.starsCaptured == 1){
-					Soundz.levelup1Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
-				}
-				if (player.starsCaptured == 2) {
-					Soundz.levelup2Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
-				}
-				
-			} else {
-				Soundz.leveldownSound.play(UserSettingz.getFloatSetting("sfxVolume"));
-			}
-			level = Math.min(maxLevel, player.starsCaptured);
-			baseButton.setLevel(level);
-		}
+        if (!manualLvl) {
+            if (Math.min(maxLevel, player.starsCaptured) != level) {
+                if (Math.min(maxLevel, player.starsCaptured) > level) {
+                    if (player.starsCaptured == 1){
+                        Soundz.levelup1Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
+                    }
+                    if (player.starsCaptured == 2) {
+                        Soundz.levelup2Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
+                    }
+
+                } else {
+                    Soundz.leveldownSound.play(UserSettingz.getFloatSetting("sfxVolume"));
+                }
+                level = Math.min(maxLevel, player.starsCaptured);
+                baseButton.setLevel(level);
+            }
+        }
 	}
 
 	public void setPointer(float x, float y) {
