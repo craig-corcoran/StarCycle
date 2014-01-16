@@ -24,13 +24,16 @@ public abstract class Tutorial extends ModelScreen {
 
     float sw = StarCycle.screenWidth;
     float sh = StarCycle.screenHeight;
-    Vector2 swipeCenter = new Vector2(sw*0.15f, sh*0.5f);
-    Vector2 swipeSize = new Vector2(sw*0.3f, sh*0.9f);
+    Vector2 swipeSize = new Vector2(sh*0.45f, sh*0.9f);
+    Vector2 swipeCenter = new Vector2(swipeSize.x/2f, sh*0.5f);
     LayeredButton swiper =  new LayeredButton(swipeCenter, swipeSize);
+    float bw = sh * 0.05f;
     float yDown = 0f;
     float yPrev = 0f;
     float dy = 0f;
+    float dragLen;
     float dragThreshold = sh*0.25f;
+    boolean dragging = false;
     boolean moving = false;
     int moves = 15;
     int move = 0;
@@ -50,8 +53,10 @@ public abstract class Tutorial extends ModelScreen {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                dragging = true;
                 yDown = y;
                 yPrev = y;
+                dragLen = 0f;
                 return super.touchDown(event, x, y, pointer, button);
             }
 
@@ -63,6 +68,7 @@ public abstract class Tutorial extends ModelScreen {
                 else {
                     dy = y - yPrev;
                     yPrev = y;
+                    dragLen = yPrev - yDown;
                     if (currentBorder > 0 || y < yDown) {
                         moveDraggables(dy);
                     }
@@ -71,7 +77,8 @@ public abstract class Tutorial extends ModelScreen {
 
             @Override
             public void cancel() {
-                float dragLen = yPrev - yDown;
+                dragging = false;
+                dragLen = yPrev - yDown;
                 if (-dragLen > dragThreshold) {
                     currentBorder++;
                     sendDraggables(-sh-dragLen);
@@ -109,6 +116,17 @@ public abstract class Tutorial extends ModelScreen {
                 move = 0;
             }
         }
+        for (int i = 0; i < numPlayers; i ++) {
+            for (int j = 0; j < players[i].orbs.size(); j ++) {
+                players[i].orbs.get(j).removeIfOff();
+            }
+            for (int j = 0; j < players[i].voids.size(); j ++) {
+                players[i].voids.get(j).removeIfOff();
+            }
+            for (int j = 0; j < players[i].novas.size(); j ++) {
+                players[i].novas.get(j).removeIfOff();
+            }
+        }
     }
 
     @Override
@@ -134,10 +152,14 @@ public abstract class Tutorial extends ModelScreen {
             model.stars.get(i).moveStar(0f, y/StarCycle.pixelsPerMeter);
         }
         for (int i = 0; i < numPlayers; i ++) {
-            players[i].base.translateBase(0f,y);
-            players[i].launchPad.movePos(0f,y);
             for (int j = 0; j < players[i].orbs.size(); j ++) {
-                players[i].orbs.get(j).moveVisual(0f, y);
+                players[i].orbs.get(j).moveOrb(0f, y/StarCycle.pixelsPerMeter);
+            }
+            for (int j = 0; j < players[i].voids.size(); j ++) {
+                players[i].voids.get(j).moveOrb(0f, y/StarCycle.pixelsPerMeter);
+            }
+            for (int j = 0; j < players[i].novas.size(); j ++) {
+                players[i].novas.get(j).moveOrb(0f, y/StarCycle.pixelsPerMeter);
             }
         }
     }
@@ -148,16 +170,37 @@ public abstract class Tutorial extends ModelScreen {
     }
 
     void borders(int borderNum) {
-        float bw = sh * 0.05f;
         for (int i = 0; i < borderNum; i++) {
             LayeredButton button = new LayeredButton(swipeCenter, swipeSize);
-            button.addLayer(new SpriteLayer(Texturez.block, new Vector2(0f, sh * 0.425f), new Vector2(sw * 0.3f, bw), Texturez.night, 0f));
-            button.addLayer(new SpriteLayer(Texturez.block, new Vector2(sw * 0.15f - bw / 2f, 0f), new Vector2(bw, sh * 0.9f), Texturez.night, 0f));
-            button.addLayer(new SpriteLayer(Texturez.block, new Vector2(0f, -sh * 0.425f), new Vector2(sw * 0.3f, bw), Texturez.night, 0f));
+            button.addLayer(new SpriteLayer(Texturez.block, new Vector2(0f, sh * 0.425f), new Vector2(swipeSize.x, bw), Texturez.night, 0f));
+            button.addLayer(new SpriteLayer(Texturez.block, new Vector2(swipeCenter.x - bw / 2f, 0f), new Vector2(bw, sh * 0.9f), Texturez.night, 0f));
+            button.addLayer(new SpriteLayer(Texturez.block, new Vector2(0f, -sh * 0.425f), new Vector2(swipeSize.x, bw), Texturez.night, 0f));
             button.moveCenter(0f, sh*i);
             draggables.add(button);
             ui.addActor(button);
         }
+    }
+
+    void moveBase(int i, float y) {
+        players[i].base.translateBase(0f ,y);
+    }
+
+    void moveLaunch(int i, float y) {
+        players[i].launchPad.movePos(0f, y);
+    }
+
+    float moveClamped(int startPage, float y) {
+        boolean clamped = false;
+        if (currentBorder > startPage) {
+            clamped = true;
+        }
+        if (currentBorder == startPage && moving && y > 0f) {
+            clamped = true;
+        }
+        if (currentBorder == startPage && !moving && dragLen <= 0f) {
+            clamped = true;
+        }
+        return clamped? 0f : y;
     }
 
 }

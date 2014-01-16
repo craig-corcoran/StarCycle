@@ -236,7 +236,7 @@ public class LaunchPad {
     public ArcButton getOrbButton(Vector2 position, float angle, Color[] colors, boolean touchable) {
         ArcButton button = new ArcButton(position, orbAng, orbTch);
         button.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, colors[1], 0f), LayerType.UP);
-        if (touchable) {        pw2Button.deactivate();
+        if (touchable) {
 
             button.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, colors[0], 0f), LayerType.DOWN);
         }

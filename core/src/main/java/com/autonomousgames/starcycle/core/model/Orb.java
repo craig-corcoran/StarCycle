@@ -182,8 +182,16 @@ public class Orb implements Collidable {
         }
     }
 
-    public void moveVisual(float x, float y) {
-        visOffset.add(x, y);
+    public void moveOrb(float x, float y) {
+        position = body.getPosition();
+        body.setTransform(position.x + x, position.y + y, 0f);
+        position = body.getPosition();
+    }
+
+    public void removeIfOff() {
+        if (position.x < -radius*1.5f || position.x > StarCycle.meterWidth + radius*1.5f || position.y < -radius*1.5f || position.y > StarCycle.meterHeight + radius*1.5f) {
+            removeSelf();
+        }
     }
 
 }
