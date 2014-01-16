@@ -47,8 +47,8 @@ public class Tutorial7 extends TutorialSandbox {
 		}
 		
 		winButton = new LayeredButton(new Vector2(StarCycle.screenHeight/4f, StarCycle.screenHeight/2f), iconSize.cpy().scl(2f));
-		winButton.addLayer(new SpriteLayer(Texturez.gradientRound, iconSize.cpy().scl(2f)));
-		winButton.addLayer(new SpriteLayer(Texturez.trophy, iconSize).setSpriteColor(tutor.colors[0]));
+		winButton.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, iconSize.cpy().scl(2f)));
+		winButton.addLayer(new SpriteLayer(StarCycle.tex.trophy, iconSize).setSpriteColor(tutor.colors[0]));
 		winButton.rotate(90f);
 		// winButton is created, but not added to the ui yet.
 		

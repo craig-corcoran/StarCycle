@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.GL10;
 public class LevelSelectScreen extends MenuScreen {
 	
 	public LevelSelectScreen () {
-		StandardButton backButton = new StandardButton(backPosition, backSize, Texturez.backIcon, padding);
+		StandardButton backButton = new StandardButton(backPosition, backSize, StarCycle.tex.backIcon, padding);
 		backButton.setRotation(90f);
 		backButton.addListener(new ScreenDoneClickListener(this, ScreenType.STARTMENU));
 		

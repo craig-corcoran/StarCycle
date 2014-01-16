@@ -12,7 +12,7 @@ public class Tutorial1 extends TutorialGraphic {
 	
 	public Tutorial1() {
 		super(ScreenType.TUTORIAL2, ScreenType.STARTMENU);
-		infoGraphic.addLayer(new SpriteLayer(Texturez.tutorialImages[0], 
+		infoGraphic.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[0],
 				new Vector2(StarCycle.screenHeight, StarCycle.screenHeight)).rotateSprite(90f));
 		
 	}

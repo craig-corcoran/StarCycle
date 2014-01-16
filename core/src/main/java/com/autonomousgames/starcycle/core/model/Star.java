@@ -54,7 +54,7 @@ public class Star extends Orbitable implements Collidable {
 	private Vector2 imageDims;
 	private float rotateSpeed = MathUtils.random(0.2f, 0.4f)*(1-2*MathUtils.random(1)); // This is purely visual.
 	ArrayList<LayeredButton> controlButtons = new ArrayList<LayeredButton>();
-	TextureRegion conIm = Texturez.block; // Image for the sides of the control hexes.
+	TextureRegion conIm = StarCycle.tex.block; // Image for the sides of the control hexes.
 	float apothem; // Inner radius of hexagon.
 	// Ratio of apothem to side length:
 	float sideScale = 2f * 0.57735f; // The second value is tand(30deg), but MathUtils doesn't have tangent.
@@ -112,9 +112,9 @@ public class Star extends Orbitable implements Collidable {
 		imageDims = new Vector2(radius, radius).scl(StarCycle.pixelsPerMeter);
 		starButton = new LayeredButton(position.cpy().scl(StarCycle.pixelsPerMeter));
 		Vector2 quadPos = imageDims.cpy().div(2f);
-        starButton.addLayer(new SpriteLayer(Texturez.gradientRound, imageDims.cpy().scl(2.75f)));
-//		starButton.addLayer(new SpriteLayer(Texturez.circle, imageDims.cpy().scl(2.15f)).setSpriteColor(Color.BLACK));
-		starButton.addLayer(new SpriteLayer(Texturez.circle, imageDims.cpy().scl(0.8f)).setSpriteColor(Color.BLACK));
+        starButton.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, imageDims.cpy().scl(2.75f)));
+//		starButton.addLayer(new SpriteLayer(StarCycle.tex.circle, imageDims.cpy().scl(2.15f)).setSpriteColor(Color.BLACK));
+		starButton.addLayer(new SpriteLayer(StarCycle.tex.circle, imageDims.cpy().scl(0.8f)).setSpriteColor(Color.BLACK));
 		// The main star visual is drawn as four quadrants.
         quadLayer0 = starButton.getLayerNum();
 		for (int i = 0; i < 4; i++) {
@@ -262,7 +262,7 @@ public class Star extends Orbitable implements Collidable {
                 // emit fake income orb
                 playerIncome[i] -= incAmmoThresh;
                 Color color = (MathUtils.random(1f) < 0.67f) ? player.colors[0] : player.colors[1];
-                player.incomeOrbs.add(new ImageOrb(Texturez.bgMote, StarCycle.screenHeight/360f, this.getButtonCenter(),
+                player.incomeOrbs.add(new ImageOrb(StarCycle.tex.bgMote, StarCycle.screenHeight/360f, this.getButtonCenter(),
                         StarCycle.screenWidth, StarCycle.screenHeight, new Vector2(MathUtils.random(-initVelScal,initVelScal),
                                                                                    MathUtils.random(-initVelScal,initVelScal)),
                                                                        new Vector2()).tint(color));

@@ -18,31 +18,34 @@ public class StarCycle implements ApplicationListener {
 	public static float meterHeight;
 	public static Vector2 meterScreenCenter;
 	public static Vector2 pixelScreenCenter;
+    public static StarCycleAssetManager assetManager;
     private static BackgroundManager background;
     private GameScreen screen;
 	public static com.autonomousgames.starcycle.core.LogHandler logHandler;
 	public static long startTime;
-	//public static StarCycle sc = new StarCycle(); // TODO is this a bad idea during restarts/regaining context
 	public static float padding;
-	public com.autonomousgames.starcycle.core.UserSettingz settings;
+    public static Soundz audio;
+    public static Texturez tex;
+	public UserSettingz settings;
 	public static Json json = new Json();
-    // public BackgroundManager background;
 
 	@Override
 	public void create() {
 		json.setOutputType(JsonWriter.OutputType.json);
 		pixelsPerMeter = Gdx.graphics.getHeight()/10f;
-		padding = pixelsPerMeter * com.autonomousgames.starcycle.core.UserSettingz.getFloatSetting("paddingMeters"); // relative padding size for UI buttons
+		padding = pixelsPerMeter * UserSettingz.getFloatSetting("paddingMeters"); // relative padding size for UI buttons
 		screenWidth = Gdx.graphics.getWidth();
 		screenHeight = Gdx.graphics.getHeight();
 		meterWidth = screenWidth/pixelsPerMeter;
 		meterHeight = screenHeight/pixelsPerMeter;
-		
-		meterScreenCenter = new Vector2(meterWidth/2f, meterHeight/2f);
+        assetManager = new StarCycleAssetManager();
+        audio = new Soundz();
+		tex = new Texturez();
+        meterScreenCenter = new Vector2(meterWidth/2f, meterHeight/2f);
 		pixelScreenCenter = new Vector2(screenWidth/2f, screenHeight/2f);
-		screen = new com.autonomousgames.starcycle.core.screens.SplashScreen();
+		screen = new SplashScreen();
 
-		logHandler = new com.autonomousgames.starcycle.core.LogHandler();
+		logHandler = new LogHandler();
 		startTime = System.currentTimeMillis();
 		HashMap<String,Object> logMap = new HashMap<String,Object>();
 		logMap.put("currentScreen", screen.toString());
@@ -54,12 +57,10 @@ public class StarCycle implements ApplicationListener {
 	}
 
 	@Override
-	public void dispose() {
+    public void dispose() {
 		Gdx.app.log("StarCycle", "root dispose called");
-		Soundz.dispose();
-		Texturez.dispose();
-		screen.dispose();
-		// TODO need to dispose sounds and textures?
+        screen.dispose();
+        assetManager.dispose();
 	}
 
 	@Override
@@ -69,6 +70,7 @@ public class StarCycle implements ApplicationListener {
 	@Override
 	public void render() {
 		screen.render(1/30f);
+        assetManager.update();
 		if (screen.isDone) {
 			logHandler.writeLogs();
 			HashMap<String,Object> logMap = new HashMap<String,Object>();
@@ -77,7 +79,7 @@ public class StarCycle implements ApplicationListener {
 			logMap.put("currentTime", System.currentTimeMillis());
 			logHandler.logScreen(json.toJson(logMap));
 			// dispose the current screen
-			Soundz.screenswitchSound.play(UserSettingz.getFloatSetting("sfxVolume"));
+			audio.screenswitchSound.play(UserSettingz.getFloatSetting("sfxVolume"));
 					
 			screen.dispose();
 
@@ -134,7 +136,6 @@ public class StarCycle implements ApplicationListener {
 				break;
 			default:
 				throw new AssertionError("No valid next screen set when scren isDone is true");
-				//screen = new MainMenu();
 			}
 		}
 	}
@@ -144,7 +145,7 @@ public class StarCycle implements ApplicationListener {
 	}
 	@Override
 	public void resume() {
-        Texturez.resetFonts();
+        tex.resetFonts();
 	}
 
     public static void makeBackground() {

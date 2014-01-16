@@ -14,7 +14,7 @@ public class Tutorial4 extends TutorialSandbox {
 	public Tutorial4() {
 		super(LevelType.SINGLE, ScreenType.TUTORIAL4, ScreenType.TUTORIAL5, ScreenType.TUTORIAL3);
 		players[0].base.setPointer(StarCycle.pixelScreenCenter.cpy().div(StarCycle.pixelsPerMeter).sub(players[0].base.origin));
-		infoGraphic.addLayer(new SpriteLayer(Texturez.tutorialImages[6],
+		infoGraphic.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[6],
 				new Vector2(StarCycle.screenHeight, 0.5f*StarCycle.screenHeight)).rotateSprite(90f));
 	}
 

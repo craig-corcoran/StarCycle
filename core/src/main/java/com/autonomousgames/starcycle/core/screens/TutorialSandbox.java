@@ -35,13 +35,13 @@ public abstract class TutorialSandbox extends ModelScreen {
 		ui.addActor(infoGraphic);
 		
 		nextPage = new StandardButton(new Vector2(navHeight, StarCycle.screenHeight-backSize.x*0.8f),
-				backSize,	Texturez.backIcon, padding);
+				backSize,	StarCycle.tex.backIcon, padding);
 		nextPage.rotateLayers(-90f).flip(false, true);
-		nextPage.addLayer(new SpriteLayer(Texturez.noIcon, iconSize).setSpriteColor(Texturez.red), LayerType.INACTIVE);
+		nextPage.addLayer(new SpriteLayer(StarCycle.tex.noIcon, iconSize).setSpriteColor(Texturez.red), LayerType.INACTIVE);
 		nextPage.addListener(new ScreenDoneClickListener(this, nextScreen));
 		ui.addActor(nextPage);
 		
-		prevPage = new StandardButton(new Vector2(navHeight, backSize.x*0.8f), backSize, Texturez.backIcon, padding);
+		prevPage = new StandardButton(new Vector2(navHeight, backSize.x*0.8f), backSize, StarCycle.tex.backIcon, padding);
 		prevPage.rotateLayers(90f);
 		prevPage.addListener(new ScreenDoneClickListener(this, prevScreen));
 		ui.addActor(prevPage);
@@ -75,9 +75,9 @@ public abstract class TutorialSandbox extends ModelScreen {
 	@Override
 	public void addWinBanner(final Player winner) {
 		//super.addWinBanner(winner);
-		TextureRegion texture = (winner.number==0) ? Texturez.trophy : Texturez.thumbsDown;
+		TextureRegion texture = (winner.number==0) ? StarCycle.tex.trophy : StarCycle.tex.thumbsDown;
 		winButton = new LayeredButton(new Vector2(StarCycle.screenHeight/4f, StarCycle.screenHeight/2f), iconSize.cpy().scl(4f));
-		winButton.addLayer(new SpriteLayer(Texturez.gradientRound, iconSize.cpy().scl(4f)));
+		winButton.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, iconSize.cpy().scl(4f)));
 		winButton.addLayer(new SpriteLayer(texture, iconSize.scl(2f)).setSpriteColor(winner.colors[0]));
 		winButton.rotate(90f);
 		ui.addActor(winButton);

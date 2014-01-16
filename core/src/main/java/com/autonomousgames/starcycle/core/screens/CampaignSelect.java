@@ -1,5 +1,6 @@
 package com.autonomousgames.starcycle.core.screens;
 
+import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
@@ -38,16 +39,16 @@ public class CampaignSelect extends LevelSelectScreen {
 		addEdges(posMap);
 		
 		/*LayeredButton tutorialButton = new LayeredButton(posMap.get(SinglePlayerLevel.TUTORIAL), new Vector2(ui.getHeight()/6f, ui.getHeight()/6f));
-		tutorialButton.addLayer(new SpriteLayer(Texturez.questionIcon, new Vector2(0f, 0f), new Vector2(ui.getHeight()/10f, ui.getHeight()/10f)));
+		tutorialButton.addLayer(new SpriteLayer(StarCycle.tex.questionIcon, new Vector2(0f, 0f), new Vector2(ui.getHeight()/10f, ui.getHeight()/10f)));
 		tutorialButton.addListener(new ScreenDoneClickListener(this, ScreenType.TUTORIAL_ORB));
 		tutorialButton.rotateLayers(90f);*/
 		
 		Vector2 baseDims = new Vector2(1f, 1f).scl(ui.getHeight() * 0.15f);
 		
 		BaseButton level1 = new BaseButton(BaseType.TAKETE, Texturez.warm, posMap.get(SinglePlayerLevel.LEVEL1), baseDims);
-		level1.addBottomLayer(new SpriteLayer(Texturez.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
+		level1.addBottomLayer(new SpriteLayer(StarCycle.tex.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
 		if (UserSettingz.getFloatSetting(SinglePlayerLevel.LEVEL1.toString()) != 1f) {
-			level1.addBottomLayer(new SpriteLayer(Texturez.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
+			level1.addBottomLayer(new SpriteLayer(StarCycle.tex.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
 		}
 		level1.addListener(new ClickListener(){
 			@Override
@@ -63,9 +64,9 @@ public class CampaignSelect extends LevelSelectScreen {
         levelButtons.add(level1);
 		
 		BaseButton level2 = new BaseButton(BaseType.TARGET, Texturez.floral, posMap.get(SinglePlayerLevel.LEVEL2), baseDims);
-		level2.addBottomLayer(new SpriteLayer(Texturez.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
+		level2.addBottomLayer(new SpriteLayer(StarCycle.tex.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
 		if (UserSettingz.getFloatSetting(SinglePlayerLevel.LEVEL2.toString()) != 1f) {
-			level2.addBottomLayer(new SpriteLayer(Texturez.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
+			level2.addBottomLayer(new SpriteLayer(StarCycle.tex.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
 		}
 		level2.addListener(new ClickListener(){
 			@Override
@@ -80,9 +81,9 @@ public class CampaignSelect extends LevelSelectScreen {
 		levelButtons.add(level2);
 		
 		BaseButton level3 = new BaseButton(BaseType.DERELICT, Texturez.neutral, posMap.get(SinglePlayerLevel.LEVEL3), baseDims);
-		level3.addBottomLayer(new SpriteLayer(Texturez.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
+		level3.addBottomLayer(new SpriteLayer(StarCycle.tex.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
 		if (UserSettingz.getFloatSetting(SinglePlayerLevel.LEVEL3.toString()) != 1f) {
-			level3.addBottomLayer(new SpriteLayer(Texturez.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
+			level3.addBottomLayer(new SpriteLayer(StarCycle.tex.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
 		}
 		level3.addListener(new ClickListener(){
 			@Override
@@ -97,9 +98,9 @@ public class CampaignSelect extends LevelSelectScreen {
 		levelButtons.add(level3);
 		
 		BaseButton level4 = new BaseButton(BaseType.CLOCKWORK, Texturez.metallic, posMap.get(SinglePlayerLevel.LEVEL4), baseDims);
-		level4.addBottomLayer(new SpriteLayer(Texturez.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
+		level4.addBottomLayer(new SpriteLayer(StarCycle.tex.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
 		if (UserSettingz.getFloatSetting(SinglePlayerLevel.LEVEL4.toString()) != 1f) {
-			level4.addBottomLayer(new SpriteLayer(Texturez.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
+			level4.addBottomLayer(new SpriteLayer(StarCycle.tex.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
 		}
 		level4.addListener(new ClickListener(){
 			@Override
@@ -145,7 +146,7 @@ public class CampaignSelect extends LevelSelectScreen {
                 Vector2 center = pos1.cpy().add(pos2).div(2f);
                 Vector2 diff = pos1.cpy().sub(pos2);
                 LayeredButton button = new LayeredButton(center);
-                button.addLayer(new SpriteLayer(Texturez.line, new Vector2(), new Vector2(0.6f * diff.len(), edgeWidth / 2f)));
+                button.addLayer(new SpriteLayer(StarCycle.tex.line, new Vector2(), new Vector2(0.6f * diff.len(), edgeWidth / 2f)));
                 float angle = diff.angle();
                 button.rotate(angle);
                 ui.addActor(button);

@@ -26,8 +26,8 @@ public class Tutorial3 extends TutorialSandbox {
 //		infoGraphic.addLayer(new SpriteLayer(Texturez.tutorialImages[5], 
 //				new Vector2(StarCycle.screenHeight, StarCycle.screenHeight*0.5f)).rotateSprite(90f));
 		Vector2 signSize = iconSize.cpy().scl(0.5f);
-		infoGraphic.addLayer(new SpriteLayer(Texturez.wrongIcon, new Vector2(StarCycle.screenWidth*5/8f-StarCycle.screenHeight/4f, -StarCycle.screenHeight/6f), signSize, Texturez.red, -90f), LayerType.ACTIVE);
-		infoGraphic.addLayer(new SpriteLayer(Texturez.rightIcon, new Vector2(StarCycle.screenWidth*5/8f-StarCycle.screenHeight/4f, StarCycle.screenHeight/6f), signSize, Texturez.spinach, -90f).rotateSprite(180f), LayerType.INACTIVE);
+		infoGraphic.addLayer(new SpriteLayer(StarCycle.tex.wrongIcon, new Vector2(StarCycle.screenWidth*5/8f-StarCycle.screenHeight/4f, -StarCycle.screenHeight/6f), signSize, StarCycle.tex.red, -90f), LayerType.ACTIVE);
+		infoGraphic.addLayer(new SpriteLayer(StarCycle.tex.rightIcon, new Vector2(StarCycle.screenWidth*5/8f-StarCycle.screenHeight/4f, StarCycle.screenHeight/6f), signSize, Texturez.spinach, -90f).rotateSprite(180f), LayerType.INACTIVE);
 		
 		timeNow = System.currentTimeMillis();
 		players[1].launchPad.streamOrbs = true;

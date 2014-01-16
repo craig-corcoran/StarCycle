@@ -39,7 +39,7 @@ public class ChargeOrb extends Orb implements Collidable {
 		orbitScal = UserSettingz.getFloatSetting("orbitScal");
 
 		chargeButton = new LayeredButton(orbButton.getCenter(),orbButton.getDims());
-		chargeButton.addLayer(new SpriteLayer(Texturez.chargeBeam, new Vector2(chargeRadius/2f, 0f), new Vector2(chargeRadius,beamWidth)).setSpriteColor(player.colors[1]),LayerType.ACTIVE);
+		chargeButton.addLayer(new SpriteLayer(StarCycle.tex.chargeBeam, new Vector2(chargeRadius/2f, 0f), new Vector2(chargeRadius,beamWidth)).setSpriteColor(player.colors[1]),LayerType.ACTIVE);
 		chargeButton.deactivate();
 	}
 

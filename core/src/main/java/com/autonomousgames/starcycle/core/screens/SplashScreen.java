@@ -17,12 +17,10 @@ public class SplashScreen extends GameScreen {
 	
 	public SplashScreen() {
 		super();
-		splashWidth = splashHeight * (Texturez.splashTexture.getRegionWidth()/ ((float)Texturez.splashTexture.getRegionHeight()));
+		splashWidth = splashHeight * (StarCycle.tex.splashTexture.getRegionWidth() / ((float)StarCycle.tex.splashTexture.getRegionHeight()));
 		nextScreen = ScreenType.MAINMENU;
 		displayedTime = 0;
         StarCycle.makeBackground();
-		//Soundz.bootupSound.play((Float) UserSettingz.getSetting("sfxVolume"));
-		
 	}
 
 	@Override
@@ -33,7 +31,7 @@ public class SplashScreen extends GameScreen {
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.draw(Texturez.splashTexture, StarCycle.screenWidth/2f-splashWidth/2f, 
+		batch.draw(StarCycle.tex.splashTexture, StarCycle.screenWidth/2f-splashWidth/2f,
 					StarCycle.screenHeight/2f-splashHeight/2f,splashWidth/2f,splashHeight/2f,splashWidth,splashHeight,1f,1f,90f);
 		batch.end();
 		update(delta);
@@ -45,9 +43,9 @@ public class SplashScreen extends GameScreen {
         float splashTime = 3f;
         if (displayedTime >= splashTime) {
 			isDone = true;
-			Soundz.gameMusic.setVolume(UserSettingz.getFloatSetting("musicVolume"));
-			Soundz.gameMusic.setLooping(true);
-			Soundz.gameMusic.play();
+			StarCycle.audio.gameMusic.setVolume(UserSettingz.getFloatSetting("musicVolume"));
+			StarCycle.audio.gameMusic.setLooping(true);
+			StarCycle.audio.gameMusic.play();
 		}
 	}
 	public String toString(){

@@ -29,11 +29,11 @@ public class Tutorial2 extends TutorialSandbox {
 		super(LevelType.NOSTARS, ScreenType.TUTORIAL2, ScreenType.TUTORIAL3, ScreenType.TUTORIAL1);
 
 		// Two aim textures and two shoot textures alternate periodically. 
-		infoGraphic.addLayer(new SpriteLayer(Texturez.tutorialImages[1], new Vector2(0f, -StarCycle.screenHeight/4f), new Vector2(StarCycle.screenHeight/2f, StarCycle.screenHeight/2f)));
-		infoGraphic.addLayer(new SpriteLayer(Texturez.tutorialImages[3], new Vector2(0f, StarCycle.screenHeight/4f), new Vector2(StarCycle.screenHeight/2f, StarCycle.screenHeight/2f)));
-		infoGraphic.addLayer(new SpriteLayer(Texturez.tutorialImages[2], new Vector2(0f, -StarCycle.screenHeight/4f), new Vector2(StarCycle.screenHeight/2f, StarCycle.screenHeight/2f)),
+		infoGraphic.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[1], new Vector2(0f, -StarCycle.screenHeight/4f), new Vector2(StarCycle.screenHeight/2f, StarCycle.screenHeight/2f)));
+		infoGraphic.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[3], new Vector2(0f, StarCycle.screenHeight/4f), new Vector2(StarCycle.screenHeight/2f, StarCycle.screenHeight/2f)));
+		infoGraphic.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[2], new Vector2(0f, -StarCycle.screenHeight/4f), new Vector2(StarCycle.screenHeight/2f, StarCycle.screenHeight/2f)),
 				LayerType.INACTIVE); // Layer types are used for texture switching. This will not be an actual button.
-		infoGraphic.addLayer(new SpriteLayer(Texturez.tutorialImages[4], new Vector2(0f, StarCycle.screenHeight/4f), new Vector2(StarCycle.screenHeight/2f, StarCycle.screenHeight/2f)),
+		infoGraphic.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[4], new Vector2(0f, StarCycle.screenHeight/4f), new Vector2(StarCycle.screenHeight/2f, StarCycle.screenHeight/2f)),
 				LayerType.LOCKED); // Layer types are used for texture switching. This will not be an actual button.
 		infoGraphic.rotateLayers(90f);
 		
@@ -73,7 +73,7 @@ public class Tutorial2 extends TutorialSandbox {
         long orbCooldown = 400;
         if (infoGraphic.isLocked() && timeNow - lastOrb >= orbCooldown) {
             float fakeRadius = 10f;
-            fakeOrbs.add(new ImageOrb(Texturez.fakeorbTextures[0], fakeRadius, fakePos, StarCycle.screenWidth,
+            fakeOrbs.add(new ImageOrb(StarCycle.tex.fakeorbTextures[0], fakeRadius, fakePos, StarCycle.screenWidth,
                     StarCycle.screenHeight, vec, new Vector2(0, 0)));
 			lastOrb = timeNow;
 		}
