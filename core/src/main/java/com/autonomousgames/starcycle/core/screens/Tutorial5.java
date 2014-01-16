@@ -21,7 +21,7 @@ public class Tutorial5 extends TutorialSandbox {
 	long lastDemo;
 	
 	public Tutorial5() {
-		super(LevelType.SINGLE, ScreenType.TUTORIAL5, ScreenType.TUTORIAL6, ScreenType.TUTORIAL4);
+		super(LevelType.SINGLE, ScreenType.TUTORIAL5, ScreenType.TUTORIAL6, ScreenType.TUTORIAL0);
 	}
 
 	@Override
