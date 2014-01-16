@@ -43,6 +43,10 @@ public abstract class Layer extends Actor{
 	public void setColor(Color tint) {
 		setLayerColor(tint);
 	}
+
+    public void setRelPosLen(float len) {
+        setCenter(center.nor().scl(len));
+    }
 	
 	abstract public void setLayerColor(Color tint);
 	

@@ -1,5 +1,6 @@
 package com.autonomousgames.starcycle.core.model;
 
+import com.autonomousgames.starcycle.core.Soundz;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.Texturez.TextureType;
@@ -174,6 +175,9 @@ public class Orb implements Collidable {
 	@Override
 	public void collision(Collidable obj) {
         removeSelf();
+        if (obj instanceof Star) {
+            Soundz.orbCrash.play(UserSettingz.getFloatSetting("sfxVolume"));
+        }
 	}
 
     public void removeSelf() {

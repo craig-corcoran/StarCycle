@@ -8,6 +8,7 @@ import com.autonomousgames.starcycle.core.ui.BaseButton;
 import com.autonomousgames.starcycle.core.ui.Layer;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -21,8 +22,8 @@ public class Base {
 
 	// TODO should these be passed into the constructor or just set statically?
 	LayeredButton aimer;
-	public Vector2 handleImDims;
-	public Vector2 chevronImDims;
+	public Vector2 handleImDims = new Vector2(1f, 1f).scl(0.54f * StarCycle.pixelsPerMeter);
+	public Vector2 chevronImDims = new Vector2(1f, 1f).scl(0.45f * StarCycle.pixelsPerMeter);
     public Vector2 baseDims;
 	public float[] baseDiams;
 	public BaseButton baseButton;
@@ -30,9 +31,9 @@ public class Base {
 	public float angle;
 	public float angleDeg;
 	private float angleOfBaseRotation = 0;
-	public static float maxPointerLength;
-	public static float minPointerLength;
-	float maxAimerLength;
+	public static float maxPointerLength = 2f;
+	public static float minPointerLength = 1.2f;
+	float maxAimerLength = maxPointerLength*StarCycle.pixelsPerMeter;
 	//public static float minSpeed;
 	public static float velScale = (Float) UserSettingz.getFloatSetting("velScale");
 	private boolean UIVisible = true;
@@ -41,6 +42,8 @@ public class Base {
 	private static float baseRotationSpeed;
 	
 	public int level;
+    int maxLevel = 2;
+    public boolean manualLvl = false;
 
     public enum BaseType {
 		MALUMA, TAKETE, TARGET, DERELICT, CLOCKWORK
@@ -62,30 +65,23 @@ public class Base {
 			ui.addActor(baseButton);
 		}
 
-		maxPointerLength = 2f;
-		minPointerLength = 1.2f;
 		if (player.number == 1) {
 			setPointer((maxPointerLength + minPointerLength) / 2f, 0f); // vector to tip of rings
 		} else if (player.number == 0) {
 			setPointer((-maxPointerLength - minPointerLength) / 2f, 0f); // vector to tip of rings
 		}
-		maxAimerLength = maxPointerLength*StarCycle.pixelsPerMeter;
 
-        float handleSize = 0.54f;
-		// TODO if we keep these square, get rid of separate width and height
-        float handleWidth = handleSize;
-        float handleHeight = handleSize;
-        float chevronSize = 0.45f;
-        float chevronWidth = chevronSize;
-        float chevronHeight = chevronSize;
-		handleImDims = new Vector2(handleWidth, handleHeight).scl(StarCycle.pixelsPerMeter);
-		chevronImDims = new Vector2(chevronWidth, chevronHeight).scl(StarCycle.pixelsPerMeter);
+        // TODO if we keep these square, get rid of separate width and height
+//        float handleSize = 0.54f;
+//        float handleWidth = handleSize;
+//        float handleHeight = handleSize;
+//        float chevronSize = 0.45f;
+//        float chevronWidth = chevronSize;
+//        float chevronHeight = chevronSize;
+//		handleImDims = new Vector2(handleWidth, handleHeight).scl(StarCycle.pixelsPerMeter);
+//		chevronImDims = new Vector2(chevronWidth, chevronHeight).scl(StarCycle.pixelsPerMeter);
 		
-		aimer = new LayeredButton(buttonLoc, baseDims);
-		aimer.addLayer(new SpriteLayer(Texturez.aimer[0], new Vector2(0f, -1f), handleImDims).setSpriteColor(player.colors[1]));
-		for (int i = 0; i < 2; i ++) {
-			aimer.addLayer(new SpriteLayer(Texturez.aimer[i+1], new Vector2(0f, 1f), chevronImDims).setSpriteColor(player.colors[i]));
-		}
+		aimer = getAimer(buttonLoc, baseDims, player.colors);
 	}
     // basic constructor, assumes UI is visible
 	public Base(Player player, Vector2 origin, float baseRadius, Stage ui) {
@@ -98,7 +94,7 @@ public class Base {
 			aimer.setRotation(angleDeg);
 			for (int i = 0; i < 3; i ++) {
 				Layer layer = aimer.getLayer(i);
-				layer.setCenter(layer.getCenter().nor().scl(maxAimerLength * pointerScale));
+				layer.setRelPosLen(maxAimerLength * pointerScale);
 			}
 				aimer.draw(batch, 1f);
 		}
@@ -111,22 +107,23 @@ public class Base {
 			angleOfBaseRotation -= 360;
 		}
 
-        int maxLevel = 2;
-        if (Math.min(maxLevel, player.starsCaptured) != level) {
-			if (Math.min(maxLevel, player.starsCaptured) > level) {
-				if (player.starsCaptured == 1){
-					Soundz.levelup1Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
-				}
-				if (player.starsCaptured == 2) {
-					Soundz.levelup2Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
-				}
-				
-			} else {
-				Soundz.leveldownSound.play(UserSettingz.getFloatSetting("sfxVolume"));
-			}
-			level = Math.min(maxLevel, player.starsCaptured);
-			baseButton.setLevel(level);
-		}
+        if (!manualLvl) {
+            if (Math.min(maxLevel, player.starsCaptured) != level) {
+                if (Math.min(maxLevel, player.starsCaptured) > level) {
+                    if (player.starsCaptured == 1){
+                        Soundz.levelup1Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
+                    }
+                    if (player.starsCaptured == 2) {
+                        Soundz.levelup2Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
+                    }
+
+                } else {
+                    Soundz.leveldownSound.play(UserSettingz.getFloatSetting("sfxVolume"));
+                }
+                level = Math.min(maxLevel, player.starsCaptured);
+                baseButton.setLevel(level);
+            }
+        }
 	}
 
 	public void setPointer(float x, float y) {
@@ -175,5 +172,14 @@ public class Base {
         x = x/UIScaleFactor;
         y = y/UIScaleFactor;
         moveBase(new Vector2(origin.x + x, origin.y + y));
+    }
+
+    public LayeredButton getAimer(Vector2 pos, Vector2 dims, Color[] colors) {
+        LayeredButton button = new LayeredButton(pos);
+        button.addLayer(new SpriteLayer(Texturez.aimer[0], new Vector2(0f, -1f).scl(maxAimerLength), handleImDims).setSpriteColor(colors[1]));
+        for (int i = 0; i < 2; i ++) {
+            button.addLayer(new SpriteLayer(Texturez.aimer[i + 1], new Vector2(0f, 1f).scl(maxAimerLength), chevronImDims).setSpriteColor(colors[i]));
+        }
+        return button;
     }
 }

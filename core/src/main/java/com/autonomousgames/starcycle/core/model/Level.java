@@ -130,14 +130,14 @@ public class Level {
 	}
 
 	private void addStaticStar(Player[] players, int starIndex, Vector2 pos, float radius) {
-		stars.add(starIndex, new Star(Texturez.hexStar, radius, pos, players,
+		stars.add(starIndex, new Star(radius, pos, players,
 				world, starIndex, 0f));
 	}
 
 	private void addPathedStar(Player[] players, int starIndex, Vector2 center, float radius, 
 								PathType pathMap, float startPercent, float rotSpeed) {
 		
-		stars.add(starIndex, new Star(Texturez.hexStar, radius, center, players,
+		stars.add(starIndex, new Star(radius, center, players,
 											world, starIndex, pathMap, startPercent, rotSpeed));
 		pathedObjList.add(stars.get(starIndex));
 	}

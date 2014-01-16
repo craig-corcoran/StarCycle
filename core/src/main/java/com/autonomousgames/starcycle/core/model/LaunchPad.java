@@ -70,6 +70,8 @@ public class LaunchPad {
     float voidCost = UserSettingz.getFloatSetting("gravWellCost");
     float novaCost = UserSettingz.getFloatSetting("nukeCost");
 
+    public boolean manualLvl = false;
+
     public LaunchPad (ModelScreen screen, Player player, boolean visible) {
 
         this.screen = screen;
@@ -114,7 +116,7 @@ public class LaunchPad {
         pw1Button = getPw1Button(position, angle, player.colors, !(player instanceof Bot));
         if (!(player instanceof Bot)) {
             pw1Button.addListener(new ClickListener() {
-                public void clicked(InputEvent event, float x, float y) {
+                public void clicked(InputEvent event, float x, float  y) {
                     launch(Orb.OrbType.VOID);
                 }
             });
@@ -153,18 +155,20 @@ public class LaunchPad {
             }
         }
 
-        if (player.starsCaptured >= voidStars && !(pw1Button.isActive())) {
-            pw1Button.activate();
-        }
-        else if (player.starsCaptured < voidStars && pw1Button.isActive()) {
-            pw1Button.deactivate();
-        }
+        if (!manualLvl) {
+            if (player.starsCaptured >= voidStars && !(pw1Button.isActive())) {
+                pw1Button.activate();
+            }
+            else if (player.starsCaptured < voidStars && pw1Button.isActive()) {
+                pw1Button.deactivate();
+            }
 
-        if (player.starsCaptured >= novaStars && !(pw2Button.isActive())) {
-            pw2Button.activate();
-        }
-        else if (player.starsCaptured < novaStars && pw2Button.isActive()) {
-            pw2Button.deactivate();
+            if (player.starsCaptured >= novaStars && !(pw2Button.isActive())) {
+                pw2Button.activate();
+            }
+            else if (player.starsCaptured < novaStars && pw2Button.isActive()) {
+                pw2Button.deactivate();
+            }
         }
 
         if (player.ammo >= orbCost && orbButton.isLocked()) {
@@ -235,12 +239,12 @@ public class LaunchPad {
 
     public ArcButton getOrbButton(Vector2 position, float angle, Color[] colors, boolean touchable) {
         ArcButton button = new ArcButton(position, orbAng, orbTch);
-        button.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, colors[1], 0f), LayerType.UP);
         if (touchable) {
-
+            button.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, colors[1], 0f), LayerType.UP);
             button.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, colors[0], 0f), LayerType.DOWN);
         }
         else {
+            button.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, colors[1], 0f));
             button.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, colors[1], 0f), LayerType.SPECIAL);
             button.getLayer(1).toggleSpecial();
         }
@@ -252,11 +256,12 @@ public class LaunchPad {
 
     public ArcButton getPw1Button(Vector2 position, float angle, Color[] colors, boolean touchable) {
         ArcButton button = new ArcButton(position, pw1Ang, powTch);
-        button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw1Pos, powDim, colors[1], 0f), LayerType.ACTIVEUP);
         if (touchable) {
+            button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw1Pos, powDim, colors[1], 0f), LayerType.ACTIVEUP);
             button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw1Pos, powDim, colors[0], 0f), LayerType.DOWN);
         }
         else {
+            button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw1Pos, powDim, colors[1], 0f), LayerType.ACTIVE);
             button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw1Pos, powDim, colors[1], 0f), LayerType.SPECIAL);
             button.getLayer(1).toggleSpecial();
         }
@@ -270,11 +275,12 @@ public class LaunchPad {
 
     public ArcButton getPw2Button(Vector2 position, float angle, Color[] colors, boolean touchable) {
         ArcButton button = new ArcButton(position, pw2Ang, powTch);
-        button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw2Pos, powDim, colors[1], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.ACTIVEUP);
         if (touchable) {
+            button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw2Pos, powDim, colors[1], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.ACTIVEUP);
             button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw2Pos, powDim, colors[0], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.DOWN);
         }
         else {
+            button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw2Pos, powDim, colors[1], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.ACTIVE);
             button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw2Pos, powDim, colors[1], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.SPECIAL);
             button.getLayer(1).toggleSpecial();
         }

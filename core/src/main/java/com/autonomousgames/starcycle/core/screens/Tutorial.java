@@ -41,13 +41,25 @@ public abstract class Tutorial extends ModelScreen {
     ArrayList<LayeredButton> draggables = new ArrayList<LayeredButton>();
     public ArrayList<ImageOrb> fakeOrbs = new ArrayList<ImageOrb>();
 
+    float offset;
     int currentBorder = 0;
     ScreenType prevScreen;
+    public boolean startAtEnd = false;
+
+    int[][] starClamp;
 
     public Tutorial (Level.LevelType lvlType, ScreenType screenType, ScreenType nextScreen, ScreenType prevScreen, BaseType[] skins, Color[][] colors) {
         super(lvlType, screenType, skins, colors);
         this.nextScreen = nextScreen;
         this.prevScreen = prevScreen;
+        silentSwitch = true;
+
+        Gdx.app.log("Tutorial","model: "+model);
+        starClamp = new int[model.stars.size()][2];
+        for (int i = 0; i < model.stars.size(); i ++) {
+            starClamp[i][0] = 0;
+            starClamp[i][1] = 0;
+        }
 
         swiper.addListener(new DragListener() {
 
@@ -149,7 +161,7 @@ public abstract class Tutorial extends ModelScreen {
             itr.next().move(0f, y);
         }
         for (int i = 0; i < model.stars.size(); i ++) {
-            model.stars.get(i).moveStar(0f, y/StarCycle.pixelsPerMeter);
+            model.stars.get(i).moveStar(0f, moveClamped(starClamp[i][0], starClamp[i][1], y)/StarCycle.pixelsPerMeter);
         }
         for (int i = 0; i < numPlayers; i ++) {
             for (int j = 0; j < players[i].orbs.size(); j ++) {
@@ -189,16 +201,24 @@ public abstract class Tutorial extends ModelScreen {
         players[i].launchPad.movePos(0f, y);
     }
 
-    float moveClamped(int startPage, float y) {
+    float moveClamped(int startPage, int endPage, float y) {
         boolean clamped = false;
-        if (currentBorder > startPage) {
-            clamped = true;
-        }
-        if (currentBorder == startPage && moving && y > 0f) {
-            clamped = true;
-        }
-        if (currentBorder == startPage && !moving && dragLen <= 0f) {
-            clamped = true;
+        if (startPage != endPage) {
+            if (startPage < currentBorder && currentBorder < endPage) {
+                clamped = true;
+            }
+            if (currentBorder == startPage && moving && y > 0f) {
+                clamped = true;
+            }
+            if (currentBorder == startPage && !moving && dragLen <= 0f) {
+                clamped = true;
+            }
+            if (currentBorder == endPage && moving && y < 0f) {
+                clamped = true;
+            }
+            if (currentBorder == endPage && !moving && dragLen >= 0f) {
+                clamped = true;
+            }
         }
         return clamped? 0f : y;
     }

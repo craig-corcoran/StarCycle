@@ -50,7 +50,7 @@ public class Star extends Orbitable implements Collidable {
 
 	// Drawing stuff
 	LayeredButton starButton;
-	TextureRegion starImage;
+	static TextureRegion starImage = Texturez.hexStar;
 	private Vector2 imageDims;
 	private float rotateSpeed = MathUtils.random(0.2f, 0.4f)*(1-2*MathUtils.random(1)); // This is purely visual.
 	ArrayList<LayeredButton> controlButtons = new ArrayList<LayeredButton>();
@@ -67,12 +67,11 @@ public class Star extends Orbitable implements Collidable {
     final float maxOrbs;
 
 	// constructor for single stars. Constructed in Level.java
-	public Star(TextureRegion image, float radius, Vector2 position,
+	public Star(float radius, Vector2 position,
 			Player[] players, World world, int index, float rotSpeed) {
 		captureRatio = UserSettingz.getFloatSetting("captureRatio");
         maxOrbs = UserSettingz.getFloatSetting("maxOrbs");
 		this.radius = radius;
-		this.starImage = image;
 		this.mass = this.radius * this.radius;
 		this.maxPop = 100 * radius;
 		this.position = position;
@@ -110,18 +109,8 @@ public class Star extends Orbitable implements Collidable {
 
 		// Create star visual
 		imageDims = new Vector2(radius, radius).scl(StarCycle.pixelsPerMeter);
-		starButton = new LayeredButton(position.cpy().scl(StarCycle.pixelsPerMeter));
-		Vector2 quadPos = imageDims.cpy().div(2f);
-        starButton.addLayer(new SpriteLayer(Texturez.gradientRound, imageDims.cpy().scl(2.75f)));
-//		starButton.addLayer(new SpriteLayer(Texturez.circle, imageDims.cpy().scl(2.15f)).setSpriteColor(Color.BLACK));
-		starButton.addLayer(new SpriteLayer(Texturez.circle, imageDims.cpy().scl(0.8f)).setSpriteColor(Color.BLACK));
-		// The main star visual is drawn as four quadrants.
-        quadLayer0 = starButton.getLayerNum();
-		for (int i = 0; i < 4; i++) {
-			starButton.addLayer(new SpriteLayer(image, quadPos.cpy().rotate(90f*i), imageDims, Texturez.night, (90f*i)));
-		}
-		starButton.deactivate(); // This is a hackish way of noting whether either player has 100% control.
-		starButton.unlock(); // This is a hackish way of noting whether either player has 50% control.
+		starButton = getButton(position.cpy().scl(StarCycle.pixelsPerMeter), radius);
+        quadLayer0 = starButton.getLayerNum()-4;
 		minSideLen = imageDims.x * 142f/512f * sideScale; // This is the minimum hexagon side length.
 		scaleRange = (432f - 143f) / 143f; // Side length scales with hexagon radius.
 		Vector2 hexPos = new Vector2(imageDims.x*142f/512f, 0f); // Starting position (minimum).
@@ -138,10 +127,10 @@ public class Star extends Orbitable implements Collidable {
 		}
 	}
 
-	public Star(TextureRegion image, float radius, Vector2 center,
+	public Star(float radius, Vector2 center,
 			Player[] players, World world, int index, PathType pathMap,
 			float startPercent, float rotSpeed) {
-		this(image, radius, new Vector2(), players, world, index, rotSpeed);
+		this(radius, new Vector2(), players, world, index, rotSpeed);
 		this.pathMap = pathMap;
 		this.startPercent = startPercent;
 	}
@@ -349,4 +338,18 @@ public class Star extends Orbitable implements Collidable {
         position = body.getPosition();
     }
 
+    public static LayeredButton getButton(Vector2 position, float radius) {
+        Vector2 dims = new Vector2(radius, radius).scl(StarCycle.pixelsPerMeter);
+        LayeredButton button = new LayeredButton(position);
+        Vector2 quadPos = dims.cpy().div(2f);
+        button.addLayer(new SpriteLayer(Texturez.gradientRound, dims.cpy().scl(2.75f)));
+        button.addLayer(new SpriteLayer(Texturez.circle, dims.cpy().scl(0.8f)).setSpriteColor(Color.BLACK));
+        // The main star visual is drawn as four quadrants.
+        for (int i = 0; i < 4; i++) {
+            button.addLayer(new SpriteLayer(starImage, quadPos.cpy().rotate(90f*i), dims, Texturez.night, (90f*i)));
+        }
+        button.deactivate(); // This is a hackish way of noting whether either player has 100% control.
+        button.unlock(); // This is a hackish way of noting whether either player has 50% control.
+        return button;
+    }
 }
