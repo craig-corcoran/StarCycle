@@ -1,5 +1,6 @@
 package com.autonomousgames.starcycle.core.screens;
 
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
@@ -103,7 +104,7 @@ public class Tutorial2 extends TutorialSandbox {
 	void setPlayers() {
 		numPlayers = 1;
 		players = new Player[numPlayers];
-		players[0] = new Player(0, BaseType.MALUMA, Texturez.cool, this, ui, true, true);
+		players[0] = new Player(0, BaseType.MALUMA, Colors.cool, this, ui, true, true);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.autonomousgames.starcycle.core.screens;
 
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.controllers.GameController;
@@ -35,7 +36,7 @@ public abstract class Tutorial extends ModelScreen {
     int currentBorder = 0;
 
     public Tutorial (Level.LevelType lvlType, ScreenType screenType, ScreenType nextScreen, ScreenType prevScreen, BaseType[] skins, Color[][] colors) {
-        super(lvlType, screenType, skins, new Color[][]{Texturez.cool, Texturez.cool});
+        super(lvlType, screenType, skins, new Color[][]{Colors.cool, Colors.cool});
         this.nextScreen = nextScreen;
         Gdx.input.setInputProcessor(new GameController(this, 2)); // only one active touch interface
 
@@ -91,9 +92,9 @@ public abstract class Tutorial extends ModelScreen {
         float bw = sh * 0.05f;
         for (int i = 0; i < borderNum; i++) {
             LayeredButton button = new LayeredButton(swipeCenter, swipeSize);
-            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, sh * 0.425f), new Vector2(sw * 0.3f, bw), StarCycle.tex.night, 0f));
-            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(sw * 0.15f - bw / 2f, 0f), new Vector2(bw, sh * 0.9f), StarCycle.tex.night, 0f));
-            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, -sh * 0.425f), new Vector2(sw * 0.3f, bw), StarCycle.tex.night, 0f));
+            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, sh * 0.425f), new Vector2(sw * 0.3f, bw), Colors.night, 0f));
+            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(sw * 0.15f - bw / 2f, 0f), new Vector2(bw, sh * 0.9f), Colors.night, 0f));
+            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, -sh * 0.425f), new Vector2(sw * 0.3f, bw), Colors.night, 0f));
             button.moveCenter(0f, sh*i);
             draggables.add(button);
             ui.addActor(button);

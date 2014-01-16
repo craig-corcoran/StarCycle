@@ -1,7 +1,7 @@
 package com.autonomousgames.starcycle.core.screens;
 
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.BotType;
@@ -38,14 +38,9 @@ public class CampaignSelect extends LevelSelectScreen {
 		
 		addEdges(posMap);
 		
-		/*LayeredButton tutorialButton = new LayeredButton(posMap.get(SinglePlayerLevel.TUTORIAL), new Vector2(ui.getHeight()/6f, ui.getHeight()/6f));
-		tutorialButton.addLayer(new SpriteLayer(StarCycle.tex.questionIcon, new Vector2(0f, 0f), new Vector2(ui.getHeight()/10f, ui.getHeight()/10f)));
-		tutorialButton.addListener(new ScreenDoneClickListener(this, ScreenType.TUTORIAL_ORB));
-		tutorialButton.rotateLayers(90f);*/
-		
 		Vector2 baseDims = new Vector2(1f, 1f).scl(ui.getHeight() * 0.15f);
 		
-		BaseButton level1 = new BaseButton(BaseType.TAKETE, Texturez.warm, posMap.get(SinglePlayerLevel.LEVEL1), baseDims);
+		BaseButton level1 = new BaseButton(BaseType.TAKETE, Colors.warm, posMap.get(SinglePlayerLevel.LEVEL1), baseDims);
 		level1.addBottomLayer(new SpriteLayer(StarCycle.tex.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
 		if (UserSettingz.getFloatSetting(SinglePlayerLevel.LEVEL1.toString()) != 1f) {
 			level1.addBottomLayer(new SpriteLayer(StarCycle.tex.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
@@ -55,7 +50,7 @@ public class CampaignSelect extends LevelSelectScreen {
 			public void clicked(InputEvent event, float x, float y) {
 				nextLvlConfig = LevelType.TREFOIL;
 				skins = new BaseType[] {BaseType.MALUMA, BaseType.TAKETE};
-				colors = new Color[][] {Texturez.cool, Texturez.warm};
+				colors = new Color[][] {Colors.cool, Colors.warm};
 				nextLvlSinglePlayer = SinglePlayerLevel.LEVEL1;
 				botType = BotType.EZ;
 			}
@@ -63,7 +58,7 @@ public class CampaignSelect extends LevelSelectScreen {
         ArrayList<LayeredButton> levelButtons = new ArrayList<LayeredButton>();
         levelButtons.add(level1);
 		
-		BaseButton level2 = new BaseButton(BaseType.TARGET, Texturez.floral, posMap.get(SinglePlayerLevel.LEVEL2), baseDims);
+		BaseButton level2 = new BaseButton(BaseType.TARGET, Colors.floral, posMap.get(SinglePlayerLevel.LEVEL2), baseDims);
 		level2.addBottomLayer(new SpriteLayer(StarCycle.tex.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
 		if (UserSettingz.getFloatSetting(SinglePlayerLevel.LEVEL2.toString()) != 1f) {
 			level2.addBottomLayer(new SpriteLayer(StarCycle.tex.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
@@ -73,14 +68,14 @@ public class CampaignSelect extends LevelSelectScreen {
 			public void clicked(InputEvent event, float x, float y) {
 				nextLvlConfig = LevelType.CONCENTRIC;
 				skins = new BaseType[] {BaseType.MALUMA, BaseType.TARGET};
-				colors = new Color[][] {Texturez.cool, Texturez.floral};
+				colors = new Color[][] {Colors.cool, Colors.floral};
 				nextLvlSinglePlayer = SinglePlayerLevel.LEVEL2;
 				botType = BotType.MEDIUM;
 			}
 		});
 		levelButtons.add(level2);
 		
-		BaseButton level3 = new BaseButton(BaseType.DERELICT, Texturez.neutral, posMap.get(SinglePlayerLevel.LEVEL3), baseDims);
+		BaseButton level3 = new BaseButton(BaseType.DERELICT, Colors.neutral, posMap.get(SinglePlayerLevel.LEVEL3), baseDims);
 		level3.addBottomLayer(new SpriteLayer(StarCycle.tex.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
 		if (UserSettingz.getFloatSetting(SinglePlayerLevel.LEVEL3.toString()) != 1f) {
 			level3.addBottomLayer(new SpriteLayer(StarCycle.tex.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
@@ -90,14 +85,14 @@ public class CampaignSelect extends LevelSelectScreen {
 			public void clicked(InputEvent event, float x, float y) {
 				nextLvlConfig = LevelType.DOUBLEBINARY;
 				skins = new BaseType[] {BaseType.MALUMA, BaseType.DERELICT};
-				colors = new Color[][] {Texturez.cool, Texturez.neutral};
+				colors = new Color[][] {Colors.cool, Colors.neutral};
 				nextLvlSinglePlayer = SinglePlayerLevel.LEVEL3;
 				botType = BotType.MEDIUM;
 			}
 		});
 		levelButtons.add(level3);
 		
-		BaseButton level4 = new BaseButton(BaseType.CLOCKWORK, Texturez.metallic, posMap.get(SinglePlayerLevel.LEVEL4), baseDims);
+		BaseButton level4 = new BaseButton(BaseType.CLOCKWORK, Colors.metallic, posMap.get(SinglePlayerLevel.LEVEL4), baseDims);
 		level4.addBottomLayer(new SpriteLayer(StarCycle.tex.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
 		if (UserSettingz.getFloatSetting(SinglePlayerLevel.LEVEL4.toString()) != 1f) {
 			level4.addBottomLayer(new SpriteLayer(StarCycle.tex.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
@@ -107,7 +102,7 @@ public class CampaignSelect extends LevelSelectScreen {
 			public void clicked(InputEvent event, float x, float y) {
 				nextLvlConfig = LevelType.TREFOIL;
 				skins = new BaseType[] {BaseType.MALUMA, BaseType.CLOCKWORK};
-				colors = new Color[][] {Texturez.cool, Texturez.metallic};
+				colors = new Color[][] {Colors.cool, Colors.metallic};
 				nextLvlSinglePlayer = SinglePlayerLevel.LEVEL4;
 				botType = BotType.PWN;
 			}

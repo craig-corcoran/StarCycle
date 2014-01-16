@@ -1,6 +1,6 @@
 package com.autonomousgames.starcycle.core.screens;
 
-import com.autonomousgames.starcycle.core.Texturez;
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Bot;
@@ -48,9 +48,9 @@ public class Tutorial8 extends TutorialSandbox {
 	void setPlayers() {
 		numPlayers = 2;
 		players = new Player[numPlayers];
-		players[0] = new Player(0, BaseType.MALUMA, Texturez.cool, this, ui, true, true);
+		players[0] = new Player(0, BaseType.MALUMA, Colors.cool, this, ui, true, true);
 		players[0].disableIncome();
-		players[1] = new Bot(1,BaseType.TAKETE, Texturez.warm, this, ui, false, false);
+		players[1] = new Bot(1,BaseType.TAKETE, Colors.warm, this, ui, false, false);
 		tutor = (Bot) players[1];
 		tutor.setBotType(BotType.DEAD);
 //		tutor.disableIncome();

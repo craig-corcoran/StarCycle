@@ -1,5 +1,6 @@
 package com.autonomousgames.starcycle.core.screens;
 
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
@@ -23,11 +24,9 @@ public class Tutorial3 extends TutorialSandbox {
 
     public Tutorial3() {
 		super(LevelType.DOUBLE, ScreenType.TUTORIAL3, ScreenType.TUTORIAL4, ScreenType.TUTORIAL0);
-//		infoGraphic.addLayer(new SpriteLayer(Texturez.tutorialImages[5], 
-//				new Vector2(StarCycle.screenHeight, StarCycle.screenHeight*0.5f)).rotateSprite(90f));
 		Vector2 signSize = iconSize.cpy().scl(0.5f);
-		infoGraphic.addLayer(new SpriteLayer(StarCycle.tex.wrongIcon, new Vector2(StarCycle.screenWidth*5/8f-StarCycle.screenHeight/4f, -StarCycle.screenHeight/6f), signSize, StarCycle.tex.red, -90f), LayerType.ACTIVE);
-		infoGraphic.addLayer(new SpriteLayer(StarCycle.tex.rightIcon, new Vector2(StarCycle.screenWidth*5/8f-StarCycle.screenHeight/4f, StarCycle.screenHeight/6f), signSize, Texturez.spinach, -90f).rotateSprite(180f), LayerType.INACTIVE);
+		infoGraphic.addLayer(new SpriteLayer(StarCycle.tex.wrongIcon, new Vector2(StarCycle.screenWidth*5/8f-StarCycle.screenHeight/4f, -StarCycle.screenHeight/6f), signSize, Colors.red, -90f), LayerType.ACTIVE);
+		infoGraphic.addLayer(new SpriteLayer(StarCycle.tex.rightIcon, new Vector2(StarCycle.screenWidth*5/8f-StarCycle.screenHeight/4f, StarCycle.screenHeight/6f), signSize, Colors.spinach, -90f).rotateSprite(180f), LayerType.INACTIVE);
 		
 		timeNow = System.currentTimeMillis();
 		players[1].launchPad.streamOrbs = true;
@@ -75,8 +74,8 @@ public class Tutorial3 extends TutorialSandbox {
 	void setPlayers() {
 		numPlayers = 2;
 		players = new Player[numPlayers];
-		players[0] = new Player(0, BaseType.MALUMA, Texturez.cool, this, ui, false, false);
-		players[1] = new Bot(1,BaseType.TAKETE, Texturez.warm, this, ui, true, false);
+		players[0] = new Player(0, BaseType.MALUMA, Colors.cool, this, ui, false, false);
+		players[1] = new Bot(1,BaseType.TAKETE, Colors.warm, this, ui, true, false);
 		((Bot)players[1]).setBotType(BotType.DEAD);
 	}
 	

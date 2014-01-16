@@ -1,7 +1,7 @@
 package com.autonomousgames.starcycle.core.screens;
 
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.ui.*;
 import com.badlogic.gdx.math.Vector2;
@@ -28,8 +28,8 @@ public class SettingsScreen extends MenuScreen {
 
 		musIcon = new ToggleButton(new Vector2(ui.getWidth()/4f, ui.getHeight()/10f), touchSize);
 		musIcon.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, touchSize), LayerType.DOWN);
-		musIcon.addLayer(new SpriteLayer(StarCycle.tex.musicIcon, iconSize).setSpriteColor(StarCycle.tex.cyan));
-		musIcon.addLayer(new SpriteLayer(StarCycle.tex.noIcon, touchSize).setSpriteColor(StarCycle.tex.red), LayerType.TOGGLED);
+		musIcon.addLayer(new SpriteLayer(StarCycle.tex.musicIcon, iconSize).setSpriteColor(Colors.cyan));
+		musIcon.addLayer(new SpriteLayer(StarCycle.tex.noIcon, touchSize).setSpriteColor(Colors.red), LayerType.TOGGLED);
 		musIcon.setRotation(90f);
 		musIcon.addListener(new ClickListener() {
 			@Override
@@ -76,8 +76,8 @@ public class SettingsScreen extends MenuScreen {
 		
 		sfxIcon = new ToggleButton(new Vector2(ui.getWidth()*3f/8f, ui.getHeight()/10f), touchSize);
 		sfxIcon.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, touchSize), LayerType.DOWN);
-		sfxIcon.addLayer(new SpriteLayer(StarCycle.tex.soundIcon, iconSize).setSpriteColor(StarCycle.tex.yellow));
-		sfxIcon.addLayer(new SpriteLayer(StarCycle.tex.noIcon, touchSize).setSpriteColor(StarCycle.tex.red), LayerType.TOGGLED);
+		sfxIcon.addLayer(new SpriteLayer(StarCycle.tex.soundIcon, iconSize).setSpriteColor(Colors.yellow));
+		sfxIcon.addLayer(new SpriteLayer(StarCycle.tex.noIcon, touchSize).setSpriteColor(Colors.red), LayerType.TOGGLED);
 		sfxIcon.setRotation(90f);
 		sfxIcon.addListener(new ClickListener() {
 			@Override

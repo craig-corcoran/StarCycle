@@ -1,10 +1,9 @@
 package com.autonomousgames.starcycle.core.model;
 
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -52,14 +51,14 @@ public class BackgroundManager {
 	
 	public BackgroundManager() {
 
-        colors.add(Texturez.cyan);
-        colors.add(Texturez.navy);
-        colors.add(Texturez.yellow);
-        colors.add(Texturez.red);
-        colors.add(Texturez.matcha);
-        colors.add(Texturez.spinach);
-        colors.add(Texturez.magenta);
-        colors.add(Texturez.indigo);
+        colors.add(Colors.cyan);
+        colors.add(Colors.navy);
+        colors.add(Colors.yellow);
+        colors.add(Colors.red);
+        colors.add(Colors.matcha);
+        colors.add(Colors.spinach);
+        colors.add(Colors.magenta);
+        colors.add(Colors.indigo);
 
 		// Randomize the background:
         blockNum = MathUtils.random(blockRange[0], blockRange[1]);

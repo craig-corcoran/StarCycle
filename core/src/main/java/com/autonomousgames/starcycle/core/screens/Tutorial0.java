@@ -1,13 +1,12 @@
 package com.autonomousgames.starcycle.core.screens;
 
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.model.*;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
@@ -35,13 +34,7 @@ public class Tutorial0 extends Tutorial {
     float sinceLastShot;
 
     public Tutorial0() {
-        super(Level.LevelType.NOSTARS, ScreenType.TUTORIAL0, ScreenType.TUTORIAL3, ScreenType.STARTMENU, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.MALUMA}, new Color[][]{Texturez.cool, Texturez.cool});
-
-//        for (int i = 0; i < model.stars.size(); i ++) {
-//            Star star = model.stars.get(i);
-//            star.mass = 0f;
-//            star.moveStar(0f, sh * 3f);
-//        }
+        super(Level.LevelType.NOSTARS, ScreenType.TUTORIAL0, ScreenType.TUTORIAL3, ScreenType.STARTMENU, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.MALUMA}, new Color[][]{Colors.cool, Colors.cool});
 
         pauseButton.deactivate();
 

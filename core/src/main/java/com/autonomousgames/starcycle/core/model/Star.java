@@ -1,7 +1,7 @@
 package com.autonomousgames.starcycle.core.model;
 
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.ui.Layer;
 import com.autonomousgames.starcycle.core.ui.LayerType;
@@ -118,7 +118,7 @@ public class Star extends Orbitable implements Collidable {
 		// The main star visual is drawn as four quadrants.
         quadLayer0 = starButton.getLayerNum();
 		for (int i = 0; i < 4; i++) {
-			starButton.addLayer(new SpriteLayer(image, quadPos.cpy().rotate(90f*i), imageDims, Texturez.night, (90f*i)));
+			starButton.addLayer(new SpriteLayer(image, quadPos.cpy().rotate(90f*i), imageDims, Colors.night, (90f*i)));
 		}
 		starButton.deactivate(); // This is a hackish way of noting whether either player has 100% control.
 		starButton.unlock(); // This is a hackish way of noting whether either player has 50% control.
@@ -181,7 +181,7 @@ public class Star extends Orbitable implements Collidable {
 		if (controlPercents[0] < 0.99f && controlPercents[1] < 0.99f && starButton.isActive()) {
 			starButton.deactivate();
 			for (int i = quadLayer0; i < quadLayer0 + 4; i ++) {
-				starButton.getLayer(i).setColor(Texturez.night);
+				starButton.getLayer(i).setColor(Colors.night);
 			}
 		}
 		// If either player has full control, do not draw hexes:

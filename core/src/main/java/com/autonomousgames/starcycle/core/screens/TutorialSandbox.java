@@ -1,7 +1,7 @@
 package com.autonomousgames.starcycle.core.screens;
 
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.controllers.GameController;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
@@ -25,7 +25,7 @@ public abstract class TutorialSandbox extends ModelScreen {
 	public TutorialSandbox(LevelType lvlType, ScreenType scnType, ScreenType nextScreen, ScreenType prevScreen) { 
 		super(lvlType, scnType, 
 			new BaseType[] {BaseType.MALUMA, BaseType.TAKETE},
-			new Color[][] {Texturez.cool, Texturez.warm});
+			new Color[][] {Colors.cool, Colors.warm});
 		background.noDraw = true;
 		this.nextScreen = nextScreen;
 		Gdx.input.setInputProcessor(new GameController(this, 1)); // only one active touch interface
@@ -37,7 +37,7 @@ public abstract class TutorialSandbox extends ModelScreen {
 		nextPage = new StandardButton(new Vector2(navHeight, StarCycle.screenHeight-backSize.x*0.8f),
 				backSize,	StarCycle.tex.backIcon, padding);
 		nextPage.rotateLayers(-90f).flip(false, true);
-		nextPage.addLayer(new SpriteLayer(StarCycle.tex.noIcon, iconSize).setSpriteColor(Texturez.red), LayerType.INACTIVE);
+		nextPage.addLayer(new SpriteLayer(StarCycle.tex.noIcon, iconSize).setSpriteColor(Colors.red), LayerType.INACTIVE);
 		nextPage.addListener(new ScreenDoneClickListener(this, nextScreen));
 		ui.addActor(nextPage);
 		

@@ -2,6 +2,7 @@ package com.autonomousgames.starcycle.core.screens;
 
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.model.*;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
@@ -83,13 +84,12 @@ public abstract class ModelScreen extends GameScreen{
 		mainMenuButton = new StandardButton(new Vector2(StarCycle.screenWidth/2f, side), iconSize.cpy().scl(0.8f), StarCycle.tex.pauseUI[0], padding);
 		mainMenuButton.addListener(new ScreenDoneClickListener(this,ScreenType.MAINMENU));
 		mainMenuButton.setRotation(90f);
-        mainMenuButton.setColor(StarCycle.tex.navy);
+        mainMenuButton.setColor(Colors.navy);
 		
 		resumeButton = new LayeredButton(new Vector2(StarCycle.screenWidth/2f, side*3f), iconSize.cpy().scl(2f));
         resumeButton.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(StarCycle.screenHeight, StarCycle.screenWidth).scl(1.1f)).setSpriteColor(Color.BLACK).setSpriteAlpha(0.6f));
 		resumeButton.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, iconSize.cpy().scl(2f)), LayerType.DOWN);
-//		resumeButton.addLayer(new SpriteLayer(StarCycle.tex.pauseUI[1], iconSize.cpy().scl(0.35f)));
-		resumeButton.addLayer(new SpriteLayer(StarCycle.tex.pauseUI[2], iconSize.cpy().scl(1.75f)).setRotationSpeed(30f).setSpriteColor(Texturez.spinach));
+		resumeButton.addLayer(new SpriteLayer(StarCycle.tex.pauseUI[2], iconSize.cpy().scl(1.75f)).setRotationSpeed(30f).setSpriteColor(Colors.spinach));
 		resumeButton.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
@@ -104,7 +104,7 @@ public abstract class ModelScreen extends GameScreen{
 		backButton = new StandardButton(new Vector2(StarCycle.screenWidth/2f, side*5f), new Vector2( iconSize.x, iconSize.y*0.75f), StarCycle.tex.pauseUI[3], padding);
 		backButton.addListener(new ScreenDoneClickListener(this,this.backScreen));
 		backButton.setRotation(90f);
-        backButton.setColor(Texturez.red);
+        backButton.setColor(Colors.red);
 		
 		ui.addActor(pauseButton);
 	}
