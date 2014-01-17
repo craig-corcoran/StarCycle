@@ -1,23 +1,19 @@
 #!/bin/bash
 pack_textures() {
     echo "ASSUMING YOUR CWD IS STARCYCLE PROJECT ROOT"
-    export SC_DIR=.
+    export SC_DIR=.  # TODO make this a script parameter
+    cd $SC_DIR
 
     echo "REMOVING OLD TEXTURES"
     if [ -d $SC_DIR/assets ]; then
         rm -r $SC_DIR/assets
     fi
-    if [ -d $SC_DIR/current ]; then
-        rm -r $SC_DIR/current
-    fi
-
-    if [ -d ~/Dropbox ]; then
-        echo "COPYING ASSETS FROM DROPBOX (ASSUMING ~/Dropbox/assets)"
+    if [ -d ~/Dropbox/assets ]; then
+        echo "COPY ASSETS FROM DROPBOX (ASSUMING ~/Dropbox/assets)"
         cp -r ~/Dropbox/assets $SC_DIR/assets
     else
-        mkdir $SC_DIR/assets
-        s3cmd get --recursive s3://autonomousgames/assets/current $SC_DIR
-        mv $SC_DIR/current $SC_DIR/assets
+        echo "Fail: no ~/Dropbox/assets"
+        exit 1
     fi
     
     export TPCLASSDIR=$(pwd)/$line/tools/src/main/java/com/autonomousgames/starcycle/tools
@@ -33,7 +29,6 @@ pack_textures() {
 
     echo "CLEANING UP"
     rm -r $SC_DIR/assets/images
-    rm $SC_DIR/tools/src/main/java/com/autonomousgames/starcycle/tools/StarCycleTexturePacker.class
     
     echo "DONE"
 }
