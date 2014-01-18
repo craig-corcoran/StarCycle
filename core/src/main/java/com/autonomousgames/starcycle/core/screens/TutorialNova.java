@@ -35,7 +35,7 @@
 //						public void clicked (InputEvent event, float x, float y) {
 //							Gdx.app.log("case 2--launchButtonListener", stringCounter + "");
 //							tutorialButton.removeLayer();
-//							tutorialButton.addLayer(Texturez.latoLightLarge,Texturez.cyan, getNextString(stringCounter), textPosCenter, wrapWidth);
+//							tutorialButton.addLayer(StarCycle.tex.latoLightLarge,StarCycle.tex.cyan, getNextString(stringCounter), textPosCenter, wrapWidth);
 //							student.frozen = false;
 //							student.base.setPointer(new Vector2(-10f, 0f));
 //							orbFactory.launch(OrbType.NOVA, student);

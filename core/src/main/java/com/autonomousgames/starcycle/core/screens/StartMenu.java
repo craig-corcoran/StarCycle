@@ -14,19 +14,19 @@ public class StartMenu extends MenuScreen {
 		
 		float padding = StarCycle.pixelsPerMeter/2f; // padding around text-only buttons
 
-		StandardButton backButton = new StandardButton(backPosition, backSize, Texturez.backIcon, padding);
+		StandardButton backButton = new StandardButton(backPosition, backSize, StarCycle.tex.backIcon, padding);
 		backButton.setRotation(90f);
 		backButton.addListener(new ScreenDoneClickListener(this, ScreenType.MAINMENU));
 		
-		StandardButton singlePlayerButton = new StandardButton(new Vector2(ui.getWidth()/4f, ui.getHeight()/2f), iconSize, Texturez.soloIcon, padding);
+		StandardButton singlePlayerButton = new StandardButton(new Vector2(ui.getWidth()/4f, ui.getHeight()/2f), iconSize, StarCycle.tex.soloIcon, padding);
 		singlePlayerButton.setRotation(90f);
 		singlePlayerButton.addListener(new ScreenDoneClickListener(this,ScreenType.CAMPAIGNSELECT));
 		
-		StandardButton multiPlayerButton = new StandardButton(new Vector2(ui.getWidth()/2f, ui.getHeight()/2f), new Vector2(iconSize.x*4f/3f, iconSize.y), Texturez.multiplayerIcon, padding);
+		StandardButton multiPlayerButton = new StandardButton(new Vector2(ui.getWidth()/2f, ui.getHeight()/2f), new Vector2(iconSize.x*4f/3f, iconSize.y), StarCycle.tex.multiplayerIcon, padding);
 		multiPlayerButton.setRotation(90f);
 		multiPlayerButton.addListener(new ScreenDoneClickListener(this,ScreenType.MULTIPLAYERSELECT));
 		
-		StandardButton tutorialButton = new StandardButton(new Vector2(ui.getWidth()*3f/4f, ui.getHeight()/2f), iconSize.div(2f), Texturez.questionIcon, padding);
+		StandardButton tutorialButton = new StandardButton(new Vector2(ui.getWidth()*3f/4f, ui.getHeight()/2f), iconSize.div(2f), StarCycle.tex.questionIcon, padding);
 		tutorialButton.setRotation(90f);
 		tutorialButton.addListener(new ScreenDoneClickListener(this,ScreenType.TUTORIAL0));
 

@@ -1,6 +1,7 @@
 package com.autonomousgames.starcycle.core.screens;
 
-import com.autonomousgames.starcycle.core.Texturez;
+import com.autonomousgames.starcycle.core.Colors;
+import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
 import com.autonomousgames.starcycle.core.ui.*;
@@ -63,15 +64,15 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		Vector2 buttonDims = new Vector2(ui.getHeight()/6f, ui.getHeight()/6f);
 		
 		ready0 = new ToggleButton(new Vector2(ui.getWidth()*8f/9f, ui.getHeight()/7f), buttonDims);
-		ready0.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.DOWN);
-		ready0.addLayer(new SpriteLayer(Texturez.readyIcon, buttonDims).setSpriteColor(Texturez.smoke), LayerType.UNTOGGLED);
-		ready0.addLayer(new SpriteLayer(Texturez.readyIcon, buttonDims).setSpriteColor(Texturez.spinach), LayerType.TOGGLED);
+		ready0.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.DOWN);
+		ready0.addLayer(new SpriteLayer(StarCycle.tex.readyIcon, buttonDims).setSpriteColor(Colors.smoke), LayerType.UNTOGGLED);
+		ready0.addLayer(new SpriteLayer(StarCycle.tex.readyIcon, buttonDims).setSpriteColor(Colors.spinach), LayerType.TOGGLED);
 		ready0.setRotation(90f);
 
 		ready1 = new ToggleButton(new Vector2(ui.getWidth()/9f, ui.getHeight()*6f/7f), buttonDims);
-		ready1.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.DOWN);
-		ready1.addLayer(new SpriteLayer(Texturez.readyIcon, buttonDims).setSpriteColor(Texturez.smoke), LayerType.UNTOGGLED);
-		ready1.addLayer(new SpriteLayer(Texturez.readyIcon, buttonDims).setSpriteColor(Texturez.spinach), LayerType.TOGGLED);
+		ready1.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.DOWN);
+		ready1.addLayer(new SpriteLayer(StarCycle.tex.readyIcon, buttonDims).setSpriteColor(Colors.smoke), LayerType.UNTOGGLED);
+		ready1.addLayer(new SpriteLayer(StarCycle.tex.readyIcon, buttonDims).setSpriteColor(Colors.spinach), LayerType.TOGGLED);
 		ready1.setRotation(270f);
 		
 		readyGroup.addButton(ready0);
@@ -87,10 +88,10 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		readyGroup.addAll(ui);
 		
 		trefoilButton = new ToggleButton(new Vector2(ui.getWidth()/2f,ui.getHeight()/5f), buttonDims);
-		trefoilButton.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.DOWN);
-		trefoilButton.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
-		trefoilButton.addLayer(new SpriteLayer(Texturez.levelIconsOn[0], buttonDims), LayerType.TOGGLED);
-		trefoilButton.addLayer(new SpriteLayer(Texturez.levelIconsOff[0], buttonDims), LayerType.UNTOGGLED);
+		trefoilButton.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.DOWN);
+		trefoilButton.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
+		trefoilButton.addLayer(new SpriteLayer(StarCycle.tex.levelIconsOn[0], buttonDims), LayerType.TOGGLED);
+		trefoilButton.addLayer(new SpriteLayer(StarCycle.tex.levelIconsOff[0], buttonDims), LayerType.UNTOGGLED);
 		trefoilButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
 				nextLvlConfig = LevelType.TREFOIL;
@@ -98,10 +99,10 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		});
 		
 		doublebinaryButton = new ToggleButton(new Vector2(ui.getWidth()/2f,ui.getHeight()*2f/5f), buttonDims);
-		doublebinaryButton.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.DOWN);
-		doublebinaryButton.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
-		doublebinaryButton.addLayer(new SpriteLayer(Texturez.levelIconsOn[1], buttonDims), LayerType.TOGGLED);
-		doublebinaryButton.addLayer(new SpriteLayer(Texturez.levelIconsOff[1], buttonDims), LayerType.UNTOGGLED);
+		doublebinaryButton.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.DOWN);
+		doublebinaryButton.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
+		doublebinaryButton.addLayer(new SpriteLayer(StarCycle.tex.levelIconsOn[1], buttonDims), LayerType.TOGGLED);
+		doublebinaryButton.addLayer(new SpriteLayer(StarCycle.tex.levelIconsOff[1], buttonDims), LayerType.UNTOGGLED);
 		doublebinaryButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
 				nextLvlConfig = LevelType.DOUBLEBINARY;
@@ -109,10 +110,10 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		});
 		
 		concentricButton = new ToggleButton(new Vector2(ui.getWidth()/2f,ui.getHeight()*3f/5f), buttonDims);
-		concentricButton.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.DOWN);
-		concentricButton.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
-		concentricButton.addLayer(new SpriteLayer(Texturez.levelIconsOn[2], buttonDims), LayerType.TOGGLED);
-		concentricButton.addLayer(new SpriteLayer(Texturez.levelIconsOff[2], buttonDims), LayerType.UNTOGGLED);
+		concentricButton.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.DOWN);
+		concentricButton.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
+		concentricButton.addLayer(new SpriteLayer(StarCycle.tex.levelIconsOn[2], buttonDims), LayerType.TOGGLED);
+		concentricButton.addLayer(new SpriteLayer(StarCycle.tex.levelIconsOff[2], buttonDims), LayerType.UNTOGGLED);
 		concentricButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
 				nextLvlConfig = LevelType.CONCENTRIC;
@@ -120,10 +121,10 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		});
 		
 		venndiagramButton = new ToggleButton(new Vector2(ui.getWidth()/2f,ui.getHeight()*4f/5f), buttonDims);
-		venndiagramButton.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.DOWN);
-		venndiagramButton.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
-		venndiagramButton.addLayer(new SpriteLayer(Texturez.levelIconsOn[3], buttonDims), LayerType.TOGGLED);
-		venndiagramButton.addLayer(new SpriteLayer(Texturez.levelIconsOff[3], buttonDims), LayerType.UNTOGGLED);
+		venndiagramButton.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.DOWN);
+		venndiagramButton.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
+		venndiagramButton.addLayer(new SpriteLayer(StarCycle.tex.levelIconsOn[3], buttonDims), LayerType.TOGGLED);
+		venndiagramButton.addLayer(new SpriteLayer(StarCycle.tex.levelIconsOff[3], buttonDims), LayerType.UNTOGGLED);
 		venndiagramButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
 				nextLvlConfig = LevelType.VENNDIAGRAM;
@@ -166,9 +167,9 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		onButton.deactivate();
 		
 		maluma0 = new ToggleButton(new Vector2(ui.getWidth()*3f/4f, ui.getHeight()*3f/10f), buttonDims);
-		maluma0.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.TOGGLED);
-		maluma0.addLayer(new SpriteLayer(Texturez.baseMaluma0, buttonDims).setRotationSpeed(30f));
-		maluma0.addLayer(new SpriteLayer(Texturez.baseMaluma0, buttonDims).setRotationSpeed(-30f));
+		maluma0.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.TOGGLED);
+		maluma0.addLayer(new SpriteLayer(StarCycle.tex.baseMaluma0, buttonDims).setRotationSpeed(30f));
+		maluma0.addLayer(new SpriteLayer(StarCycle.tex.baseMaluma0, buttonDims).setRotationSpeed(-30f));
 		maluma0.setRotation(90f);
 		maluma0.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
@@ -177,9 +178,9 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		});
 		
 		takete0 = new ToggleButton(new Vector2(ui.getWidth()*3f/4f, ui.getHeight()/2f), buttonDims);
-		takete0.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.TOGGLED);
-		takete0.addLayer(new SpriteLayer(Texturez.baseTakete0, buttonDims).setRotationSpeed(30f));
-		takete0.addLayer(new SpriteLayer(Texturez.baseTakete0, buttonDims).setRotationSpeed(-30f));
+		takete0.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.TOGGLED);
+		takete0.addLayer(new SpriteLayer(StarCycle.tex.baseTakete0, buttonDims).setRotationSpeed(30f));
+		takete0.addLayer(new SpriteLayer(StarCycle.tex.baseTakete0, buttonDims).setRotationSpeed(-30f));
 		takete0.setRotation(90f);
 		takete0.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
@@ -188,9 +189,9 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		});
 		
 		derelict0 = new ToggleButton(new Vector2(ui.getWidth()*3f/4f, ui.getHeight()*7f/10f), buttonDims);
-		derelict0.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.TOGGLED);
-		derelict0.addLayer(new SpriteLayer(Texturez.baseDerelict0a, buttonDims).setRotationSpeed(30f));
-		derelict0.addLayer(new SpriteLayer(Texturez.baseDerelict0b, buttonDims).setRotationSpeed(-30f));
+		derelict0.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.TOGGLED);
+		derelict0.addLayer(new SpriteLayer(StarCycle.tex.baseDerelict0a, buttonDims).setRotationSpeed(30f));
+		derelict0.addLayer(new SpriteLayer(StarCycle.tex.baseDerelict0b, buttonDims).setRotationSpeed(-30f));
 		derelict0.setRotation(90f);
 		derelict0.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
@@ -203,9 +204,9 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		skinRadio0.addButton(derelict0);
 		
 		maluma1 = new ToggleButton(new Vector2(ui.getWidth()/4f, ui.getHeight()*7f/10f), buttonDims);
-		maluma1.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.TOGGLED);
-		maluma1.addLayer(new SpriteLayer(Texturez.baseMaluma0, buttonDims).setRotationSpeed(30f));
-		maluma1.addLayer(new SpriteLayer(Texturez.baseMaluma0, buttonDims).setRotationSpeed(-30f));
+		maluma1.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.TOGGLED);
+		maluma1.addLayer(new SpriteLayer(StarCycle.tex.baseMaluma0, buttonDims).setRotationSpeed(30f));
+		maluma1.addLayer(new SpriteLayer(StarCycle.tex.baseMaluma0, buttonDims).setRotationSpeed(-30f));
 		maluma1.setRotation(270f);
 		maluma1.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
@@ -214,9 +215,9 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		});
 		
 		takete1 = new ToggleButton(new Vector2(ui.getWidth()/4f, ui.getHeight()/2f), buttonDims);
-		takete1.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.TOGGLED);
-		takete1.addLayer(new SpriteLayer(Texturez.baseTakete0, buttonDims).setRotationSpeed(30f));
-		takete1.addLayer(new SpriteLayer(Texturez.baseTakete0, buttonDims).setRotationSpeed(-30f));
+		takete1.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.TOGGLED);
+		takete1.addLayer(new SpriteLayer(StarCycle.tex.baseTakete0, buttonDims).setRotationSpeed(30f));
+		takete1.addLayer(new SpriteLayer(StarCycle.tex.baseTakete0, buttonDims).setRotationSpeed(-30f));
 		takete1.setRotation(270f);
 		takete1.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
@@ -225,9 +226,9 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		});
 		
 		derelict1 = new ToggleButton(new Vector2(ui.getWidth()/4f, ui.getHeight()*3f/10f), buttonDims);
-		derelict1.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.TOGGLED);
-		derelict1.addLayer(new SpriteLayer(Texturez.baseDerelict0a, buttonDims).setRotationSpeed(30f));
-		derelict1.addLayer(new SpriteLayer(Texturez.baseDerelict0b, buttonDims).setRotationSpeed(-30f));
+		derelict1.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.TOGGLED);
+		derelict1.addLayer(new SpriteLayer(StarCycle.tex.baseDerelict0a, buttonDims).setRotationSpeed(30f));
+		derelict1.addLayer(new SpriteLayer(StarCycle.tex.baseDerelict0b, buttonDims).setRotationSpeed(-30f));
 		derelict1.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				skin1 = BaseType.DERELICT;
@@ -239,52 +240,52 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		skinRadio1.addButton(derelict1);
 		
 		cool0 = new ToggleButton(new Vector2(ui.getWidth()*3/4f, ui.getHeight()/5f), buttonDims);
-		cool0.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
-		cool0.addLayer(new SpriteLayer(Texturez.block, buttonDims.cpy().scl(0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Texturez.cool[0]).setSpriteAlpha(0.6f));
-		cool0.addLayer(new SpriteLayer(Texturez.block, buttonDims.cpy().scl(-0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Texturez.cool[1]).setSpriteAlpha(0.6f));
-		cool0.addLayer(new SpriteLayer(Texturez.noIcon, buttonDims).setSpriteColor(Texturez.charcoal).rotateSprite(90f), LayerType.LOCKED);
+		cool0.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
+		cool0.addLayer(new SpriteLayer(StarCycle.tex.block, buttonDims.cpy().scl(0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Colors.cool[0]).setSpriteAlpha(0.6f));
+		cool0.addLayer(new SpriteLayer(StarCycle.tex.block, buttonDims.cpy().scl(-0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Colors.cool[1]).setSpriteAlpha(0.6f));
+		cool0.addLayer(new SpriteLayer(StarCycle.tex.noIcon, buttonDims).setSpriteColor(Colors.charcoal).rotateSprite(90f), LayerType.LOCKED);
 		cool0.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				colors0 = Texturez.cool;
+				colors0 = Colors.cool;
 				colorRadio1.unlockAll();
 				cool1.lock();
 			}
 		});
 		
 		warm0 = new ToggleButton(new Vector2(ui.getWidth()*3/4f, ui.getHeight()*2f/5f), buttonDims);
-		warm0.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
-		warm0.addLayer(new SpriteLayer(Texturez.block, buttonDims.cpy().scl(0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Texturez.warm[0]).setSpriteAlpha(0.6f));
-		warm0.addLayer(new SpriteLayer(Texturez.block, buttonDims.cpy().scl(-0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Texturez.warm[1]).setSpriteAlpha(0.6f));
-		warm0.addLayer(new SpriteLayer(Texturez.noIcon, buttonDims).setSpriteColor(Texturez.charcoal).rotateSprite(90f), LayerType.LOCKED);
+		warm0.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
+		warm0.addLayer(new SpriteLayer(StarCycle.tex.block, buttonDims.cpy().scl(0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Colors.warm[0]).setSpriteAlpha(0.6f));
+		warm0.addLayer(new SpriteLayer(StarCycle.tex.block, buttonDims.cpy().scl(-0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Colors.warm[1]).setSpriteAlpha(0.6f));
+		warm0.addLayer(new SpriteLayer(StarCycle.tex.noIcon, buttonDims).setSpriteColor(Colors.charcoal).rotateSprite(90f), LayerType.LOCKED);
 		warm0.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				colors0 = Texturez.warm;
+				colors0 = Colors.warm;
 				colorRadio1.unlockAll();
 				warm1.lock();
 			}
 		});
 		
 		leafy0 = new ToggleButton(new Vector2(ui.getWidth()*3/4f, ui.getHeight()*3f/5f), buttonDims);
-		leafy0.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
-		leafy0.addLayer(new SpriteLayer(Texturez.block, buttonDims.cpy().scl(0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Texturez.leafy[0]).setSpriteAlpha(0.6f));
-		leafy0.addLayer(new SpriteLayer(Texturez.block, buttonDims.cpy().scl(-0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Texturez.leafy[1]).setSpriteAlpha(0.6f));
-		leafy0.addLayer(new SpriteLayer(Texturez.noIcon, buttonDims).setSpriteColor(Texturez.charcoal).rotateSprite(90f), LayerType.LOCKED);
+		leafy0.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
+		leafy0.addLayer(new SpriteLayer(StarCycle.tex.block, buttonDims.cpy().scl(0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Colors.leafy[0]).setSpriteAlpha(0.6f));
+		leafy0.addLayer(new SpriteLayer(StarCycle.tex.block, buttonDims.cpy().scl(-0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Colors.leafy[1]).setSpriteAlpha(0.6f));
+		leafy0.addLayer(new SpriteLayer(StarCycle.tex.noIcon, buttonDims).setSpriteColor(Colors.charcoal).rotateSprite(90f), LayerType.LOCKED);
 		leafy0.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				colors0 = Texturez.leafy;
+				colors0 = Colors.leafy;
 				colorRadio1.unlockAll();
 				leafy1.lock();
 			}
 		});
 		
 		floral0 = new ToggleButton(new Vector2(ui.getWidth()*3/4f, ui.getHeight()*4f/5f), buttonDims);
-		floral0.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
-		floral0.addLayer(new SpriteLayer(Texturez.block, buttonDims.cpy().scl(0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Texturez.floral[0]).setSpriteAlpha(0.6f));
-		floral0.addLayer(new SpriteLayer(Texturez.block, buttonDims.cpy().scl(-0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Texturez.floral[1]).setSpriteAlpha(0.6f));
-		floral0.addLayer(new SpriteLayer(Texturez.noIcon, buttonDims).setSpriteColor(Texturez.charcoal).rotateSprite(90f), LayerType.LOCKED);
+		floral0.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
+		floral0.addLayer(new SpriteLayer(StarCycle.tex.block, buttonDims.cpy().scl(0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Colors.floral[0]).setSpriteAlpha(0.6f));
+		floral0.addLayer(new SpriteLayer(StarCycle.tex.block, buttonDims.cpy().scl(-0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Colors.floral[1]).setSpriteAlpha(0.6f));
+		floral0.addLayer(new SpriteLayer(StarCycle.tex.noIcon, buttonDims).setSpriteColor(Colors.charcoal).rotateSprite(90f), LayerType.LOCKED);
 		floral0.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				colors0 = Texturez.floral;
+				colors0 = Colors.floral;
 				colorRadio1.unlockAll();
 				floral1.lock();
 			}
@@ -296,52 +297,52 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		colorRadio0.addButton(floral0);
 		
 		cool1 = new ToggleButton(new Vector2(ui.getWidth()/4f, ui.getHeight()*4f/5f), buttonDims);
-		cool1.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
-		cool1.addLayer(new SpriteLayer(Texturez.block, buttonDims.cpy().scl(-0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Texturez.cool[0]).setSpriteAlpha(0.6f));
-		cool1.addLayer(new SpriteLayer(Texturez.block, buttonDims.cpy().scl(0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Texturez.cool[1]).setSpriteAlpha(0.6f));
-		cool1.addLayer(new SpriteLayer(Texturez.noIcon, buttonDims).setSpriteColor(Texturez.charcoal).rotateSprite(270f), LayerType.LOCKED);
+		cool1.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
+		cool1.addLayer(new SpriteLayer(StarCycle.tex.block, buttonDims.cpy().scl(-0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Colors.cool[0]).setSpriteAlpha(0.6f));
+		cool1.addLayer(new SpriteLayer(StarCycle.tex.block, buttonDims.cpy().scl(0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Colors.cool[1]).setSpriteAlpha(0.6f));
+		cool1.addLayer(new SpriteLayer(StarCycle.tex.noIcon, buttonDims).setSpriteColor(Colors.charcoal).rotateSprite(270f), LayerType.LOCKED);
 		cool1.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				colors1 = Texturez.cool;
+				colors1 = Colors.cool;
 				colorRadio0.unlockAll();
 				cool0.lock();
 			}
 		});
 		
 		warm1 = new ToggleButton(new Vector2(ui.getWidth()/4f, ui.getHeight()*3f/5f), buttonDims);
-		warm1.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
-		warm1.addLayer(new SpriteLayer(Texturez.block, buttonDims.cpy().scl(-0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Texturez.warm[0]).setSpriteAlpha(0.6f));
-		warm1.addLayer(new SpriteLayer(Texturez.block, buttonDims.cpy().scl(0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Texturez.warm[1]).setSpriteAlpha(0.6f));
-		warm1.addLayer(new SpriteLayer(Texturez.noIcon, buttonDims).setSpriteColor(Texturez.charcoal).rotateSprite(270f), LayerType.LOCKED);
+		warm1.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
+		warm1.addLayer(new SpriteLayer(StarCycle.tex.block, buttonDims.cpy().scl(-0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Colors.warm[0]).setSpriteAlpha(0.6f));
+		warm1.addLayer(new SpriteLayer(StarCycle.tex.block, buttonDims.cpy().scl(0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Colors.warm[1]).setSpriteAlpha(0.6f));
+		warm1.addLayer(new SpriteLayer(StarCycle.tex.noIcon, buttonDims).setSpriteColor(Colors.charcoal).rotateSprite(270f), LayerType.LOCKED);
 		warm1.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				colors1 = Texturez.warm;
+				colors1 = Colors.warm;
 				colorRadio0.unlockAll();
 				warm0.lock();
 			}
 		});
 		
 		leafy1 = new ToggleButton(new Vector2(ui.getWidth()/4f, ui.getHeight()*2f/5f), buttonDims);
-		leafy1.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
-		leafy1.addLayer(new SpriteLayer(Texturez.block, buttonDims.cpy().scl(-0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Texturez.leafy[0]).setSpriteAlpha(0.6f));
-		leafy1.addLayer(new SpriteLayer(Texturez.block, buttonDims.cpy().scl(0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Texturez.leafy[1]).setSpriteAlpha(0.6f));
-		leafy1.addLayer(new SpriteLayer(Texturez.noIcon, buttonDims).setSpriteColor(Texturez.charcoal).rotateSprite(270f), LayerType.LOCKED);
+		leafy1.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
+		leafy1.addLayer(new SpriteLayer(StarCycle.tex.block, buttonDims.cpy().scl(-0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Colors.leafy[0]).setSpriteAlpha(0.6f));
+		leafy1.addLayer(new SpriteLayer(StarCycle.tex.block, buttonDims.cpy().scl(0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Colors.leafy[1]).setSpriteAlpha(0.6f));
+		leafy1.addLayer(new SpriteLayer(StarCycle.tex.noIcon, buttonDims).setSpriteColor(Colors.charcoal).rotateSprite(270f), LayerType.LOCKED);
 		leafy1.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				colors1 = Texturez.leafy;
+				colors1 = Colors.leafy;
 				colorRadio0.unlockAll();
 				leafy0.lock();
 			}
 		});
 		
 		floral1 = new ToggleButton(new Vector2(ui.getWidth()/4f, ui.getHeight()/5f), buttonDims);
-		floral1.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
-		floral1.addLayer(new SpriteLayer(Texturez.block, buttonDims.cpy().scl(-0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Texturez.floral[0]).setSpriteAlpha(0.6f));
-		floral1.addLayer(new SpriteLayer(Texturez.block, buttonDims.cpy().scl(0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Texturez.floral[1]).setSpriteAlpha(0.6f));
-		floral1.addLayer(new SpriteLayer(Texturez.noIcon, buttonDims).setSpriteColor(Texturez.charcoal).rotateSprite(270f), LayerType.LOCKED);
+		floral1.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.5f)), LayerType.TOGGLED);
+		floral1.addLayer(new SpriteLayer(StarCycle.tex.block, buttonDims.cpy().scl(-0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Colors.floral[0]).setSpriteAlpha(0.6f));
+		floral1.addLayer(new SpriteLayer(StarCycle.tex.block, buttonDims.cpy().scl(0.125f), buttonDims.cpy().scl(0.75f)).setSpriteColor(Colors.floral[1]).setSpriteAlpha(0.6f));
+		floral1.addLayer(new SpriteLayer(StarCycle.tex.noIcon, buttonDims).setSpriteColor(Colors.charcoal).rotateSprite(270f), LayerType.LOCKED);
 		floral1.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				colors1 = Texturez.floral;
+				colors1 = Colors.floral;
 				colorRadio0.unlockAll();
 				floral0.lock();
 			}
@@ -353,12 +354,12 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		colorRadio1.addButton(floral1);
 		
 		skinSelect0 = new ToggleButton(new Vector2(ui.getWidth()*8f/9f, ui.getHeight()*2f/5f), buttonDims);
-		skinSelect0.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.DOWN);
-		skinSelect0.addLayer(new SpriteLayer(Texturez.swapIcon, buttonDims).setSpriteColor(Texturez.smoke).setSpriteAlpha(0.4f), LayerType.UNTOGGLED);
-		skinSelect0.addLayer(new SpriteLayer(Texturez.swapIcon, buttonDims).setSpriteColor(Texturez.smoke).setSpriteAlpha(0.4f).setRotationSpeed(-15f), LayerType.TOGGLED);
-		skinSelect0.addLayer(new SpriteLayer(Texturez.baseMaluma0, buttonDims.cpy().scl(1f / 4f), buttonDims.cpy().scl(1f / 2f)).setSpriteColor(Texturez.cyan));
-		skinSelect0.addLayer(new SpriteLayer(Texturez.baseTakete0, buttonDims.cpy().scl(1f / 4f).rotate(120f), buttonDims.cpy().scl(1f / 2f)).setSpriteColor(Texturez.yellow));
-		skinSelect0.addLayer(new SpriteLayer(Texturez.baseDerelict0a, buttonDims.cpy().scl(1f / 4f).rotate(240f), buttonDims.cpy().scl(1f / 2f)).setSpriteColor(Color.WHITE));
+		skinSelect0.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.DOWN);
+		skinSelect0.addLayer(new SpriteLayer(StarCycle.tex.swapIcon, buttonDims).setSpriteColor(Colors.smoke).setSpriteAlpha(0.4f), LayerType.UNTOGGLED);
+		skinSelect0.addLayer(new SpriteLayer(StarCycle.tex.swapIcon, buttonDims).setSpriteColor(Colors.smoke).setSpriteAlpha(0.4f).setRotationSpeed(-15f), LayerType.TOGGLED);
+		skinSelect0.addLayer(new SpriteLayer(StarCycle.tex.baseMaluma0, buttonDims.cpy().scl(1f / 4f), buttonDims.cpy().scl(1f / 2f)).setSpriteColor(Colors.cyan));
+		skinSelect0.addLayer(new SpriteLayer(StarCycle.tex.baseTakete0, buttonDims.cpy().scl(1f / 4f).rotate(120f), buttonDims.cpy().scl(1f / 2f)).setSpriteColor(Colors.yellow));
+		skinSelect0.addLayer(new SpriteLayer(StarCycle.tex.baseDerelict0a, buttonDims.cpy().scl(1f / 4f).rotate(240f), buttonDims.cpy().scl(1f / 2f)).setSpriteColor(Color.WHITE));
 		skinSelect0.setRotation(90f);
 		skinSelect0.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
@@ -375,12 +376,12 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		});
 		
 		skinSelect1 = new ToggleButton(new Vector2(ui.getWidth()/9f, ui.getHeight()*3/5f), buttonDims);
-		skinSelect1.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.DOWN);
-		skinSelect1.addLayer(new SpriteLayer(Texturez.swapIcon, buttonDims).setSpriteColor(Texturez.smoke).setSpriteAlpha(0.4f), LayerType.UNTOGGLED);
-		skinSelect1.addLayer(new SpriteLayer(Texturez.swapIcon, buttonDims).setSpriteColor(Texturez.smoke).setSpriteAlpha(0.4f).setRotationSpeed(-15f), LayerType.TOGGLED);
-		skinSelect1.addLayer(new SpriteLayer(Texturez.baseMaluma0, buttonDims.cpy().scl(1f / 4f).rotate(180f), buttonDims.cpy().scl(1f / 2f)).setSpriteColor(Texturez.cyan));
-		skinSelect1.addLayer(new SpriteLayer(Texturez.baseTakete0, buttonDims.cpy().scl(1f / 4f).rotate(60f), buttonDims.cpy().scl(1f / 2f)).setSpriteColor(Texturez.yellow));
-		skinSelect1.addLayer(new SpriteLayer(Texturez.baseDerelict0a, buttonDims.cpy().scl(1f / 4f).rotate(300f), buttonDims.cpy().scl(1f / 2f)).setSpriteColor(Color.WHITE));
+		skinSelect1.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.DOWN);
+		skinSelect1.addLayer(new SpriteLayer(StarCycle.tex.swapIcon, buttonDims).setSpriteColor(Colors.smoke).setSpriteAlpha(0.4f), LayerType.UNTOGGLED);
+		skinSelect1.addLayer(new SpriteLayer(StarCycle.tex.swapIcon, buttonDims).setSpriteColor(Colors.smoke).setSpriteAlpha(0.4f).setRotationSpeed(-15f), LayerType.TOGGLED);
+		skinSelect1.addLayer(new SpriteLayer(StarCycle.tex.baseMaluma0, buttonDims.cpy().scl(1f / 4f).rotate(180f), buttonDims.cpy().scl(1f / 2f)).setSpriteColor(Colors.cyan));
+		skinSelect1.addLayer(new SpriteLayer(StarCycle.tex.baseTakete0, buttonDims.cpy().scl(1f / 4f).rotate(60f), buttonDims.cpy().scl(1f / 2f)).setSpriteColor(Colors.yellow));
+		skinSelect1.addLayer(new SpriteLayer(StarCycle.tex.baseDerelict0a, buttonDims.cpy().scl(1f / 4f).rotate(300f), buttonDims.cpy().scl(1f / 2f)).setSpriteColor(Color.WHITE));
 		skinSelect1.setRotation(270f);
 		skinSelect1.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
@@ -397,10 +398,10 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		});
 		
 		colorSelect0 = new ToggleButton(new Vector2(ui.getWidth()*8f/9f, ui.getHeight()*3f/5f), buttonDims);
-		colorSelect0.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.DOWN);
-		colorSelect0.addLayer(new SpriteLayer(Texturez.swapIcon, buttonDims).setSpriteColor(Texturez.smoke).setSpriteAlpha(0.4f), LayerType.UNTOGGLED);
-		colorSelect0.addLayer(new SpriteLayer(Texturez.swapIcon, buttonDims).setSpriteColor(Texturez.smoke).setSpriteAlpha(0.4f).setRotationSpeed(-15f), LayerType.TOGGLED);
-		colorSelect0.addLayer(new SpriteLayer(Texturez.swatchIcon, buttonDims.cpy().scl(0.75f)).rotateSprite(90f));
+		colorSelect0.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.DOWN);
+		colorSelect0.addLayer(new SpriteLayer(StarCycle.tex.swapIcon, buttonDims).setSpriteColor(Colors.smoke).setSpriteAlpha(0.4f), LayerType.UNTOGGLED);
+		colorSelect0.addLayer(new SpriteLayer(StarCycle.tex.swapIcon, buttonDims).setSpriteColor(Colors.smoke).setSpriteAlpha(0.4f).setRotationSpeed(-15f), LayerType.TOGGLED);
+		colorSelect0.addLayer(new SpriteLayer(StarCycle.tex.swatchIcon, buttonDims.cpy().scl(0.75f)).rotateSprite(90f));
 		colorSelect0.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				if (!colorSelect0.toggled) {
@@ -414,10 +415,10 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		});
 		
 		colorSelect1 = new ToggleButton(new Vector2(ui.getWidth()/9f, ui.getHeight()*2f/5f), buttonDims);
-		colorSelect1.addLayer(new SpriteLayer(Texturez.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.DOWN);
-		colorSelect1.addLayer(new SpriteLayer(Texturez.swapIcon, buttonDims).setSpriteColor(Texturez.smoke).setSpriteAlpha(0.4f), LayerType.UNTOGGLED);
-		colorSelect1.addLayer(new SpriteLayer(Texturez.swapIcon, buttonDims).setSpriteColor(Texturez.smoke).setSpriteAlpha(0.4f).setRotationSpeed(-15f), LayerType.TOGGLED);
-		colorSelect1.addLayer(new SpriteLayer(Texturez.swatchIcon, buttonDims.cpy().scl(0.75f)).rotateSprite(270f));
+		colorSelect1.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, buttonDims.cpy().scl(1.25f)), LayerType.DOWN);
+		colorSelect1.addLayer(new SpriteLayer(StarCycle.tex.swapIcon, buttonDims).setSpriteColor(Colors.smoke).setSpriteAlpha(0.4f), LayerType.UNTOGGLED);
+		colorSelect1.addLayer(new SpriteLayer(StarCycle.tex.swapIcon, buttonDims).setSpriteColor(Colors.smoke).setSpriteAlpha(0.4f).setRotationSpeed(-15f), LayerType.TOGGLED);
+		colorSelect1.addLayer(new SpriteLayer(StarCycle.tex.swatchIcon, buttonDims.cpy().scl(0.75f)).rotateSprite(270f));
 		colorSelect1.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				if (!colorSelect1.toggled){
@@ -492,29 +493,29 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		ToggleButton offButton;
 		
 		if (colors[0][1] == null) {
-			colors0 = Texturez.cool;
+			colors0 = Colors.cool;
 		}
 		else {
 			colors0 = colors[0];
 		}
-		if (colors0 == Texturez.cool) {
+		if (colors0 == Colors.cool) {
 			onButton = cool0;
 			offButton = cool1;
 		}
-		else if (colors0 == Texturez.warm) {
+		else if (colors0 == Colors.warm) {
 			onButton = warm0;
 			offButton = warm1;
 		}
-		else if (colors0 == Texturez.leafy) {
+		else if (colors0 == Colors.leafy) {
 			onButton = leafy0;
 			offButton = leafy1;
 		}
-		else if (colors0 == Texturez.floral) {
+		else if (colors0 == Colors.floral) {
 			onButton = floral0;
 			offButton = floral1;
 		}
 		else {
-			colors0 = Texturez.cool;
+			colors0 = Colors.cool;
 			onButton = cool0;
 			offButton = cool1;
 		}
@@ -524,31 +525,31 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		offButton.lock();
 		
 		if (colors[1][1] == null || colors0 == colors[1]) {
-			colors1 = (colors0 != Texturez.warm) ? Texturez.warm : Texturez.cool;
+			colors1 = (colors0 != Colors.warm) ? Colors.warm : Colors.cool;
 		}
 		else {
 			colors1 = colors[1]; 
 		}
-		if (colors1 == Texturez.cool) {
+		if (colors1 == Colors.cool) {
 			onButton = cool1;
 			offButton = cool0;
 		}
-		else if (colors1 == Texturez.warm) {
+		else if (colors1 == Colors.warm) {
 			onButton = warm1;
 			offButton = warm0;
 		}
-		else if (colors1 == Texturez.leafy) {
+		else if (colors1 == Colors.leafy) {
 			onButton = leafy1;
 			offButton = leafy0;
 		}
-		else if (colors1 == Texturez.floral) {
+		else if (colors1 == Colors.floral) {
 			onButton = floral1;
 			offButton = floral0;
 		}
 		else {
-			colors1 = (colors0 != Texturez.warm) ? Texturez.warm : Texturez.cool;
-			onButton = (colors0 != Texturez.warm) ? warm0 : cool0;
-			offButton = (colors0 != Texturez.warm) ? warm1 : cool1;
+			colors1 = (colors0 != Colors.warm) ? Colors.warm : Colors.cool;
+			onButton = (colors0 != Colors.warm) ? warm0 : cool0;
+			offButton = (colors0 != Colors.warm) ? warm1 : cool1;
 		}
 		
 		onButton.toggled = true;

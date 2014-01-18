@@ -1,6 +1,7 @@
 package com.autonomousgames.starcycle.core.model;
 
 import com.autonomousgames.starcycle.core.Soundz;
+import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
@@ -87,7 +88,7 @@ public class Model {
                 orb.player.voids.remove(orb);
             }
 
-            Soundz.orbCrash.play(UserSettingz.getFloatSetting("sfxVolume"));
+            StarCycle.audio.orbCrash.play(UserSettingz.getFloatSetting("sfxVolume"));
         }
         toDestroyList.clear();
     }

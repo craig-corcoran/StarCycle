@@ -1,10 +1,9 @@
 package com.autonomousgames.starcycle.core.model;
 
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -26,7 +25,7 @@ public class BackgroundManager {
     int[] textureInds;
     float[] dims;
     ArrayList<TextureRegion[]> textures = new ArrayList<TextureRegion[]>();
-    int r = Texturez.bgBlockDims[0];
+    int r = StarCycle.tex.bgBlockDims[0];
     int c;
     ArrayList<Color> colors = new ArrayList<Color>();
     int cNum = 7;
@@ -34,7 +33,7 @@ public class BackgroundManager {
     ArrayList<LayeredButton> buttons = new ArrayList<LayeredButton>();
     private static float blockDim = StarCycle.screenHeight;
     private static float stripDim = StarCycle.screenHeight/3f;
-	private static float tileDim = blockDim/Texturez.bgBlockDims[0];
+	private static float tileDim = blockDim/StarCycle.tex.bgBlockDims[0];
     private Vector2 tdv = new Vector2(1f, 1f).scl(tileDim); // Tile dim vector.
 	private ArrayList<Integer> panelBlocks = new ArrayList<Integer>();
     float bgDir = 1 - MathUtils.random(1) * 2;
@@ -42,8 +41,8 @@ public class BackgroundManager {
 	private float bgSpeed = MathUtils.random(bgSpRange[0], bgSpRange[1]) * bgDir;
     private final ArrayList<Vector2> panelPos = new ArrayList<Vector2>(); // Position of the panel blocks.
 	private final float bgLength;
-    private static Vector2 starTileDim = new Vector2(StarCycle.screenWidth/(Texturez.bgStarsDims[1]-1), StarCycle.screenHeight/Texturez.bgStarsDims[0]);
-    private int starTileNum = Texturez.bgStars.length;
+    private static Vector2 starTileDim = new Vector2(StarCycle.screenWidth/(StarCycle.tex.bgStarsDims[1]-1), StarCycle.screenHeight/StarCycle.tex.bgStarsDims[0]);
+    private int starTileNum = StarCycle.tex.bgStars.length;
     ArrayList<LayeredButton> starButtons = new ArrayList<LayeredButton>();
 
     private static float moteDim = 5f/StarCycle.pixelsPerMeter; // Side length of motes in meters.
@@ -52,20 +51,20 @@ public class BackgroundManager {
 	
 	public BackgroundManager() {
 
-        colors.add(Texturez.cyan);
-        colors.add(Texturez.navy);
-        colors.add(Texturez.yellow);
-        colors.add(Texturez.red);
-        colors.add(Texturez.matcha);
-        colors.add(Texturez.spinach);
-        colors.add(Texturez.magenta);
-        colors.add(Texturez.indigo);
+        colors.add(Colors.cyan);
+        colors.add(Colors.navy);
+        colors.add(Colors.yellow);
+        colors.add(Colors.red);
+        colors.add(Colors.matcha);
+        colors.add(Colors.spinach);
+        colors.add(Colors.magenta);
+        colors.add(Colors.indigo);
 
 		// Randomize the background:
         blockNum = MathUtils.random(blockRange[0], blockRange[1]);
-        blockInds = permutation(0, Texturez.bgBlocks.size() - 1, blockNum);
+        blockInds = permutation(0, StarCycle.tex.bgBlocks.size() - 1, blockNum);
         stripNum = MathUtils.random(stripRange[0], stripRange[1]);
-        stripInds = permutation(0, Texturez.bgStrips.size() - 1, stripNum);
+        stripInds = permutation(0, StarCycle.tex.bgStrips.size() - 1, stripNum);
         num = blockNum + stripNum;
         typeInds = permutation(0, num - 1);
         textureTypes = new int[num];
@@ -89,8 +88,8 @@ public class BackgroundManager {
 
         Vector2 starPos = new Vector2(starTileDim.x/2f, StarCycle.screenHeight - starTileDim.y/2f);
         for (int i =0; i < starTileNum; i ++) {
-            LayeredButton button = new LayeredButton(new Vector2(starPos.x + starTileDim.x*(i%Texturez.bgStarsDims[1]), starPos.y-starTileDim.y*(i/Texturez.bgStarsDims[1])));
-            button.addLayer(new SpriteLayer(Texturez.bgStars[i], starTileDim));
+            LayeredButton button = new LayeredButton(new Vector2(starPos.x + starTileDim.x*(i%StarCycle.tex.bgStarsDims[1]), starPos.y-starTileDim.y*(i/StarCycle.tex.bgStarsDims[1])));
+            button.addLayer(new SpriteLayer(StarCycle.tex.bgStars[i], starTileDim));
             starButtons.add(button);
         }
 				
@@ -154,8 +153,8 @@ public class BackgroundManager {
 	}
 
     private LayeredButton getButton(float lastX, int i) {
-        textures = (textureTypes[i] == 0) ? Texturez.bgBlocks : Texturez.bgStrips;
-        c = (textureTypes[i] == 0) ? Texturez.bgBlockDims[1] : Texturez.bgStripDims[1];
+        textures = (textureTypes[i] == 0) ? StarCycle.tex.bgBlocks : StarCycle.tex.bgStrips;
+        c = (textureTypes[i] == 0) ? StarCycle.tex.bgBlockDims[1] : StarCycle.tex.bgStripDims[1];
         float yOffset = (textureTypes[i] == 0) ? MathUtils.random(-StarCycle.screenHeight/2f, StarCycle.screenHeight/2f) : 0f;
         Vector2 pos = new Vector2(lastX, StarCycle.screenHeight - tileDim/2f + yOffset);
         LayeredButton button = new LayeredButton(pos);

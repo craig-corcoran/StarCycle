@@ -22,11 +22,11 @@ public abstract class TutorialGraphic extends MenuScreen {
 		infoGraphic = new LayeredButton(StarCycle.pixelScreenCenter);
 		
 		nextPage = new StandardButton(new Vector2(navHeight, StarCycle.screenHeight-backSize.x*0.8f),
-				backSize,	Texturez.backIcon, padding);
+				backSize,	StarCycle.tex.backIcon, padding);
 		nextPage.rotateLayers(-90f).flip(false, true);
 		nextPage.addListener(new ScreenDoneClickListener(this, nextScreen));
 		
-		prevPage = new StandardButton(new Vector2(navHeight, backSize.x*0.8f), backSize, Texturez.backIcon, padding);
+		prevPage = new StandardButton(new Vector2(navHeight, backSize.x*0.8f), backSize, StarCycle.tex.backIcon, padding);
 		prevPage.rotateLayers(90f);
 		prevPage.addListener(new ScreenDoneClickListener(this, prevScreen));
 		

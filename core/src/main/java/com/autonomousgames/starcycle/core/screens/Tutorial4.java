@@ -1,7 +1,7 @@
 package com.autonomousgames.starcycle.core.screens;
 
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
 import com.autonomousgames.starcycle.core.model.Player;
@@ -14,7 +14,7 @@ public class Tutorial4 extends TutorialSandbox {
 	public Tutorial4() {
 		super(LevelType.SINGLE, ScreenType.TUTORIAL4, ScreenType.TUTORIAL5, ScreenType.TUTORIAL3);
 		players[0].base.setPointer(StarCycle.pixelScreenCenter.cpy().div(StarCycle.pixelsPerMeter).sub(players[0].base.origin));
-		infoGraphic.addLayer(new SpriteLayer(Texturez.tutorialImages[6],
+		infoGraphic.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[6],
 				new Vector2(StarCycle.screenHeight, 0.5f*StarCycle.screenHeight)).rotateSprite(90f));
 	}
 
@@ -38,7 +38,7 @@ public class Tutorial4 extends TutorialSandbox {
 	void setPlayers() {
 		numPlayers = 1;
 		players = new Player[numPlayers];
-		players[0] = new Player(0, BaseType.MALUMA, Texturez.cool, this, ui, true, true);
+		players[0] = new Player(0, BaseType.MALUMA, Colors.cool, this, ui, true, true);
         players[0].showIncomeOrbs = false;
 	}
 

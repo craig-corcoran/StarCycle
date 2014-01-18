@@ -1,8 +1,8 @@
 package com.autonomousgames.starcycle.core.screens;
 
-import com.autonomousgames.starcycle.core.Soundz;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.model.*;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
@@ -81,16 +81,15 @@ public abstract class ModelScreen extends GameScreen{
 			}
 		});
 		
-		mainMenuButton = new StandardButton(new Vector2(StarCycle.screenWidth/2f, side), iconSize.cpy().scl(0.8f), Texturez.pauseUI[0], padding);
+		mainMenuButton = new StandardButton(new Vector2(StarCycle.screenWidth/2f, side), iconSize.cpy().scl(0.8f), StarCycle.tex.pauseUI[0], padding);
 		mainMenuButton.addListener(new ScreenDoneClickListener(this,ScreenType.MAINMENU));
 		mainMenuButton.setRotation(90f);
-        mainMenuButton.setColor(Texturez.navy);
+        mainMenuButton.setColor(Colors.navy);
 		
 		resumeButton = new LayeredButton(new Vector2(StarCycle.screenWidth/2f, side*3f), iconSize.cpy().scl(2f));
-        resumeButton.addLayer(new SpriteLayer(Texturez.block, new Vector2(StarCycle.screenHeight, StarCycle.screenWidth).scl(1.1f)).setSpriteColor(Color.BLACK).setSpriteAlpha(0.6f));
-		resumeButton.addLayer(new SpriteLayer(Texturez.gradientRound, iconSize.cpy().scl(2f)), LayerType.DOWN);
-//		resumeButton.addLayer(new SpriteLayer(Texturez.pauseUI[1], iconSize.cpy().scl(0.35f)));
-		resumeButton.addLayer(new SpriteLayer(Texturez.pauseUI[2], iconSize.cpy().scl(1.75f)).setRotationSpeed(30f).setSpriteColor(Texturez.spinach));
+        resumeButton.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(StarCycle.screenHeight, StarCycle.screenWidth).scl(1.1f)).setSpriteColor(Color.BLACK).setSpriteAlpha(0.6f));
+		resumeButton.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, iconSize.cpy().scl(2f)), LayerType.DOWN);
+		resumeButton.addLayer(new SpriteLayer(StarCycle.tex.pauseUI[2], iconSize.cpy().scl(1.75f)).setRotationSpeed(30f).setSpriteColor(Colors.spinach));
 		resumeButton.addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
@@ -102,10 +101,10 @@ public abstract class ModelScreen extends GameScreen{
 				});
 		resumeButton.setRotation(90f);
 		
-		backButton = new StandardButton(new Vector2(StarCycle.screenWidth/2f, side*5f), new Vector2( iconSize.x, iconSize.y*0.75f), Texturez.pauseUI[3], padding);
+		backButton = new StandardButton(new Vector2(StarCycle.screenWidth/2f, side*5f), new Vector2( iconSize.x, iconSize.y*0.75f), StarCycle.tex.pauseUI[3], padding);
 		backButton.addListener(new ScreenDoneClickListener(this,this.backScreen));
 		backButton.setRotation(90f);
-        backButton.setColor(Texturez.red);
+        backButton.setColor(Colors.red);
 		
 		ui.addActor(pauseButton);
 	}
@@ -116,12 +115,7 @@ public abstract class ModelScreen extends GameScreen{
         for (Player player : players) {
             player.frozen = true;
         }
-        Soundz.winSound.play(UserSettingz.getFloatSetting("sfxVolume"));
-        //winner.base = new Base(winner, new Vector2(StarCycle.meterWidth / 2f, StarCycle.meterHeight / 2f),
-        //        UserSettingz.getFloatSetting("baseRadius")*2f, ui, true);
-        //winner.base.baseButton.setLevel(2);
-        //winner.base.handleImDims = new Vector2(0f, 0f);
-        //winner.base.chevronImDims = new Vector2(0f, 0f);
+        StarCycle.audio.winSound.play(UserSettingz.getFloatSetting("sfxVolume"));
         winBase = new BaseButton(winner.basetype, winner.colors, StarCycle.pixelScreenCenter,
                 winner.base.baseDims.scl(1.5f), 2);
         winButton = new LayeredButton(new Vector2(StarCycle.screenWidth/2f, side*3f), iconSize.cpy().scl(4f));
@@ -171,8 +165,6 @@ public abstract class ModelScreen extends GameScreen{
 		renderSprites(delta); // orbs, stars, bases
 		ui.draw();
 		
-		//long start = System.currentTimeMillis();
-		//super.render(delta);
 		if (dbRender){
 			debugRenderer.render(model.world,cam.combined); // TODO remove in final version
 		}
@@ -214,7 +206,6 @@ public abstract class ModelScreen extends GameScreen{
 	}
 	
 	void renderSprites(float delta) {
-//		batch.getProjectionMatrix().set(cam.combined);
 		batch.begin();
 
 		background.draw(batch);
@@ -228,9 +219,6 @@ public abstract class ModelScreen extends GameScreen{
 		for (int i = 0; i < model.stars.size(); i++) {
 			model.stars.get(i).draw(batch);
 		}
-		//for (int i=0; i < model.explosions.size(); i++) {
-		//	model.explosions.get(i).draw(batch,delta,model.explosions);
-		//}
 		batch.end();
 	}
 	
@@ -242,7 +230,7 @@ public abstract class ModelScreen extends GameScreen{
         for (Player player : players) {
             numOrbs += players[0].orbs.size();
         }
-		Texturez.font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond() + " update time: " + 
+		StarCycle.tex.font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond() + " update time: " +
 				updateTime + " orbs: " + numOrbs + "", 0, 20);
 		batch.end();
 	}

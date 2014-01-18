@@ -66,19 +66,19 @@ public class Orb implements Collidable {
 		switch (type) {
 		case ORB:
 			orbList = player.orbs;
-			orbButton.addLayer(new SpriteLayer(Texturez.gradientRound, imageDims.cpy().scl(3f)).setSpriteColor(player.colors[0]), LayerType.ACTIVE);
+			orbButton.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, imageDims.cpy().scl(3f)).setSpriteColor(player.colors[0]), LayerType.ACTIVE);
 			orbButton.deactivate();
-			textures = new AtlasRegion[]{Texturez.skinMap.get(player.basetype).get(TextureType.ORB0), Texturez.skinMap.get(player.basetype).get(TextureType.ORB1)};
+			textures = new AtlasRegion[]{StarCycle.tex.skinMap.get(player.basetype).get(TextureType.ORB0), StarCycle.tex.skinMap.get(player.basetype).get(TextureType.ORB1)};
 			break;
 		case VOID:
 			orbList = player.voids;
 			Vector2 voidRingDims = new Vector2(UserSettingz.getFloatSetting("gravWellSensorRadius"), UserSettingz.getFloatSetting("gravWellSensorRadius")).scl(2f);
-			orbButton.addLayer(new SpriteLayer(Texturez.voidRing, voidRingDims.cpy().scl(StarCycle.pixelsPerMeter)).setSpriteColor(player.colors[0]));
-			textures = new AtlasRegion[]{Texturez.skinMap.get(player.basetype).get(TextureType.VOID0), Texturez.skinMap.get(player.basetype).get(TextureType.VOID1)};
+			orbButton.addLayer(new SpriteLayer(StarCycle.tex.voidRing, voidRingDims.cpy().scl(StarCycle.pixelsPerMeter)).setSpriteColor(player.colors[0]));
+			textures = new AtlasRegion[]{StarCycle.tex.skinMap.get(player.basetype).get(TextureType.VOID0), StarCycle.tex.skinMap.get(player.basetype).get(TextureType.VOID1)};
 			break;
 		case NOVA:
 			orbList = player.novas;
-			textures = new AtlasRegion[]{Texturez.skinMap.get(player.basetype).get(TextureType.NOVA0), Texturez.skinMap.get(player.basetype).get(TextureType.NOVA1)};
+			textures = new AtlasRegion[]{StarCycle.tex.skinMap.get(player.basetype).get(TextureType.NOVA0), StarCycle.tex.skinMap.get(player.basetype).get(TextureType.NOVA1)};
 			break;
 		}
 		

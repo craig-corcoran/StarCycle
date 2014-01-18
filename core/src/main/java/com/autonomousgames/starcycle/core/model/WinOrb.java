@@ -1,5 +1,6 @@
 package com.autonomousgames.starcycle.core.model;
 
+import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
@@ -18,9 +19,8 @@ public class WinOrb extends FakeOrb{
         orbButton = new LayeredButton(position.cpy());
         dimensions = new Vector2(radius, radius).scl(2f);
         imageDims = new Vector2(dimensions);
-        //orbButton.addLayer(new SpriteLayer(Texturez.gradientRound, imageDims.cpy().scl(3f)).setSpriteColor(player.colors[0]), LayerType.ACTIVE);
         orbButton.deactivate();
-        TextureAtlas.AtlasRegion[] textures = new TextureAtlas.AtlasRegion[]{Texturez.skinMap.get(player.basetype).get(Texturez.TextureType.ORB0), Texturez.skinMap.get(player.basetype).get(Texturez.TextureType.ORB1)};
+        TextureAtlas.AtlasRegion[] textures = new TextureAtlas.AtlasRegion[]{StarCycle.tex.skinMap.get(player.basetype).get(Texturez.TextureType.ORB0), StarCycle.tex.skinMap.get(player.basetype).get(Texturez.TextureType.ORB1)};
         for (int i = 0; i < 2; i ++) {
             orbButton.addLayer(new SpriteLayer(textures[i], imageDims).setSpriteColor(player.colors[i]));
         }
