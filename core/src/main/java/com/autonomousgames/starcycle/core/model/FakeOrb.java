@@ -14,7 +14,7 @@ public abstract class FakeOrb {
 	float vpWidth; // size of viewport (pixels or meters?)
 	float vpHeight;
     public int age = 0;
-    public int lifespan = 250; //(int) UserSettingz.getFloatSetting("lifeSpan"); TODO set in settings
+    public int lifespan = (int) UserSettingz.getFloatSetting("incOrbLifeSpan");
 
     public FakeOrb(Float radius, Vector2 position, float vpWidth, float vpHeight) {
         this.radius = radius;
