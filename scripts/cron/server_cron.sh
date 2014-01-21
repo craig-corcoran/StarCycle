@@ -18,6 +18,8 @@ if [[ "${reslog}" != "" ]] ; then
     echo "$TIMESTAMP"
 
     git checkout $BRANCH
+    echo "packing textures"
+    bash scripts/pack_textures.sh
 
     echo "prepping assets"
     mkdir -p tmp_assets/images
@@ -26,14 +28,15 @@ if [[ "${reslog}" != "" ]] ; then
     
     echo "compressing assets"
     tar -zcvf assets.tar.gz tmp_assets
-    
+    mv tmp_assets/* assets
+    rm -r assets/images
+
     echo "pushing assets"
     s3cmd put -P assets.tar.gz s3://autonomousgames/nightlies/assets/$TIMESTAMP-assets.tar.gz
     
     echo "cleaning up"
     rm assets.tar.gz
     rm -r tmp_assets
-    
     echo "building android project"
     echo $(mvn -version)
     /usr/local/bin/mvn clean package -Pandroid
