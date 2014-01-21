@@ -6,6 +6,7 @@ REMOTE="origin"
 
 reslog=`git log HEAD..$REMOTE/$BRANCH --oneline`
 echo $reslog
+
 if [[ "${reslog}" != "" ]] ; then
 
     echo "CHANGE IN MASTER DETECTED!"
@@ -33,14 +34,14 @@ if [[ "${reslog}" != "" ]] ; then
     echo "building android project"
     mvn clean package -Pandroid
     NEW_APK=android/target/starcycle-android.apk 
-    S3_APK_LOC=s3://autonomousgames/nightlies/android/$TIMESTAMP-starcycle-android.apk
+    S3_APK_LOC=s3://autonomousgames/nightlies/android/$TIMESTAMP-$BRANCH-starcycle-android.apk
     
     echo "sending android project"
     s3cmd put -P $NEW_APK $S3_APK_LOC
     
     echo "building desktop project"
     mvn clean package -Pdesktop
-    S3_JAR_LOC=s3://autonomousgames/nightlies/desktop/$TIMESTAMP-$branch-starcycle-desktop.jar
+    S3_JAR_LOC=s3://autonomousgames/nightlies/desktop/$TIMESTAMP-$BRANCH-starcycle-desktop.jar
     NEW_JAR=desktop/target/starcycle-desktop-0.06-jar-with-dependencies.jar 
     
     echo "sending desktop project"
