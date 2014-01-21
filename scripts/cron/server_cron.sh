@@ -28,7 +28,7 @@ if [[ "${reslog}" != "" ]] ; then
     tar -zcvf assets.tar.gz tmp_assets
     
     echo "pushing assets"
-    s3cmd put -P assets.tar.gz s3://autonomousgames/assets/tarballs/$TIMESTAMP-assets.tar.gz
+    s3cmd put -P assets.tar.gz s3://autonomousgames/nightlies/assets/$TIMESTAMP-assets.tar.gz
     
     echo "cleaning up"
     rm assets.tar.gz
