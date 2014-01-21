@@ -9,6 +9,8 @@ git fetch $REMOTE
 reslog=`git log HEAD..$REMOTE/$BRANCH --oneline`
 echo $reslog
 
+export ANDROID_HOME=/home/blake/android-sdk-linux
+
 if [[ "${reslog}" != "" ]] ; then
 
     echo "CHANGE IN MASTER DETECTED!"
@@ -33,7 +35,8 @@ if [[ "${reslog}" != "" ]] ; then
     rm -r tmp_assets
     
     echo "building android project"
-    mvn clean package -Pandroid
+    echo $(mvn -version)
+    /usr/local/bin/mvn clean package -Pandroid
     NEW_APK=android/target/starcycle-android.apk 
     S3_APK_LOC=s3://autonomousgames/nightlies/android/$TIMESTAMP-$BRANCH-starcycle-android.apk
     
