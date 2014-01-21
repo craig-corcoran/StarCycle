@@ -245,8 +245,13 @@ public class Star extends Orbitable implements Collidable {
 
     private Player player;
     private float rate;
-    private float incAmmoThresh = 2f;
-    private float initVelScal = 2.2f;
+    private float incAmmoThresh = UserSettingz.getFloatSetting("incAmmoThresh");
+    private float initVelScale = UserSettingz.getFloatSetting("initVelScale");
+    private float incOrbSize = UserSettingz.getFloatSetting("incOrbSize");
+    private float incOrbAlpha = UserSettingz.getFloatSetting("incOrbAlpha");
+    private Vector2 pos = new Vector2();
+    private Vector2 vel = new Vector2();
+    private float nor = 0;
     private float[] playerIncome = {0f, 0f};
     public void updateControl() {
         for (int i = 0; i < players.length; i++) { // TODO iterator
@@ -257,15 +262,17 @@ public class Star extends Orbitable implements Collidable {
             player.ammo += rate;
             playerIncome[i] += rate;
 
-            if (player.showIncomeOrbs && playerIncome[i] > incAmmoThresh) {
-                Gdx.app.log("star","player income" + playerIncome[i]);
+            while(player.showIncomeOrbs && (playerIncome[i] > incAmmoThresh)) {
                 // emit fake income orb
                 playerIncome[i] -= incAmmoThresh;
-                Color color = (MathUtils.random(1f) < 0.67f) ? player.colors[0] : player.colors[1];
-                player.incomeOrbs.add(new ImageOrb(StarCycle.tex.bgMote, StarCycle.screenHeight/360f, this.getButtonCenter(),
-                        StarCycle.screenWidth, StarCycle.screenHeight, new Vector2(MathUtils.random(-initVelScal,initVelScal),
-                                                                                   MathUtils.random(-initVelScal,initVelScal)),
-                                                                       new Vector2()).tint(color));
+                Color color = (MathUtils.random(1f) < 0.3f) ? player.colors[0] : player.colors[1];
+
+                vel = new Vector2(MathUtils.random(-initVelScale,initVelScale), MathUtils.random(-initVelScale,initVelScale));
+                pos = this.getButtonCenter();
+                nor = vel.len();
+                pos = pos.add(this.radius*StarCycle.pixelsPerMeter*vel.x/nor, this.radius*StarCycle.pixelsPerMeter*vel.y/nor);
+                player.incomeOrbs.add(new ImageOrb(StarCycle.tex.bgMote, incOrbSize * StarCycle.screenHeight, pos,
+                        StarCycle.screenWidth, StarCycle.screenHeight, vel, new Vector2()).tint(color).set_alpha(incOrbAlpha));
             }
         }
 
@@ -313,6 +320,8 @@ public class Star extends Orbitable implements Collidable {
 			activeVoids.add((Void) orb);
             numVoids[orb.player.number]++; // keep player counts for easy access by bot
 		}
+        assert ((numVoids[0] + numVoids[1]) == getOrbCount(Orb.OrbType.VOID));
+        assert ((numOrbs[0] + numOrbs[1]) == getOrbCount(Orb.OrbType.ORB));
 	}
 
 	public void removeOrb(Orb orb) {
@@ -324,6 +333,8 @@ public class Star extends Orbitable implements Collidable {
 			activeVoids.remove(orb);
             numVoids[orb.player.number]--;
 		}
+        assert ((numVoids[0] + numVoids[1]) == getOrbCount(Orb.OrbType.VOID));
+        assert ((numOrbs[0] + numOrbs[1]) == getOrbCount(Orb.OrbType.ORB));
 	}
 
 	public int getOrbCount(Orb.OrbType type) {

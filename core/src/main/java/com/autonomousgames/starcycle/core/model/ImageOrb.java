@@ -10,6 +10,9 @@ import com.badlogic.gdx.math.Vector2;
 public class ImageOrb extends FakeOrb {
     SpriteLayer sprite;
     private TextureRegion image;
+
+    public float alpha = 1f;
+
     public ImageOrb(TextureRegion image, Float radius, Vector2 position, float vpWidth, float vpHeight, boolean direction) {
         super(radius, position, vpWidth, vpHeight);
 
@@ -17,19 +20,27 @@ public class ImageOrb extends FakeOrb {
         this.velocity = new Vector2((float) Math.random() * 2f - 1, (float) Math.random() * 2f - 1).scl(13f);
         this.acceleration = (direction) ? new Vector2(-1f, 0f) : new Vector2(1f, 0f);
         sprite = new SpriteLayer(image, new Vector2(vpWidth, vpWidth).scl(1/ StarCycle.pixelsPerMeter));
+        sprite.setSize(radius, radius);
     }
 
     public ImageOrb(TextureRegion image, Float radius, Vector2 position, float vpWidth, float vpHeight, Vector2 velocity, Vector2 acceleration) {
         super(radius, position, velocity, acceleration, vpWidth, vpHeight);
         sprite = new SpriteLayer(image, new Vector2(vpWidth, vpWidth).scl(1/ StarCycle.pixelsPerMeter));
+        sprite.setSize(radius, radius);
     }
 
 	public void draw(SpriteBatch batch) {
-        sprite.draw(batch, 1f, position, angle);
+        sprite.draw(batch, alpha, position, angle);
+
 	}
 
     public ImageOrb tint(Color color) {
         sprite.setLayerColor(color);
+        return this;
+    }
+
+    public ImageOrb set_alpha(float alpha) {
+        this.alpha = alpha;
         return this;
     }
 }

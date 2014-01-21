@@ -67,8 +67,9 @@ public class Player {
 		this(num, basetype, colors, screen, ui, UIVisible, UIVisible);
 	}
 
+    private float incOrbGravScale = UserSettingz.getFloatSetting("incOrbGravScale");
     private Vector2 difference = new Vector2();
-    private float minDiff = 80f;
+    private float minDiff = 50f;
     private float r = 0;
 	public void update(float delta, ArrayList<Star> stars, Vector2[] starPositions) {
 
@@ -115,12 +116,11 @@ public class Player {
             difference.set((base.buttonLoc.x - fakeOrb.position.x), (base.buttonLoc.y - fakeOrb.position.y));
             r = difference.len();
             if ((r < minDiff) | (!fakeOrb.insideView()) | (fakeOrb.age > fakeOrb.lifespan)){
-                Gdx.app.log("player", "removing orb");
                 itr.remove();
             }
             else {
                 difference = difference.nor();
-                fakeOrb.acceleration.set(30000f/(r*r) * difference.x, 30000f/(r*r) * difference.y);
+                fakeOrb.acceleration.set(incOrbGravScale/(r*r) * difference.x, incOrbGravScale/(r*r) * difference.y);
                 fakeOrb.update(delta);
             }
         }
