@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class SpriteLayer extends Layer{
 
-	Sprite image;
+	public Sprite image;
 	float rotationSpeed;
 	float revolutionSpeed;
 	Vector2 relPos = new Vector2();
@@ -32,6 +32,12 @@ public class SpriteLayer extends Layer{
 		setLayerColor(color);
 		setRotation(angle);
 	}
+
+    @Override
+    public void setSize(float width, float height) {
+        super.setSize(width, height);
+        image.setSize(width, height);
+    }
 	
 	// The sprite will rotate around it's own center:
 	public SpriteLayer setRotationSpeed(float speed) {
