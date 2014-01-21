@@ -2,16 +2,18 @@ cd /home/blake/starcycle
 echo "CRON RUNNING"
 
 BRANCH="master"
-reslog=`git log HEAD..origin/$BRANCH --oneline`
-echo $reslog
+REMOTE="origin"
 
+reslog=`git log HEAD..$REMOTE/$BRANCH --oneline`
+echo $reslog
 if [[ "${reslog}" != "" ]] ; then
 
     echo "CHANGE IN MASTER DETECTED!"
     TIMESTAMP=$(date +%Y%m%d%H%M%S)
     echo "$TIMESTAMP"
 
-    git merge origin/$BRANCH
+    git fetch $REMOTE
+    git checkout $BRANCH
 
     echo "prepping assets"
     mkdir -p tmp_assets/images
@@ -22,7 +24,7 @@ if [[ "${reslog}" != "" ]] ; then
     tar -zcvf assets.tar.gz tmp_assets
     
     echo "pushing assets"
-    s3cmd put -P assets.tar.gz s3://autonomousgames/assets/tarballs/$(date +%Y%m%d)-assets.tar.gz
+    s3cmd put -P assets.tar.gz s3://autonomousgames/assets/tarballs/$TIMESTAMP-assets.tar.gz
     
     echo "cleaning up"
     rm assets.tar.gz
@@ -44,5 +46,8 @@ if [[ "${reslog}" != "" ]] ; then
     echo "sending desktop project"
     s3cmd put -P $NEW_JAR $S3_JAR_LOC
 
+else
+    echo "no changes detected-- exiting!"
+    exit 0
 fi
 
