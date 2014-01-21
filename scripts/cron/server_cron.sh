@@ -4,6 +4,8 @@ echo "CRON RUNNING"
 BRANCH="master"
 REMOTE="origin"
 
+git fetch $REMOTE
+
 reslog=`git log HEAD..$REMOTE/$BRANCH --oneline`
 echo $reslog
 
@@ -13,7 +15,6 @@ if [[ "${reslog}" != "" ]] ; then
     TIMESTAMP=$(date +%Y%m%d%H%M%S)
     echo "$TIMESTAMP"
 
-    git fetch $REMOTE
     git checkout $BRANCH
 
     echo "prepping assets"
