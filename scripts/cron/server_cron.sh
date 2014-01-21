@@ -1,14 +1,17 @@
 cd /home/blake/starcycle
 echo "CRON RUNNING"
 
-reslog=`git log HEAD..origin/master --oneline`
+BRANCH="master"
+reslog=`git log HEAD..origin/$BRANCH --oneline`
+echo $reslog
+
 if [[ "${reslog}" != "" ]] ; then
 
     echo "CHANGE IN MASTER DETECTED!"
     TIMESTAMP=$(date +%Y%m%d%H%M%S)
     echo "$TIMESTAMP"
 
-    git merge origin/master
+    git merge origin/$BRANCH
 
     echo "prepping assets"
     mkdir -p tmp_assets/images
