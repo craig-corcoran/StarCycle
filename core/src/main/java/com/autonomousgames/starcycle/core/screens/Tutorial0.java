@@ -152,11 +152,11 @@ public class Tutorial0 extends Tutorial {
                 vel.set(orbVel0);
             }
             if (0f < fakeBasePos0.y && fakeBasePos0.y < sh) {
-                fakeOrbs.add(new ImageOrb(StarCycle.tex.fakeorbTextures[0], 10f, fakeBasePos0, StarCycle.screenWidth,
+                fakeOrbs.add(new ImageOrb(StarCycle.tex.fakeorbTextures[0], fakeOrbRad, fakeBasePos0, StarCycle.screenWidth,
                         StarCycle.screenHeight, vel, new Vector2(0, 0)));
             }
             if (shoot.getLayer(2).drawCondition() && 0f < fakeBasePos1.y && fakeBasePos1.y < sh) {
-                fakeOrbs.add(new ImageOrb(StarCycle.tex.fakeorbTextures[0], 10f, fakeBasePos1, StarCycle.screenWidth,
+                fakeOrbs.add(new ImageOrb(StarCycle.tex.fakeorbTextures[0], fakeOrbRad, fakeBasePos1, StarCycle.screenWidth,
                         StarCycle.screenHeight, orbVel0, new Vector2(0, 0)));
             }
             sinceLastShot = 0f;

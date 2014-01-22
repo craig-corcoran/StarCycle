@@ -20,13 +20,13 @@ public class ImageOrb extends FakeOrb {
         this.velocity = new Vector2((float) Math.random() * 2f - 1, (float) Math.random() * 2f - 1).scl(13f);
         this.acceleration = (direction) ? new Vector2(-1f, 0f) : new Vector2(1f, 0f);
         sprite = new SpriteLayer(image, new Vector2(vpWidth, vpWidth).scl(1/ StarCycle.pixelsPerMeter));
-        sprite.setSize(radius, radius);
+        sprite.setSize(radius*2f, radius*2f);
     }
 
     public ImageOrb(TextureRegion image, Float radius, Vector2 position, float vpWidth, float vpHeight, Vector2 velocity, Vector2 acceleration) {
         super(radius, position, velocity, acceleration, vpWidth, vpHeight);
         sprite = new SpriteLayer(image, new Vector2(vpWidth, vpWidth).scl(1/ StarCycle.pixelsPerMeter));
-        sprite.setSize(radius, radius);
+        sprite.setSize(radius*2f, radius*2f);
     }
 
 	public void draw(SpriteBatch batch) {

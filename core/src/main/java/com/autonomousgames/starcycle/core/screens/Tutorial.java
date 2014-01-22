@@ -3,6 +3,7 @@ package com.autonomousgames.starcycle.core.screens;
 import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
+import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.controllers.GameController;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.FakeOrb;
@@ -39,6 +40,7 @@ public abstract class Tutorial extends ModelScreen {
     float moveStep = 0f;
     ArrayList<LayeredButton> draggables = new ArrayList<LayeredButton>();
     public ArrayList<ImageOrb> fakeOrbs = new ArrayList<ImageOrb>();
+    float fakeOrbRad = UserSettingz.getFloatSetting("chargeOrbRadius")*StarCycle.pixelsPerMeter;
 
     float offset;
     int currentBorder = 0;
@@ -151,7 +153,7 @@ public abstract class Tutorial extends ModelScreen {
             itr.next().move(0f, y);
         }
         for (int i = 0; i < model.stars.size(); i ++) {
-            model.stars.get(i).moveStar(0f, moveClamped(starClamp[i][0], starClamp[i][1], y)/StarCycle.pixelsPerMeter);
+            model.stars.get(i).moveStar(0f, moveClamped(starClamp[i][0], starClamp[i][1], y) / StarCycle.pixelsPerMeter);
         }
         for (int i = 0; i < numPlayers; i ++) {
             for (int j = 0; j < players[i].orbs.size(); j ++) {
