@@ -31,7 +31,7 @@ public class Tutorial1 extends Tutorial {
     float starRadius = 1.5f * UserSettingz.getFloatSetting("starRadius");
 
     public Tutorial1() {
-        super(Level.LevelType.DOUBLE, ScreenType.TUTORIAL1, ScreenType.TUTORIAL4, ScreenType.TUTORIAL0, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm});
+        super(Level.LevelType.DOUBLE, ScreenType.TUTORIAL1, ScreenType.TUTORIAL5, ScreenType.TUTORIAL0, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm});
 
         Gdx.input.setInputProcessor(new GameController(this, 1));
 
@@ -67,6 +67,9 @@ public class Tutorial1 extends Tutorial {
 
         fakeAim1 = players[1].base.getAimer(taketePos, new Vector2(), players[1].colors);
         fakeAim1.rotate(-45f);
+        for (int i = 0; i < fakeAim0.getLayerNum(); i ++) {
+            fakeAim1.getLayer(i).setRelPosLen(Base.maxAimerLength);
+        }
         ui.addActor(fakeAim1);
         draggables.add(fakeAim1);
 

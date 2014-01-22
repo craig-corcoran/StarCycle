@@ -39,7 +39,7 @@ public class Tutorial0 extends Tutorial {
     boolean starsMass = false;
 
     public Tutorial0(boolean startAtEnd) {
-        super(Level.LevelType.DOUBLE, ScreenType.TUTORIAL0, ScreenType.TUTORIAL5, ScreenType.STARTMENU, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm});
+        super(Level.LevelType.DOUBLE, ScreenType.TUTORIAL0, ScreenType.TUTORIAL1, ScreenType.STARTMENU, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm});
 
         Gdx.input.setInputProcessor(new GameController(this, 1));
 
@@ -103,7 +103,6 @@ public class Tutorial0 extends Tutorial {
         players[1].base.moveBase(new Vector2(StarCycle.meterWidth/2f-1f, StarCycle.meterHeight*2f/3f+1f));
         players[1].base.translateBase(0f, offset);
         players[1].base.setPointer(2f, 2f);
-
 
         for (int i = 0; i < model.stars.size(); i ++) {
             Star star = model.stars.get(i);

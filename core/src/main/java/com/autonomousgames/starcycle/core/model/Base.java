@@ -32,7 +32,7 @@ public class Base {
 	private float angleOfBaseRotation = 0;
 	public static float maxPointerLength = 2f;
 	public static float minPointerLength = 1.2f;
-	float maxAimerLength = maxPointerLength*StarCycle.pixelsPerMeter;
+	public static float maxAimerLength = maxPointerLength*StarCycle.pixelsPerMeter;
 	//public static float minSpeed;
 	public static float velScale = (Float) UserSettingz.getFloatSetting("velScale");
 	private boolean UIVisible = true;
@@ -175,9 +175,9 @@ public class Base {
 
     public LayeredButton getAimer(Vector2 pos, Vector2 dims, Color[] colors) {
         LayeredButton button = new LayeredButton(pos);
-        button.addLayer(new SpriteLayer(StarCycle.tex.aimer[0], new Vector2(0f, -1f).scl(maxAimerLength), handleImDims).setSpriteColor(colors[1]));
+        button.addLayer(new SpriteLayer(StarCycle.tex.aimer[0], new Vector2(0f, -1f).scl((maxPointerLength + minPointerLength)*StarCycle.pixelsPerMeter / 2f), handleImDims).setSpriteColor(colors[1]));
         for (int i = 0; i < 2; i ++) {
-            button.addLayer(new SpriteLayer(StarCycle.tex.aimer[i + 1], new Vector2(0f, 1f).scl(maxAimerLength), chevronImDims).setSpriteColor(colors[i]));
+            button.addLayer(new SpriteLayer(StarCycle.tex.aimer[i + 1], new Vector2(0f, 1f).scl((maxPointerLength + minPointerLength)*StarCycle.pixelsPerMeter / 2f), chevronImDims).setSpriteColor(colors[i]));
         }
         return button;
     }

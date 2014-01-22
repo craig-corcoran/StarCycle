@@ -53,7 +53,6 @@ public abstract class Tutorial extends ModelScreen {
         this.prevScreen = prevScreen;
         silentSwitch = true;
 
-        Gdx.app.log("Tutorial","model: "+model);
         starClamp = new int[model.stars.size()][2];
         for (int i = 0; i < model.stars.size(); i ++) {
             starClamp[i][0] = 0;
@@ -108,14 +107,29 @@ public abstract class Tutorial extends ModelScreen {
 
     }
 
-//    @Override
-//    void setPlayers() {
-//        numPlayers = 1;
-//        players = new Player[numPlayers];
-//        players[0] = new Player(0, skins[0], colors[0], this, ui, true, true);
-//        players[0].altWin = true;
-//    }
-
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+        if (moving) {
+            moveDraggables(moveStep);
+            move++;
+            if (move == moves) {
+                moving = false;
+                move = 0;
+            }
+        }
+        for (int i = 0; i < numPlayers; i ++) {
+            for (int j = 0; j < players[i].orbs.size(); j ++) {
+                players[i].orbs.get(j).removeIfOff();
+            }
+            for (int j = 0; j < players[i].voids.size(); j ++) {
+                players[i].voids.get(j).removeIfOff();
+            }
+            for (int j = 0; j < players[i].novas.size(); j ++) {
+                players[i].novas.get(j).removeIfOff();
+            }
+        }
+    }
 
     @Override
     public void render(float delta) {
