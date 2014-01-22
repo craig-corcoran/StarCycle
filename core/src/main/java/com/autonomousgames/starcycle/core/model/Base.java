@@ -1,6 +1,5 @@
 package com.autonomousgames.starcycle.core.model;
 
-import com.autonomousgames.starcycle.core.Soundz;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.UserSettingz;
@@ -111,14 +110,14 @@ public class Base {
             if (Math.min(maxLevel, player.starsCaptured) != level) {
                 if (Math.min(maxLevel, player.starsCaptured) > level) {
                     if (player.starsCaptured == 1){
-                        Soundz.levelup1Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
+                        StarCycle.audio.levelup1Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
                     }
                     if (player.starsCaptured == 2) {
-                        Soundz.levelup2Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
+                        StarCycle.audio.levelup2Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
                     }
 
                 } else {
-                    Soundz.leveldownSound.play(UserSettingz.getFloatSetting("sfxVolume"));
+                    StarCycle.audio.leveldownSound.play(UserSettingz.getFloatSetting("sfxVolume"));
                 }
                 level = Math.min(maxLevel, player.starsCaptured);
                 baseButton.setLevel(level);
@@ -176,9 +175,9 @@ public class Base {
 
     public LayeredButton getAimer(Vector2 pos, Vector2 dims, Color[] colors) {
         LayeredButton button = new LayeredButton(pos);
-        button.addLayer(new SpriteLayer(Texturez.aimer[0], new Vector2(0f, -1f).scl(maxAimerLength), handleImDims).setSpriteColor(colors[1]));
+        button.addLayer(new SpriteLayer(StarCycle.tex.aimer[0], new Vector2(0f, -1f).scl(maxAimerLength), handleImDims).setSpriteColor(colors[1]));
         for (int i = 0; i < 2; i ++) {
-            button.addLayer(new SpriteLayer(Texturez.aimer[i + 1], new Vector2(0f, 1f).scl(maxAimerLength), chevronImDims).setSpriteColor(colors[i]));
+            button.addLayer(new SpriteLayer(StarCycle.tex.aimer[i + 1], new Vector2(0f, 1f).scl(maxAimerLength), chevronImDims).setSpriteColor(colors[i]));
         }
         return button;
     }

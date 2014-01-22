@@ -1,7 +1,7 @@
 package com.autonomousgames.starcycle.core.screens;
 
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Bot;
@@ -47,8 +47,8 @@ public class Tutorial7 extends TutorialSandbox {
 		}
 		
 		winButton = new LayeredButton(new Vector2(StarCycle.screenHeight/4f, StarCycle.screenHeight/2f), iconSize.cpy().scl(2f));
-		winButton.addLayer(new SpriteLayer(Texturez.gradientRound, iconSize.cpy().scl(2f)));
-		winButton.addLayer(new SpriteLayer(Texturez.trophy, iconSize).setSpriteColor(tutor.colors[0]));
+		winButton.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, iconSize.cpy().scl(2f)));
+		winButton.addLayer(new SpriteLayer(StarCycle.tex.trophy, iconSize).setSpriteColor(tutor.colors[0]));
 		winButton.rotate(90f);
 		// winButton is created, but not added to the ui yet.
 		
@@ -94,8 +94,8 @@ public class Tutorial7 extends TutorialSandbox {
 	void setPlayers() {
 		numPlayers = 2;
 		players = new Player[numPlayers];
-		players[0] = new Player(0, BaseType.MALUMA, Texturez.cool, this, ui, false, false);
-		players[1] = new Bot(1,BaseType.TAKETE, Texturez.warm, this, ui, true, true);
+		players[0] = new Player(0, BaseType.MALUMA, Colors.cool, this, ui, false, false);
+		players[1] = new Bot(1,BaseType.TAKETE, Colors.warm, this, ui, true, true);
 		tutor = (Bot) players[1];
 		tutor.setBotType(BotType.DEAD);
 //		tutor.disableIncome();

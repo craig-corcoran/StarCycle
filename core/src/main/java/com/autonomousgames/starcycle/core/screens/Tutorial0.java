@@ -1,7 +1,7 @@
 package com.autonomousgames.starcycle.core.screens;
 
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.controllers.GameController;
 import com.autonomousgames.starcycle.core.model.*;
@@ -49,7 +49,7 @@ public class Tutorial0 extends Tutorial {
 
         dragHand = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y+sh*0.3f));
         Vector2 slideVec = new Vector2(0f, -sh*0.6f);
-        dragHand.addLayer(new SpriteLayer(Texturez.fingerRight, new Vector2(swipeSize.x/4f, swipeSize.x/3f)).rotateSprite(90f).slideAndReturn(slideVec, 2f));
+        dragHand.addLayer(new SpriteLayer(StarCycle.tex.fingerRight, new Vector2(swipeSize.x/4f, swipeSize.x/3f)).rotateSprite(90f).slideAndReturn(slideVec, 2f));
         ui.addActor(dragHand);
         draggables.add(dragHand);
 
@@ -59,7 +59,7 @@ public class Tutorial0 extends Tutorial {
 
         holdImage = new LayeredButton(new Vector2(sw*0.7f, sh*0.5f+offset));
         float graphicSide = (sh < sw*0.6f) ? sh : sw*0.6f;
-        holdImage.addLayer(new SpriteLayer(Texturez.tutorialImages[0], new Vector2(1f, 1f).scl(graphicSide)).rotateSprite(90f));
+        holdImage.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[0], new Vector2(1f, 1f).scl(graphicSide)).rotateSprite(90f));
         ui.addActor(holdImage);
         draggables.add(holdImage);
 
@@ -72,9 +72,9 @@ public class Tutorial0 extends Tutorial {
         fakeBasePos0.add(0f, offset);
 
         aim = new LayeredButton(new Vector2(swipeCenter.x-bw/2f, swipeCenter.y + offset));
-        aim.addLayer(new SpriteLayer(Texturez.tutorialImages[1], new Vector2(0f, -tileSize.x/2f), tileSize));
-        aim.addLayer(new SpriteLayer(Texturez.tutorialImages[2], new Vector2(0f, -tileSize.x/2f), tileSize).blink(0.75f),LayerType.SPECIAL);
-        aim.addLayer(new SpriteLayer(Texturez.tutorialImages[3], new Vector2(0f, tileSize.x/2f), tileSize));
+        aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[1], new Vector2(0f, -tileSize.x/2f), tileSize));
+        aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[2], new Vector2(0f, -tileSize.x/2f), tileSize).blink(0.75f),LayerType.SPECIAL);
+        aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[3], new Vector2(0f, tileSize.x/2f), tileSize));
         aim.rotateLayers(90f);
         ui.addActor(aim);
         draggables.add(aim);
@@ -88,9 +88,9 @@ public class Tutorial0 extends Tutorial {
         fakeBasePos1.add(0f, offset);
 
         shoot = new LayeredButton(new Vector2(swipeCenter.x-bw/2f, swipeCenter.y + offset));
-        shoot.addLayer(new SpriteLayer(Texturez.tutorialImages[1], new Vector2(0f, -tileSize.x/2f), tileSize));
-        shoot.addLayer(new SpriteLayer(Texturez.tutorialImages[4], new Vector2(0f, tileSize.x/2f), tileSize));
-        shoot.addLayer(new SpriteLayer(Texturez.tutorialImages[5], new Vector2(0f, tileSize.x/2f), tileSize).blink(1f), LayerType.SPECIAL);
+        shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[1], new Vector2(0f, -tileSize.x/2f), tileSize));
+        shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[4], new Vector2(0f, tileSize.x/2f), tileSize));
+        shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[5], new Vector2(0f, tileSize.x/2f), tileSize).blink(1f), LayerType.SPECIAL);
         shoot.rotateLayers(90f);
         ui.addActor(shoot);
         draggables.add(shoot);
@@ -112,7 +112,7 @@ public class Tutorial0 extends Tutorial {
         }
 
         orbit = new LayeredButton(new Vector2(swipeCenter.x - bw, swipeCenter.y + offset));
-        orbit.addLayer(new SpriteLayer(Texturez.tutorialImages[6], new Vector2(swipeSize.y, swipeSize.x)).rotateSprite(90f));
+        orbit.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[6], new Vector2(swipeSize.y, swipeSize.x)).rotateSprite(90f));
         ui.addActor(orbit);
         draggables.add(orbit);
 
@@ -153,11 +153,11 @@ public class Tutorial0 extends Tutorial {
                 vel.set(orbVel0);
             }
             if (0f < fakeBasePos0.y && fakeBasePos0.y < sh) {
-                fakeOrbs.add(new ImageOrb(Texturez.fakeorbTextures[0], 10f, fakeBasePos0, StarCycle.screenWidth,
+                fakeOrbs.add(new ImageOrb(StarCycle.tex.fakeorbTextures[0], 10f, fakeBasePos0, StarCycle.screenWidth,
                         StarCycle.screenHeight, vel, new Vector2(0, 0)));
             }
             if (shoot.getLayer(2).drawCondition() && 0f < fakeBasePos1.y && fakeBasePos1.y < sh) {
-                fakeOrbs.add(new ImageOrb(Texturez.fakeorbTextures[0], 10f, fakeBasePos1, StarCycle.screenWidth,
+                fakeOrbs.add(new ImageOrb(StarCycle.tex.fakeorbTextures[0], 10f, fakeBasePos1, StarCycle.screenWidth,
                         StarCycle.screenHeight, orbVel0, new Vector2(0, 0)));
             }
             sinceLastShot = 0f;

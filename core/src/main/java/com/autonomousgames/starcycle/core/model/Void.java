@@ -1,8 +1,7 @@
 package com.autonomousgames.starcycle.core.model;
 
-import com.autonomousgames.starcycle.core.Soundz;
+import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.UserSettingz;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class Void extends ChargeOrb implements Collidable {
@@ -21,7 +20,7 @@ public class Void extends ChargeOrb implements Collidable {
 	public void beginSensorContact(Collidable obj) {
 		if ((obj instanceof Orb)) {
 			if ((obj instanceof Void)) {
-				Soundz.gravkillgravSound.play(UserSettingz.getFloatSetting("sfxVolume"));
+				StarCycle.audio.gravkillgravSound.play(UserSettingz.getFloatSetting("sfxVolume"));
 			}
 			obj.collision(this);
 		} else {

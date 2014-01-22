@@ -1,7 +1,7 @@
 package com.autonomousgames.starcycle.core.model;
 
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.ui.Layer;
 import com.autonomousgames.starcycle.core.ui.LayerType;
@@ -50,11 +50,11 @@ public class Star extends Orbitable implements Collidable {
 
 	// Drawing stuff
 	LayeredButton starButton;
-	static TextureRegion starImage = Texturez.hexStar;
+//	TextureRegion starImage = StarCycle.tex.hexStar;
 	private Vector2 imageDims;
 	private float rotateSpeed = MathUtils.random(0.2f, 0.4f)*(1-2*MathUtils.random(1)); // This is purely visual.
 	ArrayList<LayeredButton> controlButtons = new ArrayList<LayeredButton>();
-	TextureRegion conIm = Texturez.block; // Image for the sides of the control hexes.
+	TextureRegion conIm = StarCycle.tex.block; // Image for the sides of the control hexes.
 	float apothem; // Inner radius of hexagon.
 	// Ratio of apothem to side length:
 	float sideScale = 2f * 0.57735f; // The second value is tand(30deg), but MathUtils doesn't have tangent.
@@ -170,7 +170,7 @@ public class Star extends Orbitable implements Collidable {
 		if (controlPercents[0] < 0.99f && controlPercents[1] < 0.99f && starButton.isActive()) {
 			starButton.deactivate();
 			for (int i = quadLayer0; i < quadLayer0 + 4; i ++) {
-				starButton.getLayer(i).setColor(Texturez.night);
+				starButton.getLayer(i).setColor(Colors.night);
 			}
 		}
 		// If either player has full control, do not draw hexes:
@@ -234,8 +234,13 @@ public class Star extends Orbitable implements Collidable {
 
     private Player player;
     private float rate;
-    private float incAmmoThresh = 2f;
-    private float initVelScal = 2.2f;
+    private float incAmmoThresh = UserSettingz.getFloatSetting("incAmmoThresh");
+    private float initVelScale = UserSettingz.getFloatSetting("initVelScale");
+    private float incOrbSize = UserSettingz.getFloatSetting("incOrbSize");
+    private float incOrbAlpha = UserSettingz.getFloatSetting("incOrbAlpha");
+    private Vector2 pos = new Vector2();
+    private Vector2 vel = new Vector2();
+    private float nor = 0;
     private float[] playerIncome = {0f, 0f};
     public void updateControl() {
         for (int i = 0; i < players.length; i++) { // TODO iterator
@@ -246,15 +251,17 @@ public class Star extends Orbitable implements Collidable {
             player.ammo += rate;
             playerIncome[i] += rate;
 
-            if (player.showIncomeOrbs && playerIncome[i] > incAmmoThresh) {
-                Gdx.app.log("star","player income" + playerIncome[i]);
+            while(player.showIncomeOrbs && (playerIncome[i] > incAmmoThresh)) {
                 // emit fake income orb
                 playerIncome[i] -= incAmmoThresh;
-                Color color = (MathUtils.random(1f) < 0.67f) ? player.colors[0] : player.colors[1];
-                player.incomeOrbs.add(new ImageOrb(Texturez.bgMote, StarCycle.screenHeight/360f, this.getButtonCenter(),
-                        StarCycle.screenWidth, StarCycle.screenHeight, new Vector2(MathUtils.random(-initVelScal,initVelScal),
-                                                                                   MathUtils.random(-initVelScal,initVelScal)),
-                                                                       new Vector2()).tint(color));
+                Color color = (MathUtils.random(1f) < 0.3f) ? player.colors[0] : player.colors[1];
+
+                vel = new Vector2(MathUtils.random(-initVelScale,initVelScale), MathUtils.random(-initVelScale,initVelScale));
+                pos = this.getButtonCenter();
+                nor = vel.len();
+                pos = pos.add(this.radius*StarCycle.pixelsPerMeter*vel.x/nor, this.radius*StarCycle.pixelsPerMeter*vel.y/nor);
+                player.incomeOrbs.add(new ImageOrb(StarCycle.tex.bgMote, incOrbSize * StarCycle.screenHeight, pos,
+                        StarCycle.screenWidth, StarCycle.screenHeight, vel, new Vector2()).tint(color).set_alpha(incOrbAlpha));
             }
         }
 
@@ -302,6 +309,8 @@ public class Star extends Orbitable implements Collidable {
 			activeVoids.add((Void) orb);
             numVoids[orb.player.number]++; // keep player counts for easy access by bot
 		}
+        assert ((numVoids[0] + numVoids[1]) == getOrbCount(Orb.OrbType.VOID));
+        assert ((numOrbs[0] + numOrbs[1]) == getOrbCount(Orb.OrbType.ORB));
 	}
 
 	public void removeOrb(Orb orb) {
@@ -313,6 +322,8 @@ public class Star extends Orbitable implements Collidable {
 			activeVoids.remove(orb);
             numVoids[orb.player.number]--;
 		}
+        assert ((numVoids[0] + numVoids[1]) == getOrbCount(Orb.OrbType.VOID));
+        assert ((numOrbs[0] + numOrbs[1]) == getOrbCount(Orb.OrbType.ORB));
 	}
 
 	public int getOrbCount(Orb.OrbType type) {
@@ -342,11 +353,11 @@ public class Star extends Orbitable implements Collidable {
         Vector2 dims = new Vector2(radius, radius).scl(StarCycle.pixelsPerMeter);
         LayeredButton button = new LayeredButton(position);
         Vector2 quadPos = dims.cpy().div(2f);
-        button.addLayer(new SpriteLayer(Texturez.gradientRound, dims.cpy().scl(2.75f)));
-        button.addLayer(new SpriteLayer(Texturez.circle, dims.cpy().scl(0.8f)).setSpriteColor(Color.BLACK));
+        button.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, dims.cpy().scl(2.75f)));
+        button.addLayer(new SpriteLayer(StarCycle.tex.circle, dims.cpy().scl(0.8f)).setSpriteColor(Color.BLACK));
         // The main star visual is drawn as four quadrants.
         for (int i = 0; i < 4; i++) {
-            button.addLayer(new SpriteLayer(starImage, quadPos.cpy().rotate(90f*i), dims, Texturez.night, (90f*i)));
+            button.addLayer(new SpriteLayer(StarCycle.tex.hexStar, quadPos.cpy().rotate(90f*i), dims, Colors.night, (90f*i)));
         }
         button.deactivate(); // This is a hackish way of noting whether either player has 100% control.
         button.unlock(); // This is a hackish way of noting whether either player has 50% control.

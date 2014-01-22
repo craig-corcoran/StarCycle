@@ -1,5 +1,6 @@
 package com.autonomousgames.starcycle.core.screens;
 
+import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.ui.ScreenDoneClickListener;
 import com.autonomousgames.starcycle.core.ui.StandardButton;
@@ -16,8 +17,8 @@ public class MainMenu extends MenuScreen {
 		Vector2 startButtonDims = new Vector2(startButtonWidth, startButtonWidth);
 		ScreenType startDestination = ScreenType.STARTMENU;//(UserSettingz.getSetting(SinglePlayerLevel.TUTORIAL.toString()) == 1f) ? ScreenType.STARTMENU : ScreenType.TUTORIAL_ORB; 
 		
-		StandardButton startButton = new StandardButton(new Vector2(ui.getWidth()/3f, ui.getHeight()/2f), startButtonDims, Texturez.genericLogo, padding);
-		startButton.addLayer(new TextLayer(Texturez.gridnikLarge, "Start", startButtonDims));
+		StandardButton startButton = new StandardButton(new Vector2(ui.getWidth()/3f, ui.getHeight()/2f), startButtonDims, StarCycle.tex.genericLogo, padding);
+		startButton.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Start", startButtonDims));
 		startButton.rotateLayers(90f);
 		startButton.addListener(new ScreenDoneClickListener(this,startDestination));
 		
@@ -25,13 +26,13 @@ public class MainMenu extends MenuScreen {
 		Vector2 iconSize = new Vector2(hcenter, hcenter);
 		Vector2 aboutPos = new Vector2(ui.getWidth()*5/8f+hcenter, ui.getHeight()/3f);
 		
-		StandardButton aboutButton = new StandardButton(aboutPos, iconSize, Texturez.infoIcon, padding);
+		StandardButton aboutButton = new StandardButton(aboutPos, iconSize, StarCycle.tex.infoIcon, padding);
 		aboutButton.setRotation(90f);
 		aboutButton.addListener(new ScreenDoneClickListener(this,ScreenType.ABOUT));
 		
 		Vector2 settingsPos = new Vector2(ui.getWidth()*5/8f+hcenter, ui.getHeight()*2/3f);
 		
-		StandardButton settingsButton = new StandardButton(settingsPos, iconSize, Texturez.settingsIcon, padding);
+		StandardButton settingsButton = new StandardButton(settingsPos, iconSize, StarCycle.tex.settingsIcon, padding);
 		settingsButton.setRotation(90f);
 		settingsButton.addListener(new ScreenDoneClickListener(this,ScreenType.SETTINGS));
 		

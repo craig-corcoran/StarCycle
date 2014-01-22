@@ -1,5 +1,6 @@
 package com.autonomousgames.starcycle.core.screens;
 
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.controllers.GameController;
@@ -7,14 +8,12 @@ import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.FakeOrb;
 import com.autonomousgames.starcycle.core.model.ImageOrb;
 import com.autonomousgames.starcycle.core.model.Level;
-import com.autonomousgames.starcycle.core.model.Player;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 
 import java.util.ArrayList;
@@ -117,29 +116,6 @@ public abstract class Tutorial extends ModelScreen {
 //        players[0].altWin = true;
 //    }
 
-    @Override
-    public void update(float delta) {
-        super.update(delta);
-        if (moving) {
-            moveDraggables(moveStep);
-            move++;
-            if (move == moves) {
-                moving = false;
-                move = 0;
-            }
-        }
-        for (int i = 0; i < numPlayers; i ++) {
-            for (int j = 0; j < players[i].orbs.size(); j ++) {
-                players[i].orbs.get(j).removeIfOff();
-            }
-            for (int j = 0; j < players[i].voids.size(); j ++) {
-                players[i].voids.get(j).removeIfOff();
-            }
-            for (int j = 0; j < players[i].novas.size(); j ++) {
-                players[i].novas.get(j).removeIfOff();
-            }
-        }
-    }
 
     @Override
     public void render(float delta) {
@@ -184,9 +160,9 @@ public abstract class Tutorial extends ModelScreen {
     void borders(int borderNum) {
         for (int i = 0; i < borderNum; i++) {
             LayeredButton button = new LayeredButton(swipeCenter, swipeSize);
-            button.addLayer(new SpriteLayer(Texturez.block, new Vector2(0f, sh * 0.425f), new Vector2(swipeSize.x, bw), Texturez.night, 0f));
-            button.addLayer(new SpriteLayer(Texturez.block, new Vector2(swipeCenter.x - bw / 2f, 0f), new Vector2(bw, sh * 0.9f), Texturez.night, 0f));
-            button.addLayer(new SpriteLayer(Texturez.block, new Vector2(0f, -sh * 0.425f), new Vector2(swipeSize.x, bw), Texturez.night, 0f));
+            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, sh * 0.425f), new Vector2(swipeSize.x, bw), Colors.night, 0f));
+            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(swipeCenter.x - bw / 2f, 0f), new Vector2(bw, sh * 0.9f), Colors.night, 0f));
+            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, -sh * 0.425f), new Vector2(swipeSize.x, bw), Colors.night, 0f));
             button.moveCenter(0f, sh*i);
             draggables.add(button);
             ui.addActor(button);
@@ -222,5 +198,4 @@ public abstract class Tutorial extends ModelScreen {
         }
         return clamped? 0f : y;
     }
-
 }

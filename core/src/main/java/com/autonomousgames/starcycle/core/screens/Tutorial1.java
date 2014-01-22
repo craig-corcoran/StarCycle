@@ -70,7 +70,7 @@ public class Tutorial1 extends Tutorial {
         draggables.add(fakeAim1);
 
         orbit = new LayeredButton(new Vector2(swipeCenter.x - bw, swipeCenter.y + offset));
-        orbit.addLayer(new SpriteLayer(Texturez.tutorialImages[6], new Vector2(swipeSize.y, swipeSize.x)).rotateSprite(90f));
+        orbit.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[6], new Vector2(swipeSize.y, swipeSize.x)).rotateSprite(90f));
         ui.addActor(orbit);
         draggables.add(orbit);
 

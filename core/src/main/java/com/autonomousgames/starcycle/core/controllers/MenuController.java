@@ -1,6 +1,5 @@
 package com.autonomousgames.starcycle.core.controllers;
 
-import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.screens.MainMenu;
 import com.autonomousgames.starcycle.core.screens.MenuScreen;
 import com.autonomousgames.starcycle.core.screens.ScreenType;
@@ -24,7 +23,7 @@ public class MenuController extends LogController {
 		super.keyDown(keycode);
 		if (keycode == Keys.BACK){
 			if (screen instanceof MainMenu){
-				StarCycle.sc.dispose();
+                Gdx.app.exit();
         	}
 			else{
 				screen.nextScreen = ScreenType.MAINMENU;

@@ -51,7 +51,7 @@ public class MenuScreen extends GameScreen {
         int textureSwitch = (Math.random() > .5) ? 1 : 0;
         boolean left = (textureSwitch == 1) ? true : false;
         if (drawFakeOrbs) {
-		    fakeOrbs.add(new ImageOrb(Texturez.fakeorbTextures[textureSwitch], StarCycle.screenHeight/60f, vec,
+		    fakeOrbs.add(new ImageOrb(StarCycle.tex.fakeorbTextures[textureSwitch], StarCycle.screenHeight/60f, vec,
                     StarCycle.screenWidth, StarCycle.screenHeight, left));
         }
 	}

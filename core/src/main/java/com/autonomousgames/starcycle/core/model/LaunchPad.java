@@ -77,23 +77,23 @@ public class LaunchPad {
         this.screen = screen;
         this.player = player;
         this.visible = visible;
-        orbTxt = new AtlasRegion[]{Texturez.skinMap.get(player.basetype).get(Texturez.TextureType.ORB0), Texturez.skinMap.get(player.basetype).get(Texturez.TextureType.ORB1)};
-        pw1Txt = new AtlasRegion[]{Texturez.skinMap.get(player.basetype).get(Texturez.TextureType.VOID0), Texturez.skinMap.get(player.basetype).get(Texturez.TextureType.VOID1)};
-        pw2Txt = new AtlasRegion[]{Texturez.skinMap.get(player.basetype).get(Texturez.TextureType.NOVA0), Texturez.skinMap.get(player.basetype).get(Texturez.TextureType.NOVA1)};
+        orbTxt = new AtlasRegion[]{StarCycle.tex.skinMap.get(player.basetype).get(Texturez.TextureType.ORB0), StarCycle.tex.skinMap.get(player.basetype).get(Texturez.TextureType.ORB1)};
+        pw1Txt = new AtlasRegion[]{StarCycle.tex.skinMap.get(player.basetype).get(Texturez.TextureType.VOID0), StarCycle.tex.skinMap.get(player.basetype).get(Texturez.TextureType.VOID1)};
+        pw2Txt = new AtlasRegion[]{StarCycle.tex.skinMap.get(player.basetype).get(Texturez.TextureType.NOVA0), StarCycle.tex.skinMap.get(player.basetype).get(Texturez.TextureType.NOVA1)};
 
         position = (player.number ==0 ) ? new Vector2(StarCycle.screenWidth, StarCycle.screenHeight) : new Vector2(0f, 0f);
         angle =  (player.number == 0) ? 180f : 0f;
 
         bgButton = new LayeredButton(position);
-        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[1], metPos, metDim, Color.BLACK, -45f), LayerType.ACTIVE);
-        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[1], metPos, metDim, player.colors[0], -45f), LayerType.ACTIVE);
+        bgButton.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[1], metPos, metDim, Color.BLACK, -45f), LayerType.ACTIVE);
+        bgButton.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[1], metPos, metDim, player.colors[0], -45f), LayerType.ACTIVE);
         for (int i = 0; i < 8; i ++) {
-            bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[5], triPos.cpy().rotate(-topAngs[i]), triDim, player.colors[1], -topAngs[i]), LayerType.ACTIVE);
+            bgButton.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[5], triPos.cpy().rotate(-topAngs[i]), triDim, player.colors[1], -topAngs[i]), LayerType.ACTIVE);
         }
         for (int i = 0; i < 3; i ++) {
-            bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[5], triPos.cpy().rotate(-botAngs[i]), triDim, player.colors[1], -botAngs[i] + 180f), LayerType.ACTIVE);
+            bgButton.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[5], triPos.cpy().rotate(-botAngs[i]), triDim, player.colors[1], -botAngs[i] + 180f), LayerType.ACTIVE);
         }
-        bgButton.addLayer(new SpriteLayer(Texturez.launchTextures[2], metPos, metDim, player.colors[1], -45f), LayerType.ACTIVE);
+        bgButton.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[2], metPos, metDim, player.colors[1], -45f), LayerType.ACTIVE);
         bgButton.rotate(angle);
         meter = ((SpriteLayer) bgButton.getLayer(1));
 
@@ -240,12 +240,12 @@ public class LaunchPad {
     public ArcButton getOrbButton(Vector2 position, float angle, Color[] colors, boolean touchable) {
         ArcButton button = new ArcButton(position, orbAng, orbTch);
         if (touchable) {
-            button.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, colors[1], 0f), LayerType.UP);
-            button.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, colors[0], 0f), LayerType.DOWN);
+            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[3], orbPos, orbDim, colors[1], 0f), LayerType.UP);
+            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[3], orbPos, orbDim, colors[0], 0f), LayerType.DOWN);
         }
         else {
-            button.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, colors[1], 0f));
-            button.addLayer(new SpriteLayer(Texturez.launchTextures[3], orbPos, orbDim, colors[1], 0f), LayerType.SPECIAL);
+            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[3], orbPos, orbDim, colors[1], 0f));
+            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[3], orbPos, orbDim, colors[1], 0f), LayerType.SPECIAL);
             button.getLayer(1).toggleSpecial();
         }
         button.addLayer(new SpriteLayer(orbTxt[0], orbTxtPos, txtDim, colors[0], 0f).setRotationSpeed(trs), LayerType.UNLOCKED);
@@ -257,15 +257,15 @@ public class LaunchPad {
     public ArcButton getPw1Button(Vector2 position, float angle, Color[] colors, boolean touchable) {
         ArcButton button = new ArcButton(position, pw1Ang, powTch);
         if (touchable) {
-            button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw1Pos, powDim, colors[1], 0f), LayerType.ACTIVEUP);
-            button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw1Pos, powDim, colors[0], 0f), LayerType.DOWN);
+            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[4], pw1Pos, powDim, colors[1], 0f), LayerType.ACTIVEUP);
+            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[4], pw1Pos, powDim, colors[0], 0f), LayerType.DOWN);
         }
         else {
-            button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw1Pos, powDim, colors[1], 0f), LayerType.ACTIVE);
-            button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw1Pos, powDim, colors[1], 0f), LayerType.SPECIAL);
+            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[4], pw1Pos, powDim, colors[1], 0f), LayerType.ACTIVE);
+            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[4], pw1Pos, powDim, colors[1], 0f), LayerType.SPECIAL);
             button.getLayer(1).toggleSpecial();
         }
-        button.addLayer(new SpriteLayer(Texturez.voidRing, pw1TxtPos, txtDim.cpy().scl(2.5f), colors[0], 0f), LayerType.FREE);
+        button.addLayer(new SpriteLayer(StarCycle.tex.voidRing, pw1TxtPos, txtDim.cpy().scl(2.5f), colors[0], 0f), LayerType.FREE);
         button.addLayer(new SpriteLayer(pw1Txt[0], pw1TxtPos, txtDim, colors[0], 0f).setRotationSpeed(trs), LayerType.FREE);
         button.addLayer(new SpriteLayer(pw1Txt[1], pw1TxtPos, txtDim, colors[1], 0f).setRotationSpeed(trs), LayerType.FREE);
         button.rotate(angle);
@@ -276,12 +276,12 @@ public class LaunchPad {
     public ArcButton getPw2Button(Vector2 position, float angle, Color[] colors, boolean touchable) {
         ArcButton button = new ArcButton(position, pw2Ang, powTch);
         if (touchable) {
-            button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw2Pos, powDim, colors[1], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.ACTIVEUP);
-            button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw2Pos, powDim, colors[0], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.DOWN);
+            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[4], pw2Pos, powDim, colors[1], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.ACTIVEUP);
+            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[4], pw2Pos, powDim, colors[0], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.DOWN);
         }
         else {
-            button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw2Pos, powDim, colors[1], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.ACTIVE);
-            button.addLayer(new SpriteLayer(Texturez.launchTextures[4], pw2Pos, powDim, colors[1], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.SPECIAL);
+            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[4], pw2Pos, powDim, colors[1], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.ACTIVE);
+            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[4], pw2Pos, powDim, colors[1], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.SPECIAL);
             button.getLayer(1).toggleSpecial();
         }
         button.addLayer(new SpriteLayer(pw2Txt[0], pw2TxtPos, pw2TxtDim, colors[0], 0f).setRotationSpeed(trs), LayerType.FREE);

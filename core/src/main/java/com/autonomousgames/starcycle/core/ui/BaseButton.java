@@ -1,5 +1,6 @@
 package com.autonomousgames.starcycle.core.ui;
 
+import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.badlogic.gdx.Gdx;
@@ -45,24 +46,24 @@ public class BaseButton extends ToggleButton {
 
 		switch (skin) {
 		case MALUMA:
-			addBaseLayer(Texturez.baseMaluma0, sizes.get(0), speeds[0], 0, 0);
-			addBaseLayer(Texturez.baseMaluma0, sizes.get(0), -speeds[0], 0, 1);
-			addBaseLayer(Texturez.baseMaluma1, sizes.get(1), speeds[1], 1, 0);
-			addBaseLayer(Texturez.baseMaluma1, sizes.get(1), -speeds[1], 1, 1);
-			addBaseLayer(Texturez.baseMaluma1, sizes.get(2), speeds[0], 2, 0);
-			addBaseLayer(Texturez.baseMaluma1, sizes.get(2), -speeds[0], 2, 0);
-			addBaseLayer(Texturez.baseMaluma1, sizes.get(1), speeds[2], 2, 1);
-			addBaseLayer(Texturez.baseMaluma1, sizes.get(1), -speeds[2], 2, 1);
+			addBaseLayer(StarCycle.tex.baseMaluma0, sizes.get(0), speeds[0], 0, 0);
+			addBaseLayer(StarCycle.tex.baseMaluma0, sizes.get(0), -speeds[0], 0, 1);
+			addBaseLayer(StarCycle.tex.baseMaluma1, sizes.get(1), speeds[1], 1, 0);
+			addBaseLayer(StarCycle.tex.baseMaluma1, sizes.get(1), -speeds[1], 1, 1);
+			addBaseLayer(StarCycle.tex.baseMaluma1, sizes.get(2), speeds[0], 2, 0);
+			addBaseLayer(StarCycle.tex.baseMaluma1, sizes.get(2), -speeds[0], 2, 0);
+			addBaseLayer(StarCycle.tex.baseMaluma1, sizes.get(1), speeds[2], 2, 1);
+			addBaseLayer(StarCycle.tex.baseMaluma1, sizes.get(1), -speeds[2], 2, 1);
 			break;
 		case TAKETE:
-			addBaseLayer(Texturez.baseTakete0, sizes.get(0), speeds[0], 0, 0);
-			addBaseLayer(Texturez.baseTakete0, sizes.get(0), -speeds[0], 0, 1);
-			addBaseLayer(Texturez.baseTakete1, sizes.get(1), speeds[1], 1, 0);
-			addBaseLayer(Texturez.baseTakete1, sizes.get(1), -speeds[1], 1, 1);
-			addBaseLayer(Texturez.baseTakete1, sizes.get(2), speeds[0], 2, 0);
-			addBaseLayer(Texturez.baseTakete1, sizes.get(2), -speeds[0], 2, 0);
-			addBaseLayer(Texturez.baseTakete1, sizes.get(1), speeds[2], 2, 1);
-			addBaseLayer(Texturez.baseTakete1, sizes.get(1), -speeds[2], 2, 1);
+			addBaseLayer(StarCycle.tex.baseTakete0, sizes.get(0), speeds[0], 0, 0);
+			addBaseLayer(StarCycle.tex.baseTakete0, sizes.get(0), -speeds[0], 0, 1);
+			addBaseLayer(StarCycle.tex.baseTakete1, sizes.get(1), speeds[1], 1, 0);
+			addBaseLayer(StarCycle.tex.baseTakete1, sizes.get(1), -speeds[1], 1, 1);
+			addBaseLayer(StarCycle.tex.baseTakete1, sizes.get(2), speeds[0], 2, 0);
+			addBaseLayer(StarCycle.tex.baseTakete1, sizes.get(2), -speeds[0], 2, 0);
+			addBaseLayer(StarCycle.tex.baseTakete1, sizes.get(1), speeds[2], 2, 1);
+			addBaseLayer(StarCycle.tex.baseTakete1, sizes.get(1), -speeds[2], 2, 1);
 			break;
 		case TARGET:
 			ArrayList<Vector2> size0 = new ArrayList<Vector2>();
@@ -73,29 +74,29 @@ public class BaseButton extends ToggleButton {
 				size1.add(sizes.get(i).cpy().scl(92f / 256f));
 				size2.add(sizes.get(i).cpy().scl(0.5f));
 			}
-			SpriteLayer layer00 = new SpriteLayer(Texturez.baseTarget0, size0.get(0).cpy().scl(0.5f), size0.get(0), colors[0], 0f);
+			SpriteLayer layer00 = new SpriteLayer(StarCycle.tex.baseTarget0, size0.get(0).cpy().scl(0.5f), size0.get(0), colors[0], 0f);
 			layer00.setOrigin(0f, 0f);
-			SpriteLayer layer01 = new SpriteLayer(Texturez.baseTarget0, size0.get(1).cpy().scl(0.5f), size0.get(1), colors[0], 0f);
+			SpriteLayer layer01 = new SpriteLayer(StarCycle.tex.baseTarget0, size0.get(1).cpy().scl(0.5f), size0.get(1), colors[0], 0f);
 			layer01.setOrigin(0f, 0f);
-			SpriteLayer layer02 = new SpriteLayer(Texturez.baseTarget0, size0.get(2).cpy().scl(0.5f), size0.get(2), colors[0], 0f);
+			SpriteLayer layer02 = new SpriteLayer(StarCycle.tex.baseTarget0, size0.get(2).cpy().scl(0.5f), size0.get(2), colors[0], 0f);
 			layer02.setOrigin(0f, 0f);
-			SpriteLayer layer10 = new SpriteLayer(Texturez.baseTarget1, size1.get(0).cpy().scl(0.5f), size1.get(0), colors[0], 0f);
+			SpriteLayer layer10 = new SpriteLayer(StarCycle.tex.baseTarget1, size1.get(0).cpy().scl(0.5f), size1.get(0), colors[0], 0f);
 			layer10.setOrigin(0f, 0f);
-			SpriteLayer layer11 = new SpriteLayer(Texturez.baseTarget1, size1.get(1).cpy().scl(0.5f), size1.get(1), colors[0], 0f);
+			SpriteLayer layer11 = new SpriteLayer(StarCycle.tex.baseTarget1, size1.get(1).cpy().scl(0.5f), size1.get(1), colors[0], 0f);
 			layer11.setOrigin(0f, 0f);
-			SpriteLayer layer12 = new SpriteLayer(Texturez.baseTarget1, size1.get(2).cpy().scl(0.5f), size1.get(2), colors[0], 0f);
+			SpriteLayer layer12 = new SpriteLayer(StarCycle.tex.baseTarget1, size1.get(2).cpy().scl(0.5f), size1.get(2), colors[0], 0f);
 			layer12.setOrigin(0f, 0f);
-			SpriteLayer layer20 = new SpriteLayer(Texturez.baseTarget2, size2.get(0).cpy().scl(0.5f), size2.get(0), colors[0], 0f);
+			SpriteLayer layer20 = new SpriteLayer(StarCycle.tex.baseTarget2, size2.get(0).cpy().scl(0.5f), size2.get(0), colors[0], 0f);
 			layer20.setOrigin(0f, 0f);
-			SpriteLayer layer21 = new SpriteLayer(Texturez.baseTarget2, size2.get(1).cpy().scl(0.5f), size2.get(1), colors[0], 0f);
+			SpriteLayer layer21 = new SpriteLayer(StarCycle.tex.baseTarget2, size2.get(1).cpy().scl(0.5f), size2.get(1), colors[0], 0f);
 			layer21.setOrigin(0f, 0f);
-			SpriteLayer layer22 = new SpriteLayer(Texturez.baseTarget2, size2.get(2).cpy().scl(0.5f), size2.get(2), colors[0], 0f);
+			SpriteLayer layer22 = new SpriteLayer(StarCycle.tex.baseTarget2, size2.get(2).cpy().scl(0.5f), size2.get(2), colors[0], 0f);
 			layer22.setOrigin(0f, 0f);
-			SpriteLayer layer30 = new SpriteLayer(Texturez.baseTarget3, size2.get(0).cpy().scl(0.5f), size2.get(0), colors[0], 0f);
+			SpriteLayer layer30 = new SpriteLayer(StarCycle.tex.baseTarget3, size2.get(0).cpy().scl(0.5f), size2.get(0), colors[0], 0f);
 			layer30.setOrigin(0f, 0f);
-			SpriteLayer layer31 = new SpriteLayer(Texturez.baseTarget3, size2.get(1).cpy().scl(0.5f), size2.get(1), colors[0], 0f);
+			SpriteLayer layer31 = new SpriteLayer(StarCycle.tex.baseTarget3, size2.get(1).cpy().scl(0.5f), size2.get(1), colors[0], 0f);
 			layer31.setOrigin(0f, 0f);
-			SpriteLayer layer32 = new SpriteLayer(Texturez.baseTarget3, size2.get(2).cpy().scl(0.5f), size2.get(2), colors[0], 0f);
+			SpriteLayer layer32 = new SpriteLayer(StarCycle.tex.baseTarget3, size2.get(2).cpy().scl(0.5f), size2.get(2), colors[0], 0f);
 			layer32.setOrigin(0f, 0f);
 			
 			modAndAddBaseLayer(layer10, speeds[0], 0f, 0f, 0, 0);
@@ -164,23 +165,23 @@ public class BaseButton extends ToggleButton {
 			modAndAddBaseLayer(layer22, speeds[2]*2f, 180f, 0f, 2, 1);
 			break;
 		case DERELICT:
-			addBaseLayer(Texturez.baseDerelict0a, sizes.get(0), speeds[0], 0, 0);
-			addBaseLayer(Texturez.baseDerelict0b, sizes.get(0), -speeds[0], 0, 1);
-			addBaseLayer(Texturez.baseDerelict1a, sizes.get(0), speeds[1], 1, 0);
-			addBaseLayer(Texturez.baseDerelict1b, sizes.get(0), -speeds[1], 1, 1);
-			addBaseLayer(Texturez.baseDerelict2a, sizes.get(1), speeds[2], 2, 0);
-			addBaseLayer(Texturez.baseDerelict2b, sizes.get(1), -speeds[2], 2, 1);
+			addBaseLayer(StarCycle.tex.baseDerelict0a, sizes.get(0), speeds[0], 0, 0);
+			addBaseLayer(StarCycle.tex.baseDerelict0b, sizes.get(0), -speeds[0], 0, 1);
+			addBaseLayer(StarCycle.tex.baseDerelict1a, sizes.get(0), speeds[1], 1, 0);
+			addBaseLayer(StarCycle.tex.baseDerelict1b, sizes.get(0), -speeds[1], 1, 1);
+			addBaseLayer(StarCycle.tex.baseDerelict2a, sizes.get(1), speeds[2], 2, 0);
+			addBaseLayer(StarCycle.tex.baseDerelict2b, sizes.get(1), -speeds[2], 2, 1);
 			break;
 		case CLOCKWORK:
-			addBaseLayer(Texturez.baseClockwork0a, sizes.get(0), speeds[0], 0, 0);
-			addBaseLayer(Texturez.baseClockwork0b, sizes.get(0), -speeds[0], 0, 1);
-			addBaseLayer(Texturez.baseClockwork1a, sizes.get(1), speeds[1], 1, 0);
-			addBaseLayer(Texturez.baseClockwork1b, sizes.get(1), -speeds[1], 1, 1);
-			addBaseLayer(Texturez.baseClockwork2a, sizes.get(2), speeds[2], 2, 0);
-			addBaseLayer(Texturez.baseClockwork2b, sizes.get(2).cpy().scl(0.25f), -speeds[2]*3.75f*2f-speeds[2], 2, 0);
-			addBaseLayer(Texturez.baseClockwork2c, sizes.get(2), -speeds[2], 2, 1);
-			addBaseLayer(Texturez.baseClockwork2b, new Vector2(0, sizes.get(2).y * 0.22f), sizes.get(2).cpy().scl(0.25f), speeds[2]*3.75f*2f-speeds[2], 360f/16f, -speeds[2], 2, 1);
-			addBaseLayer(Texturez.baseClockwork2b, new Vector2(0, sizes.get(2).y * -0.22f), sizes.get(2).cpy().scl(0.25f), speeds[2]*3.75f*2f-speeds[2], 360f/16f, -speeds[2], 2, 1);
+			addBaseLayer(StarCycle.tex.baseClockwork0a, sizes.get(0), speeds[0], 0, 0);
+			addBaseLayer(StarCycle.tex.baseClockwork0b, sizes.get(0), -speeds[0], 0, 1);
+			addBaseLayer(StarCycle.tex.baseClockwork1a, sizes.get(1), speeds[1], 1, 0);
+			addBaseLayer(StarCycle.tex.baseClockwork1b, sizes.get(1), -speeds[1], 1, 1);
+			addBaseLayer(StarCycle.tex.baseClockwork2a, sizes.get(2), speeds[2], 2, 0);
+			addBaseLayer(StarCycle.tex.baseClockwork2b, sizes.get(2).cpy().scl(0.25f), -speeds[2]*3.75f*2f-speeds[2], 2, 0);
+			addBaseLayer(StarCycle.tex.baseClockwork2c, sizes.get(2), -speeds[2], 2, 1);
+			addBaseLayer(StarCycle.tex.baseClockwork2b, new Vector2(0, sizes.get(2).y * 0.22f), sizes.get(2).cpy().scl(0.25f), speeds[2]*3.75f*2f-speeds[2], 360f/16f, -speeds[2], 2, 1);
+			addBaseLayer(StarCycle.tex.baseClockwork2b, new Vector2(0, sizes.get(2).y * -0.22f), sizes.get(2).cpy().scl(0.25f), speeds[2]*3.75f*2f-speeds[2], 360f/16f, -speeds[2], 2, 1);
 			break;
 		}
 		
