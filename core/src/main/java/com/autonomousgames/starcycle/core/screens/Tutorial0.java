@@ -23,7 +23,6 @@ public class Tutorial0 extends Tutorial {
     int[] basePages;
     int[] launchPages;
     int[] taketePages;
-    int pages = 5;
 
     Vector2 tileSize = new Vector2(swipeSize.y/2f-bw, swipeSize.x-bw);
 
@@ -42,6 +41,8 @@ public class Tutorial0 extends Tutorial {
         super(Level.LevelType.DOUBLE, ScreenType.TUTORIAL0, ScreenType.TUTORIAL1, ScreenType.STARTMENU, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm});
 
         Gdx.input.setInputProcessor(new GameController(this, 1));
+
+        pages = 5;
 
         // Zeroth page
         // Pausing and swiping:
@@ -138,10 +139,6 @@ public class Tutorial0 extends Tutorial {
     @Override
     public void update(float delta) {
         super.update(delta);
-
-        if (!moving && currentBorder == pages) {
-            isDone = true;
-        };
 
         sinceLastShot = Math.min(sinceLastShot + delta, coolDown);
         if (sinceLastShot >= coolDown) {

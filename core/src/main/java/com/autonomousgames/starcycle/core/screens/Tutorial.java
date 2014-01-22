@@ -48,6 +48,7 @@ public abstract class Tutorial extends ModelScreen {
     public boolean startAtEnd = false;
 
     int[][] starClamp;
+    int pages;
 
     public Tutorial (Level.LevelType lvlType, ScreenType screenType, ScreenType nextScreen, ScreenType prevScreen, BaseType[] skins, Color[][] colors) {
         super(lvlType, screenType, skins, colors);
@@ -131,6 +132,9 @@ public abstract class Tutorial extends ModelScreen {
                 players[i].novas.get(j).removeIfOff();
             }
         }
+        if (!moving && currentBorder == pages) {
+            isDone = true;
+        };
     }
 
     @Override

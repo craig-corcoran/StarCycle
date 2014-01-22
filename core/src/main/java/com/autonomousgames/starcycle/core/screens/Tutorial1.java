@@ -35,6 +35,8 @@ public class Tutorial1 extends Tutorial {
 
         Gdx.input.setInputProcessor(new GameController(this, 1));
 
+        pages = 2;
+
         // Zeroth page:
         // Return transition:
         offset = 0f;
