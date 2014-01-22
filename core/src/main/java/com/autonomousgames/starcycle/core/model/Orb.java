@@ -176,7 +176,7 @@ public class Orb implements Collidable {
 	public void collision(Collidable obj) {
         removeSelf();
         if (obj instanceof Star) {
-            Soundz.orbCrash.play(UserSettingz.getFloatSetting("sfxVolume"));
+            StarCycle.audio.orbCrash.play(UserSettingz.getFloatSetting("sfxVolume"));
         }
 	}
 

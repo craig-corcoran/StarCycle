@@ -1,6 +1,7 @@
 package com.autonomousgames.starcycle.core.screens;
 
 
+import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.UserSettingz;
@@ -30,7 +31,7 @@ public class Tutorial1 extends Tutorial {
     float starRadius = 1.5f * UserSettingz.getFloatSetting("starRadius");
 
     public Tutorial1() {
-        super(Level.LevelType.DOUBLE, ScreenType.TUTORIAL1, ScreenType.TUTORIAL4, ScreenType.TUTORIAL0, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Texturez.cool, Texturez.warm});
+        super(Level.LevelType.DOUBLE, ScreenType.TUTORIAL1, ScreenType.TUTORIAL4, ScreenType.TUTORIAL0, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm});
 
         Gdx.input.setInputProcessor(new GameController(this, 1));
 
