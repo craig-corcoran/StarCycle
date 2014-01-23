@@ -1,5 +1,6 @@
 package com.autonomousgames.starcycle.core.model;
 
+import com.autonomousgames.starcycle.core.Soundz;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.Texturez.TextureType;
@@ -174,6 +175,9 @@ public class Orb implements Collidable {
 	@Override
 	public void collision(Collidable obj) {
         removeSelf();
+        if (obj instanceof Star) {
+            StarCycle.audio.orbCrash.play(UserSettingz.getFloatSetting("sfxVolume"));
+        }
 	}
 
     public void removeSelf() {
@@ -182,8 +186,16 @@ public class Orb implements Collidable {
         }
     }
 
-    public void moveVisual(float x, float y) {
-        visOffset.add(x, y);
+    public void moveOrb(float x, float y) {
+        position = body.getPosition();
+        body.setTransform(position.x + x, position.y + y, 0f);
+        position = body.getPosition();
+    }
+
+    public void removeIfOff() {
+        if (position.x < -radius*1.5f || position.x > StarCycle.meterWidth + radius*1.5f || position.y < -radius*1.5f || position.y > StarCycle.meterHeight + radius*1.5f) {
+            removeSelf();
+        }
     }
 
 }

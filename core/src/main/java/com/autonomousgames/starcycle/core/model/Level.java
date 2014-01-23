@@ -54,7 +54,6 @@ public class Level {
 			numStars = 3;
 			stars = new ArrayList<Star>(numStars);
 			Vector2 farCenter = new Vector2((1 / 3f) * StarCycle.meterWidth, (1 / 2f) * StarCycle.meterHeight);
-			
 			addStaticStar(players, 0, centerRight, 1.5f * starRadius);
 			addStaticStar(players, 1, centerLeft, 1.5f * starRadius);
 			addStaticStar(players, 2, farCenter, 1.5f * starRadius);
@@ -130,14 +129,14 @@ public class Level {
 	}
 
 	private void addStaticStar(Player[] players, int starIndex, Vector2 pos, float radius) {
-		stars.add(starIndex, new Star(StarCycle.tex.hexStar, radius, pos, players,
+		stars.add(starIndex, new Star(radius, pos, players,
 				world, starIndex, 0f));
 	}
 
 	private void addPathedStar(Player[] players, int starIndex, Vector2 center, float radius, 
 								PathType pathMap, float startPercent, float rotSpeed) {
 		
-		stars.add(starIndex, new Star(StarCycle.tex.hexStar, radius, center, players,
+		stars.add(starIndex, new Star(radius, center, players,
 											world, starIndex, pathMap, startPercent, rotSpeed));
 		pathedObjList.add(stars.get(starIndex));
 	}

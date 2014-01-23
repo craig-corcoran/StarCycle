@@ -23,7 +23,8 @@ public class ChargeOrb extends Orb implements Collidable {
 	public boolean charging = false;
     public boolean lockedOn = false;
 
-    private float dAngle = 0f;
+    private float dTheta = 0f; // Measured difference in radians.
+    private float rotDeg = 0f; // Vector rotation in degrees, used after lockOn.
     private float angleSum = 0f;
 
 	LayeredButton chargeButton;
@@ -97,9 +98,8 @@ public class ChargeOrb extends Orb implements Collidable {
             }
 
             angle += rotVel;
-            vec.rotate((float)(dAngle * 180f/Math.PI));
-            setPosition(chargeStar.position.x + vec.x,
-                        chargeStar.position.y + vec.y);
+            vec.rotate(rotDeg);
+            setPosition(chargeStar.position.x + vec.x, chargeStar.position.y + vec.y);
 
 
         }
@@ -109,19 +109,15 @@ public class ChargeOrb extends Orb implements Collidable {
 
             if (charging) { // if not locked on, but charging: check for lock-on conditions
                 measAngle = measureAngle(chargeStar.position); // change in angle this frame
-                dAngle = measAngOld - measAngle;
-                if (Math.abs(dAngle) > MathUtils.PI) {
-                    dAngle += -1 * Math.signum(dAngle) * MathUtils.PI2;
+                dTheta = measAngOld - measAngle;
+                if (Math.abs(dTheta) > MathUtils.PI) {
+                    dTheta += -1 * Math.signum(dTheta) * MathUtils.PI2;
                 }
-                angleSum += dAngle;
+                angleSum += dTheta;
                 measAngOld = measAngle;
 
                 if (Math.abs(angleSum) > angleThresh) {
-                    lockedOn = true;
-                    orbButton.activate();
-                    chargeStar.addOrb(this);
-                    // set vector to be rotated dAngle
-                    vec.set(position.x - chargeStar.position.x, position.y - chargeStar.position.y);
+                    lockOn(chargeStar, (float)(dTheta * 180f/Math.PI));
                 }
             }
         }
@@ -201,5 +197,14 @@ public class ChargeOrb extends Orb implements Collidable {
 		}
 		super.removeSelf();
 	}
+
+    public void lockOn(Star star, float angle) {
+        lockedOn = true;
+        orbButton.activate();
+        star.addOrb(this);
+        // set vector to be rotated by angle
+        vec.set(position.x - star.position.x, position.y - star.position.y);
+        rotDeg = angle;
+    }
 
 }
