@@ -78,13 +78,13 @@ public class Tutorial0 extends Tutorial {
         offset = 0f;
 
         CharSequence text0 = "Welcome to StarCycle!";
-        CharSequence text1 = "Swipe the area at the top of the screen";
+        CharSequence text1 = "Swipe within the upper area";
         CharSequence text2 = "to progress through this tutorial.";
         CharSequence text3 = "Access the pause menu by tapping";
         CharSequence text4 = "within the blue rectangular area.";
         Vector2 textDims = new Vector2(sh, sw/10f);
         welcomeText = new LayeredButton(new Vector2(sw/2f - pauseButton.getDims().x/4f, sh/2f + offset));
-        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text0, textDims).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikJumbo, text0, textDims).rotateText(90f));
         welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text1, new Vector2(1.5f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
         welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text2, new Vector2(2.25f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
         welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text3, new Vector2(6.75f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));

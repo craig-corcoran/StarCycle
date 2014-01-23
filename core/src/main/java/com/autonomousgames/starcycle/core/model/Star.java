@@ -235,6 +235,7 @@ public class Star extends Orbitable implements Collidable {
     private Vector2 vel = new Vector2();
     private float nor = 0;
     private float[] playerIncome = {0f, 0f};
+    private float[] nonlinearIncome = {0f, 0f};
     public void updateControl() {
         for (int i = 0; i < players.length; i++) { // TODO iterator
             player = players[i];
@@ -243,10 +244,11 @@ public class Star extends Orbitable implements Collidable {
             rate = ammoRate * numOrbs[i];
             player.ammo += rate;
             playerIncome[i] += rate;
+            nonlinearIncome[i] += ammoRate * ((float) Math.sqrt(((double) numOrbs[i])));
 
-            while(player.showIncomeOrbs && (playerIncome[i] > incAmmoThresh)) {
+            while(player.showIncomeOrbs && (nonlinearIncome[i] > incAmmoThresh)) {
                 // emit fake income orb
-                playerIncome[i] -= incAmmoThresh;
+                nonlinearIncome[i] -= incAmmoThresh;
                 Color color = (MathUtils.random(1f) < 0.3f) ? player.colors[0] : player.colors[1];
 
                 vel = new Vector2(MathUtils.random(-initVelScale,initVelScale), MathUtils.random(-initVelScale,initVelScale));

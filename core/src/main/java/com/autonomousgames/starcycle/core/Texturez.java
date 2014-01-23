@@ -173,8 +173,10 @@ public class Texturez {
     public HashMap<TextureType,AtlasRegion> derelictMap;
     public HashMap<TextureType,AtlasRegion> clockworkMap;
 
+    public BitmapFont gridnikSmall;
     public BitmapFont gridnikMedium;
     public BitmapFont gridnikLarge;
+    public BitmapFont gridnikJumbo;
     public BitmapFont latoLightLarge;
     private FreeTypeFontGenerator gridnikGenerator;
     private FreeTypeFontGenerator latoLightGenerator;
@@ -346,9 +348,7 @@ public class Texturez {
 
         gridnikGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Gridnik.ttf"));
         latoLightGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Lato-Light.ttf"));
-        gridnikMedium = gridnikGenerator.generateFont(22);
-        gridnikLarge = gridnikGenerator.generateFont(42);
-        latoLightLarge = latoLightGenerator.generateFont(52);
+        resetFonts();
         fingerLeft = new TextureRegion(fingerRight);
         fingerLeft.flip(true, false);
 
@@ -426,8 +426,10 @@ public class Texturez {
 	}
 
     public void resetFonts() {
-        gridnikMedium = gridnikGenerator.generateFont(22);
+        gridnikSmall = gridnikGenerator.generateFont(22);
+        gridnikMedium = gridnikGenerator.generateFont(32);
         gridnikLarge = gridnikGenerator.generateFont(42);
+        gridnikJumbo = gridnikGenerator.generateFont(52);
         latoLightLarge = latoLightGenerator.generateFont(52);
     }
 }
