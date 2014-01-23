@@ -54,12 +54,12 @@ public class Star extends Orbitable implements Collidable {
 	private Vector2 imageDims;
 	private float rotateSpeed = MathUtils.random(0.2f, 0.4f)*(1-2*MathUtils.random(1)); // This is purely visual.
 	ArrayList<LayeredButton> controlButtons = new ArrayList<LayeredButton>();
-	TextureRegion conIm = StarCycle.tex.block; // Image for the sides of the control hexes.
+//	TextureRegion conIm = StarCycle.tex.block; // Image for the sides of the control hexes.
 	float apothem; // Inner radius of hexagon.
 	// Ratio of apothem to side length:
-	float sideScale = 2f * 0.57735f; // The second value is tand(30deg), but MathUtils doesn't have tangent.
+	static float sideScale = 2f * 0.57735f; // The second value is tand(30deg), but MathUtils doesn't have tangent.
 	float minSideLen; // Smallest hexagon side length.
-	float scaleRange; // Scale percent, for maximum side length, over 100% of original size.
+	static float scaleRange = (432f - 143f) / 143f;; // Scale percent, for maximum side length, over 100% of original size.
 	Vector2 sideDims; // Dimensions of hexagon side length.
 	int quadLayer0; // Starting layer of star image quadrants.
 
@@ -112,19 +112,12 @@ public class Star extends Orbitable implements Collidable {
 		starButton = getButton(position.cpy().scl(StarCycle.pixelsPerMeter), radius);
         quadLayer0 = starButton.getLayerNum()-4;
 		minSideLen = imageDims.x * 142f/512f * sideScale; // This is the minimum hexagon side length.
-		scaleRange = (432f - 143f) / 143f; // Side length scales with hexagon radius.
 		Vector2 hexPos = new Vector2(imageDims.x*142f/512f, 0f); // Starting position (minimum).
 		sideDims = new Vector2(imageDims.x/24f, minSideLen); // Minimum dimensions per hexagon side.
-		for (int i = 0; i < players.length; i ++) {
-			// Each player gets a "button."
-			controlButtons.add(new LayeredButton(starButton.getCenter(),starButton.getDims()));
-			for (int j = 0; j < 6; j ++) {
-				// The buttons have six layers, one for each side of the hexagon.
-				float sideAngle = 60f*j+30f*i;
-				controlButtons.get(i).addLayer(new SpriteLayer(conIm, hexPos.cpy().rotate(sideAngle), sideDims.cpy(), players[i].colors[0], sideAngle), LayerType.ACTIVE);
-			}
-			controlButtons.get(i).deactivate(); // Start off. Active means the hexagons are drawn.
-		}
+        for (int i = 0; i < players.length; i ++) {
+            // Each player gets a "button."
+            controlButtons.add(getControlButton(starButton.getCenter(), imageDims.x, players[i].colors[0], i));
+        }
 	}
 
 	public Star(float radius, Vector2 center,
@@ -362,5 +355,33 @@ public class Star extends Orbitable implements Collidable {
         button.deactivate(); // This is a hackish way of noting whether either player has 100% control.
         button.unlock(); // This is a hackish way of noting whether either player has 50% control.
         return button;
+    }
+
+    public static LayeredButton getControlButton(Vector2 pos, float dims, Color color, int player, float percent) {
+        LayeredButton button = new LayeredButton(pos);
+        Vector2 hexPos = new Vector2(dims*142f/512f, 0f); // Starting position (minimum).
+        float minSideLen = dims * 142f/512f * sideScale; // This is the minimum hexagon side length.
+        Vector2 sideDims = new Vector2(dims/24f, minSideLen); // Minimum dimensions per hexagon side.
+        for (int i = 0; i < 6; i ++) {
+            // The buttons have six layers, one for each side of the hexagon.
+            float sideAngle = 60f*i+30f*player;
+            button.addLayer(new SpriteLayer(StarCycle.tex.block, hexPos.cpy().rotate(sideAngle), sideDims.cpy(), color, sideAngle), LayerType.ACTIVE);
+        }
+        if (percent == 0f) {
+            button.deactivate(); // Start off. Active means the hexagons are drawn.
+        }
+        else {
+            float apothem = dims * (142f + (432f - 142f)*percent) / 512f;
+            for (int i = 0; i < 6; i ++) {
+                Layer layer = button.getLayer(i);
+                layer.setCenter(layer.getCenter().nor().scl(apothem)); // Scale the image radius.
+                layer.setScaleY(percent*scaleRange + 1f); // Scale the side length (not width).
+            }
+        }
+        return button;
+    }
+
+    public static LayeredButton getControlButton(Vector2 pos, float dims, Color color, int player) {
+        return getControlButton(pos, dims, color, player, 0f);
     }
 }

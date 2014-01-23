@@ -245,7 +245,7 @@ public class LaunchPad {
         }
         else {
             button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[3], orbPos, orbDim, colors[1], 0f));
-            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[3], orbPos, orbDim, colors[1], 0f), LayerType.SPECIAL);
+            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[3], orbPos, orbDim, colors[0], 0f), LayerType.SPECIAL);
             button.getLayer(1).toggleSpecial();
         }
         button.addLayer(new SpriteLayer(orbTxt[0], orbTxtPos, txtDim, colors[0], 0f).setRotationSpeed(trs), LayerType.UNLOCKED);
@@ -262,7 +262,7 @@ public class LaunchPad {
         }
         else {
             button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[4], pw1Pos, powDim, colors[1], 0f), LayerType.ACTIVE);
-            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[4], pw1Pos, powDim, colors[1], 0f), LayerType.SPECIAL);
+            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[4], pw1Pos, powDim, colors[0], 0f), LayerType.SPECIAL);
             button.getLayer(1).toggleSpecial();
         }
         button.addLayer(new SpriteLayer(StarCycle.tex.voidRing, pw1TxtPos, txtDim.cpy().scl(2.5f), colors[0], 0f), LayerType.FREE);
@@ -281,7 +281,7 @@ public class LaunchPad {
         }
         else {
             button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[4], pw2Pos, powDim, colors[1], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.ACTIVE);
-            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[4], pw2Pos, powDim, colors[1], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.SPECIAL);
+            button.addLayer(new SpriteLayer(StarCycle.tex.launchTextures[4], pw2Pos, powDim, colors[0], 0f).flipSprite(true, false).rotateSprite(-90f), LayerType.SPECIAL);
             button.getLayer(1).toggleSpecial();
         }
         button.addLayer(new SpriteLayer(pw2Txt[0], pw2TxtPos, pw2TxtDim, colors[0], 0f).setRotationSpeed(trs), LayerType.FREE);

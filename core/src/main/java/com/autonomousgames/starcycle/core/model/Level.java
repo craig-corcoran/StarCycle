@@ -54,7 +54,6 @@ public class Level {
 			numStars = 3;
 			stars = new ArrayList<Star>(numStars);
 			Vector2 farCenter = new Vector2((1 / 3f) * StarCycle.meterWidth, (1 / 2f) * StarCycle.meterHeight);
-			
 			addStaticStar(players, 0, centerRight, 1.5f * starRadius);
 			addStaticStar(players, 1, centerLeft, 1.5f * starRadius);
 			addStaticStar(players, 2, farCenter, 1.5f * starRadius);

@@ -15,6 +15,7 @@ public class TextLayer extends Layer{
 	Texture originalTexture;
 	Sprite textSprite;
 	boolean dispOnce = true;
+    boolean changed = false;
 	Vector2 buttonCenter = new Vector2(0f, 0f);
 
 	public TextLayer(BitmapFont font, java.lang.CharSequence text, Vector2 relPos, Vector2 dims) {
@@ -24,7 +25,7 @@ public class TextLayer extends Layer{
 		cache = new TransformText(new BitmapFont(font.getData(), textSprite, font.usesIntegerPositions()));
 		cache.setText(text, 0, 0);
 		cacheDims = new Vector2(cache.getBounds().width, cache.getBounds().height);
-		cache.setPosition(MathUtils.round(center.x - cacheDims.x/2f), MathUtils.round(center.y + cacheDims.y/2f));
+		cache.setPosition(MathUtils.round(- cacheDims.x/2f), MathUtils.round(cacheDims.y/2f));
 	}
 	
 	public TextLayer(BitmapFont font, java.lang.CharSequence text, Vector2 dims) {
@@ -40,11 +41,12 @@ public class TextLayer extends Layer{
 	@Override
 	public void rotate(float angle) {
 		cache.rotate(angle);
+        changed = true;
 	}
 	
 	@Override
 	public void setRotation(float angle) {
-		cache.rotate(angle - cache.getRotation());
+		rotate(angle - cache.getRotation());
 	}
 	
 	@Override
@@ -81,9 +83,10 @@ public class TextLayer extends Layer{
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha, Vector2 groupCenter, float groupAngle) {
 		// We shouldn't recalculate text positions unless something changes
-		if (!buttonCenter.equals(groupCenter)) {
-			cache.setPosition(MathUtils.round(groupCenter.x - cacheDims.x / 2f), MathUtils.round(groupCenter.y + cacheDims.y / 2f));
+		if (!buttonCenter.equals(groupCenter) || changed) {
+			cache.setPosition(MathUtils.round(groupCenter.x + center.x - cacheDims.x / 2f), MathUtils.round(groupCenter.y + center.y + cacheDims.y / 2f));
 			buttonCenter.set(groupCenter.x, groupCenter.y);
+            changed = false;
 		}
 		cache.draw(batch, parentAlpha);
 	}

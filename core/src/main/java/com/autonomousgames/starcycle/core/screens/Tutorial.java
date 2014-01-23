@@ -2,16 +2,13 @@ package com.autonomousgames.starcycle.core.screens;
 
 import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.UserSettingz;
-import com.autonomousgames.starcycle.core.controllers.GameController;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.FakeOrb;
 import com.autonomousgames.starcycle.core.model.ImageOrb;
 import com.autonomousgames.starcycle.core.model.Level;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -121,17 +118,7 @@ public abstract class Tutorial extends ModelScreen {
                 move = 0;
             }
         }
-        for (int i = 0; i < numPlayers; i ++) {
-            for (int j = 0; j < players[i].orbs.size(); j ++) {
-                players[i].orbs.get(j).removeIfOff();
-            }
-            for (int j = 0; j < players[i].voids.size(); j ++) {
-                players[i].voids.get(j).removeIfOff();
-            }
-            for (int j = 0; j < players[i].novas.size(); j ++) {
-                players[i].novas.get(j).removeIfOff();
-            }
-        }
+
         if (!moving && currentBorder == pages) {
             isDone = true;
         };
@@ -217,5 +204,10 @@ public abstract class Tutorial extends ModelScreen {
             }
         }
         return clamped? 0f : y;
+   }
+
+    void add(LayeredButton button) {
+        ui.addActor(button);
+        draggables.add(button);
     }
 }
