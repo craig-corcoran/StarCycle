@@ -280,6 +280,8 @@ public class Star extends Orbitable implements Collidable {
 
 	// stars unaffected by contact
 	// TODO are these Overrides necessary? Collidable doesn't have anything to override? Do Stars need to implement Collidable at all?
+    // Do they need Colliadable so that (star instanceof Collidable) returns true elsewhere?
+    // If that's the case, do they need the Overrides so that these methods can be called, even though they do nothing?
 	@Override
 	public void beginSensorContact(Collidable obj) {
 	}
@@ -299,26 +301,25 @@ public class Star extends Orbitable implements Collidable {
             }
             numOrbs[orb.player.number]++;
 		}
-
 		else if (orb.type == Orb.OrbType.VOID) {
 			activeVoids.add((Void) orb);
             numVoids[orb.player.number]++; // keep player counts for easy access by bot
 		}
-        assert ((numVoids[0] + numVoids[1]) == getOrbCount(Orb.OrbType.VOID));
-        assert ((numOrbs[0] + numOrbs[1]) == getOrbCount(Orb.OrbType.ORB));
+        assert ((numVoids[0] + numVoids[1]) == getOrbCount(Orb.OrbType.VOID)) : "Wrong value for numVoids after adding.";
+        assert ((numOrbs[0] + numOrbs[1]) == getOrbCount(Orb.OrbType.ORB)) : "Wrong value for numOrbs after adding.";
 	}
 
 	public void removeOrb(Orb orb) {
 		if (orb.type == Orb.OrbType.ORB) {
-			activeOrbs.remove(orb);
             numOrbs[orb.player.number]--;
+			activeOrbs.remove(orb);
 		}
 		else if (orb.type == Orb.OrbType.VOID) {
-			activeVoids.remove(orb);
             numVoids[orb.player.number]--;
+			activeVoids.remove(orb);
 		}
-        assert ((numVoids[0] + numVoids[1]) == getOrbCount(Orb.OrbType.VOID));
-        assert ((numOrbs[0] + numOrbs[1]) == getOrbCount(Orb.OrbType.ORB));
+        assert ((numVoids[0] + numVoids[1]) == getOrbCount(Orb.OrbType.VOID)) : "Wrong value for numVoids after removing.";
+        assert ((numOrbs[0] + numOrbs[1]) == getOrbCount(Orb.OrbType.ORB)) : "Wrong value for numOrbs after removing.";
 	}
 
 	public int getOrbCount(Orb.OrbType type) {

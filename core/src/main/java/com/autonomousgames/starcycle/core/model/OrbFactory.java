@@ -1,6 +1,7 @@
 package com.autonomousgames.starcycle.core.model;
 
 import com.autonomousgames.starcycle.core.UserSettingz;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class OrbFactory {
@@ -96,7 +97,6 @@ public class OrbFactory {
 	}
 	
 	public void createOrb(Orb.OrbType type, Player player, Vector2 pos, Vector2 vel, float lifespan) {
-		
 		switch (type) {
 		case ORB:
 			if (player.number == 0) {
@@ -134,7 +134,7 @@ public class OrbFactory {
 			nova.setLifeSpan(lifespan);
 			player.novas.add(nova);
 			break;
-		}	
+		}
 	}
 
 	public void createOrb(Orb.OrbType type, Player player, Vector2 pos, Vector2 vel) {
