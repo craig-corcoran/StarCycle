@@ -1,18 +1,15 @@
 package com.autonomousgames.starcycle.core.model;
 
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.LinkedList;
-import java.util.ListIterator;
 
 public class ChargeOrb extends Orb implements Collidable {
 
@@ -20,7 +17,7 @@ public class ChargeOrb extends Orb implements Collidable {
 
 	public LinkedList<Star> activeStars = new LinkedList<Star>();
     public Star chargeStar = null;
-	public boolean charging = false;
+	public boolean orbiting = false;
     public boolean lockedOn = false;
 
     private float dTheta = 0f; // Measured difference in radians.
@@ -49,7 +46,7 @@ public class ChargeOrb extends Orb implements Collidable {
     private Vector2 dir = new Vector2();
 	@Override
 	public Vector2 getGravForce(Vector2[] starPositions) {
-		if (!charging) {
+		if (!orbiting) {
 			return super.getGravForce(starPositions);
 		}
 
@@ -101,13 +98,12 @@ public class ChargeOrb extends Orb implements Collidable {
             vec.rotate(rotDeg);
             setPosition(chargeStar.position.x + vec.x, chargeStar.position.y + vec.y);
 
-
         }
         else {
 
-            super.update(delta,starPositions); // delegates physics difference bt charging to getGravForce
+            super.update(delta,starPositions); // delegates physics difference bt orbiting to getGravForce
 
-            if (charging) { // if not locked on, but charging: check for lock-on conditions
+            if (orbiting) { // if not locked on, but orbiting: check for lock-on conditions
                 measAngle = measureAngle(chargeStar.position); // change in angle this frame
                 dTheta = measAngOld - measAngle;
                 if (Math.abs(dTheta) > MathUtils.PI) {
@@ -125,7 +121,7 @@ public class ChargeOrb extends Orb implements Collidable {
 
 	@Override
 	public void draw(SpriteBatch batch) {
-		if (charging) {
+		if (orbiting) {
 			// Updating the beam angle can't occur in the update method, because it must occur after super.update.
 			float beamAngle = activeStars.getFirst().getButtonCenter().sub(orbButton.getCenter()).angle();
 			// Move to the orb's current position and point toward the star.
@@ -145,9 +141,9 @@ public class ChargeOrb extends Orb implements Collidable {
 		if (obj instanceof Star) {
 
             // activate charge beam and orb
-            if (!charging) {
+            if (!orbiting) {
                 chargeStar = (Star)obj;
-                charging = true;
+                orbiting = true;
                 chargeButton.activate();
                 resetLockCounter();
             }
@@ -170,6 +166,7 @@ public class ChargeOrb extends Orb implements Collidable {
             activeStars.remove(obj); // remove from the active set
 
             if (obj.equals(chargeStar)) {
+                // I don't think this should ever happen:
                 if (lockedOn) { // losing lock on
                     chargeStar.removeOrb(this);
                     lockedOn = false;
@@ -178,7 +175,7 @@ public class ChargeOrb extends Orb implements Collidable {
 
                 if (activeStars.size() == 0) { // if no more active stars, stop charge beam
                     chargeStar = null;
-                    charging = false;
+                    orbiting = false;
                     chargeButton.deactivate();
                 }
                 else {
