@@ -19,66 +19,66 @@ public class Texturez {
     private final TextureAtlas atlas;
     public final AtlasRegion fingerRight;
 
-    private AtlasRegion tutorial0;
-    private AtlasRegion tutorial1;
-    private AtlasRegion tutorial2;
-    private AtlasRegion tutorial3;
-    private AtlasRegion tutorial4;
-    private AtlasRegion tutorial5;
-    private AtlasRegion tutorial6;
-    public AtlasRegion[] tutorialImages = new AtlasRegion[] {tutorial0, tutorial1, tutorial2, tutorial3, tutorial4, tutorial5, tutorial6};
+    private final AtlasRegion tutorial0;
+    private final AtlasRegion tutorial1;
+    private final AtlasRegion tutorial2;
+    private final AtlasRegion tutorial3;
+    private final AtlasRegion tutorial4;
+    private final AtlasRegion tutorial5;
+    private final AtlasRegion tutorial6;
+    public AtlasRegion[] tutorialImages;
     public TextureRegion fingerLeft; // = atlas.findRegion("icon-finger"); // 3:4
 
     // ORBS N STUFF
-    private AtlasRegion orbMaluma0;
-    private AtlasRegion orbMaluma1;
-    private AtlasRegion orbTakete0;
-    private AtlasRegion orbTakete1;
-    private AtlasRegion orbTarget0;
-    private AtlasRegion orbTarget1;
-    private AtlasRegion orbDerelict0;
-    private AtlasRegion orbDerelict1;
-    private AtlasRegion orbClockwork0;
-    private AtlasRegion orbClockwork1;
-    private AtlasRegion voidMaluma0;
-    private AtlasRegion voidMaluma1;
-    private AtlasRegion voidTakete0;
-    private AtlasRegion voidTakete1;
-    private AtlasRegion voidTarget0;
-    private AtlasRegion voidTarget1;
-    private AtlasRegion voidDerelict0;
-    private AtlasRegion voidDerelict1;
-    private AtlasRegion voidClockwork0;
-    private AtlasRegion voidClockwork1;
-    private AtlasRegion novaMaluma0;
-    private AtlasRegion novaMaluma1;
-    private AtlasRegion novaTakete0;
-    private AtlasRegion novaTakete1;
-    private AtlasRegion novaTarget0;
-    private AtlasRegion novaTarget1;
-    private AtlasRegion novaDerelict0;
-    private AtlasRegion novaDerelict1;
-    private AtlasRegion novaClockwork0;
-    private AtlasRegion novaClockwork1;
-    private AtlasRegion fakeredOrbTexture;
-    private AtlasRegion fakeblueOrbTexture;
+    private final AtlasRegion orbMaluma0;
+    private final AtlasRegion orbMaluma1;
+    private final AtlasRegion orbTakete0;
+    private final AtlasRegion orbTakete1;
+    private final AtlasRegion orbTarget0;
+    private final AtlasRegion orbTarget1;
+    private final AtlasRegion orbDerelict0;
+    private final AtlasRegion orbDerelict1;
+    private final AtlasRegion orbClockwork0;
+    private final AtlasRegion orbClockwork1;
+    private final AtlasRegion voidMaluma0;
+    private final AtlasRegion voidMaluma1;
+    private final AtlasRegion voidTakete0;
+    private final AtlasRegion voidTakete1;
+    private final AtlasRegion voidTarget0;
+    private final AtlasRegion voidTarget1;
+    private final AtlasRegion voidDerelict0;
+    private final AtlasRegion voidDerelict1;
+    private final AtlasRegion voidClockwork0;
+    private final AtlasRegion voidClockwork1;
+    private final AtlasRegion novaMaluma0;
+    private final AtlasRegion novaMaluma1;
+    private final AtlasRegion novaTakete0;
+    private final AtlasRegion novaTakete1;
+    private final AtlasRegion novaTarget0;
+    private final AtlasRegion novaTarget1;
+    private final AtlasRegion novaDerelict0;
+    private final AtlasRegion novaDerelict1;
+    private final AtlasRegion novaClockwork0;
+    private final AtlasRegion novaClockwork1;
+    private final AtlasRegion fakeredOrbTexture;
+    private final AtlasRegion fakeblueOrbTexture;
     public AtlasRegion chargeBeam;
     public AtlasRegion voidRing;
 
     public AtlasRegion[] fakeorbTextures;
 
     // LAUNCHPAD (NEW)
-    private AtlasRegion launchBackground;
-    private AtlasRegion launchFill;
-    private AtlasRegion launchMeter;
-    private AtlasRegion launchButton1;
-    private AtlasRegion launchButton2;
-    private AtlasRegion launchTriangle;
+    private final AtlasRegion launchBackground;
+    private final AtlasRegion launchFill;
+    private final AtlasRegion launchMeter;
+    private final AtlasRegion launchButton1;
+    private final AtlasRegion launchButton2;
+    private final AtlasRegion launchTriangle;
     public AtlasRegion[] launchTextures;
     // AIMING UI (UPDATED)
-    private AtlasRegion handle;
-    private AtlasRegion chevron0;
-    private AtlasRegion chevron1;
+    private final AtlasRegion handle;
+    private final AtlasRegion chevron0;
+    private final AtlasRegion chevron1;
     public AtlasRegion[] aimer;
 
     // BACKGROUND (NEW)
@@ -98,77 +98,73 @@ public class Texturez {
     public BitmapFont font;
 
     // MENU UI
-    public AtlasRegion splashTexture;
-    public AtlasRegion genericLogo;
-    public AtlasRegion questionIcon;
-    public AtlasRegion settingsIcon;
-    public AtlasRegion soloIcon;
-    public AtlasRegion multiplayerIcon; // 4:3
-    public AtlasRegion musicIcon;
-    public AtlasRegion soundIcon;
-    public AtlasRegion noIcon;
-    public AtlasRegion infoIcon;
-    public AtlasRegion swapIcon;
-    public AtlasRegion swatchIcon;
-    public AtlasRegion sliderIcon; // 2:1
-    public AtlasRegion backIcon; // 4:3
-    public AtlasRegion readyIcon;
-    public AtlasRegion rightIcon;
-    public AtlasRegion wrongIcon;
-    private AtlasRegion trefoilIcon;
-    private AtlasRegion doublebinaryIcon;
-    private AtlasRegion concentricIcon;
-    private AtlasRegion venndiagramIcon;
-    private AtlasRegion trefoilIconOn;
-    private AtlasRegion doublebinaryIconOn;
-    private AtlasRegion concentricIconOn;
-    private AtlasRegion venndiagramIconOn;
+    public final AtlasRegion splashTexture;
+    public final AtlasRegion genericLogo;
+    public final AtlasRegion questionIcon;
+    public final AtlasRegion settingsIcon;
+    public final AtlasRegion soloIcon;
+    public final AtlasRegion multiplayerIcon; // 4:3
+    public final AtlasRegion musicIcon;
+    public final AtlasRegion soundIcon;
+    public final AtlasRegion noIcon;
+    public final AtlasRegion infoIcon;
+    public final AtlasRegion swapIcon;
+    public final AtlasRegion swatchIcon;
+    public final AtlasRegion sliderIcon; // 2:1
+    public final AtlasRegion backIcon; // 4:3
+    public final AtlasRegion readyIcon;
+    public final AtlasRegion rightIcon;
+    public final AtlasRegion wrongIcon;
+    private final AtlasRegion trefoilIcon;
+    private final AtlasRegion doublebinaryIcon;
+    private final AtlasRegion concentricIcon;
+    private final AtlasRegion venndiagramIcon;
+    private final AtlasRegion trefoilIconOn;
+    private final AtlasRegion doublebinaryIconOn;
+    private final AtlasRegion concentricIconOn;
+    private final AtlasRegion venndiagramIconOn;
     public AtlasRegion[] levelIconsOff;
     public AtlasRegion[] levelIconsOn;
 
     // BASIC UI
-    public AtlasRegion line;
-    public AtlasRegion block;
-    public AtlasRegion circle;
-    public AtlasRegion gradientRound;
+    public final AtlasRegion line;
+    public final AtlasRegion block;
+    public final AtlasRegion circle;
+    public final AtlasRegion gradientRound;
 
    // IN-GAME PAUSE UI
-    public AtlasRegion menuIcon;
-    public AtlasRegion pauseIcon; // 3:4
-    public AtlasRegion arrowsIcon;
+    public final AtlasRegion menuIcon;
+    public final AtlasRegion pauseIcon; // 3:4
+    public final AtlasRegion arrowsIcon;
     public AtlasRegion[] pauseUI;
-    public AtlasRegion trophy;
-    public AtlasRegion thumbsDown;
+    public final AtlasRegion trophy;
+    public final AtlasRegion thumbsDown;
 
     // STARS
     public AtlasRegion hexStar;
 
     // BASE SHAPES
-    public AtlasRegion baseMaluma0;
-    public AtlasRegion baseMaluma1;
-
-    public AtlasRegion baseTakete0;
-    public AtlasRegion baseTakete1;
-
-    public AtlasRegion baseTarget0;
-    public AtlasRegion baseTarget1;
-    public AtlasRegion baseTarget2;
-    public AtlasRegion baseTarget3;
-
-    public AtlasRegion baseDerelict0a;
-    public AtlasRegion baseDerelict0b;
-    public AtlasRegion baseDerelict1a;
-    public AtlasRegion baseDerelict1b;
-    public AtlasRegion baseDerelict2a;
-    public AtlasRegion baseDerelict2b;
-
-    public AtlasRegion baseClockwork0a;
-    public AtlasRegion baseClockwork0b;
-    public AtlasRegion baseClockwork1a;
-    public AtlasRegion baseClockwork1b;
-    public AtlasRegion baseClockwork2a;
-    public AtlasRegion baseClockwork2b;
-    public AtlasRegion baseClockwork2c;
+    public final AtlasRegion baseMaluma0;
+    public final AtlasRegion baseMaluma1;
+    public final AtlasRegion baseTakete0;
+    public final AtlasRegion baseTakete1;
+    public final AtlasRegion baseTarget0;
+    public final AtlasRegion baseTarget1;
+    public final AtlasRegion baseTarget2;
+    public final AtlasRegion baseTarget3;
+    public final AtlasRegion baseDerelict0a;
+    public final AtlasRegion baseDerelict0b;
+    public final AtlasRegion baseDerelict1a;
+    public final AtlasRegion baseDerelict1b;
+    public final AtlasRegion baseDerelict2a;
+    public final AtlasRegion baseDerelict2b;
+    public final AtlasRegion baseClockwork0a;
+    public final AtlasRegion baseClockwork0b;
+    public final AtlasRegion baseClockwork1a;
+    public final AtlasRegion baseClockwork1b;
+    public final AtlasRegion baseClockwork2a;
+    public final AtlasRegion baseClockwork2b;
+    public final AtlasRegion baseClockwork2c;
 
     public HashMap<BaseType, HashMap<TextureType,AtlasRegion>> skinMap;
     public HashMap<TextureType,AtlasRegion> malumaMap;
@@ -177,8 +173,10 @@ public class Texturez {
     public HashMap<TextureType,AtlasRegion> derelictMap;
     public HashMap<TextureType,AtlasRegion> clockworkMap;
 
+    public BitmapFont gridnikSmall;
     public BitmapFont gridnikMedium;
     public BitmapFont gridnikLarge;
+    public BitmapFont gridnikJumbo;
     public BitmapFont latoLightLarge;
     private FreeTypeFontGenerator gridnikGenerator;
     private FreeTypeFontGenerator latoLightGenerator;
@@ -350,9 +348,7 @@ public class Texturez {
 
         gridnikGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Gridnik.ttf"));
         latoLightGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Lato-Light.ttf"));
-        gridnikMedium = gridnikGenerator.generateFont(22);
-        gridnikLarge = gridnikGenerator.generateFont(42);
-        latoLightLarge = latoLightGenerator.generateFont(52);
+        resetFonts();
         fingerLeft = new TextureRegion(fingerRight);
         fingerLeft.flip(true, false);
 
@@ -430,8 +426,10 @@ public class Texturez {
 	}
 
     public void resetFonts() {
-        gridnikMedium = gridnikGenerator.generateFont(22);
+        gridnikSmall = gridnikGenerator.generateFont(22);
+        gridnikMedium = gridnikGenerator.generateFont(32);
         gridnikLarge = gridnikGenerator.generateFont(42);
+        gridnikJumbo = gridnikGenerator.generateFont(52);
         latoLightLarge = latoLightGenerator.generateFont(52);
     }
 }

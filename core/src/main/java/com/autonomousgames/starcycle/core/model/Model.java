@@ -88,7 +88,7 @@ public class Model {
                 orb.player.voids.remove(orb);
             }
 
-            StarCycle.audio.orbCrash.play(UserSettingz.getFloatSetting("sfxVolume"));
+//            Soundz.orbCrash.play(UserSettingz.getFloatSetting("sfxVolume"));
         }
         toDestroyList.clear();
     }

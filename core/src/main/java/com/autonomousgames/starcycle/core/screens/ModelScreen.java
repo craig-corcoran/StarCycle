@@ -170,9 +170,9 @@ public abstract class ModelScreen extends GameScreen{
 		}
 		
 		// TODO remove in final
-		/*long start = System.currentTimeMillis();
-		displayFPS(start);
-		printFPS(start); // log fps to console output */
+//		long start = System.currentTimeMillis();
+//		displayFPS(start);
+//		printFPS(start); // log fps to console output
 		
 		if (!debugPaused) {
 			if ((!gameOver) & (!paused)) {
@@ -224,11 +224,11 @@ public abstract class ModelScreen extends GameScreen{
 	
 	void displayFPS(float start) {
 		float updateTime = (System.currentTimeMillis() - start) / 1000.0f;
-		batch.getProjectionMatrix().setToOrtho2D(0,0, StarCycle.meterWidth*StarCycle.pixelsPerMeter, StarCycle.meterHeight*StarCycle.pixelsPerMeter);
+//		batch.getProjectionMatrix().setToOrtho2D(0,0, StarCycle.meterWidth*StarCycle.pixelsPerMeter, StarCycle.meterHeight*StarCycle.pixelsPerMeter);
 		batch.begin();
 		Integer numOrbs = 0;
         for (Player player : players) {
-            numOrbs += players[0].orbs.size();
+            numOrbs += player.orbs.size();
         }
 		StarCycle.tex.font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond() + " update time: " +
 				updateTime + " orbs: " + numOrbs + "", 0, 20);
@@ -237,7 +237,7 @@ public abstract class ModelScreen extends GameScreen{
 	
 	void printFPS(float start) {
 		float updateTime = (System.currentTimeMillis() - start) / 1000.0f;
-		batch.getProjectionMatrix().setToOrtho2D(0,0, StarCycle.meterWidth*StarCycle.pixelsPerMeter, StarCycle.meterHeight*StarCycle.pixelsPerMeter);
+//		batch.getProjectionMatrix().setToOrtho2D(0,0, StarCycle.meterWidth*StarCycle.pixelsPerMeter, StarCycle.meterHeight*StarCycle.pixelsPerMeter);
 		Gdx.app.log("model screen", "fps: " + Gdx.graphics.getFramesPerSecond() + " update time: " + updateTime);
 	}
 	

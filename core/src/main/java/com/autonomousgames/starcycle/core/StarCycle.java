@@ -28,6 +28,7 @@ public class StarCycle implements ApplicationListener {
     public static Texturez tex;
 	public UserSettingz settings;
 	public static Json json = new Json();
+    boolean startAtEnd;
 
 	@Override
 	public void create() {
@@ -79,8 +80,16 @@ public class StarCycle implements ApplicationListener {
 			logMap.put("currentTime", System.currentTimeMillis());
 			logHandler.logScreen(json.toJson(logMap));
 			// dispose the current screen
-			audio.screenswitchSound.play(UserSettingz.getFloatSetting("sfxVolume"));
-					
+            if (!screen.silentSwitch) {
+			    audio.screenswitchSound.play(UserSettingz.getFloatSetting("sfxVolume"));
+            }
+			if (screen instanceof Tutorial) {
+                startAtEnd = ((Tutorial) screen).startAtEnd;
+            }
+            else
+            {
+                startAtEnd = false;
+            }
 			screen.dispose();
 
 			switch (screen.nextScreen) {
@@ -93,10 +102,10 @@ public class StarCycle implements ApplicationListener {
 										  ((CampaignSelect)screen).botType);
 				break;
 			case TUTORIAL0:
-				screen = new Tutorial0();
+				screen = new Tutorial0(startAtEnd);
 				break;
-			case TUTORIAL2:
-				screen = new Tutorial2();
+			case TUTORIAL1:
+				screen = new Tutorial1();
 				break;
 			case TUTORIAL3:
 				screen = new Tutorial3();
@@ -155,4 +164,5 @@ public class StarCycle implements ApplicationListener {
     public static BackgroundManager getBackground() {
         return background;
     }
+
 }

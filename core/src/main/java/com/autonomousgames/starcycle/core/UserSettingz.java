@@ -12,7 +12,7 @@ public class UserSettingz {
 		userPrefs = Gdx.app.getPreferences("StarCycle-user-preferences");
 		sessionPrefs = Gdx.app.getPreferences("StarCycle-session-preferences");
 		int clientSettingsVersion = userPrefs.getInteger("settingsVersion");
-		int currentSettingsVersion = 20;
+		int currentSettingsVersion = 23;
 		if (clientSettingsVersion != currentSettingsVersion) {
 			Gdx.app.log("UserSettingz", "rewriting settings file");
 			userPrefs.putInteger("settingsVersion", currentSettingsVersion);
@@ -50,7 +50,7 @@ public class UserSettingz {
 			
 			userPrefs.putFloat("angleDelta", 0.5f);        // Star
 			userPrefs.putFloat("captureRatio", 0.5f);      // Star
-			
+
 			userPrefs.putFloat("gravWellRadius", 0.12f);   // OrbFactory
 			userPrefs.putFloat("gravWellSensorRadius", 0.6f);   // GravWell
 			
@@ -70,10 +70,10 @@ public class UserSettingz {
 			userPrefs.putFloat("ammoRate",0.008f);         // OrbFactory
 			userPrefs.putFloat("popRate",0.005f);          // OrbFactory
 
-            userPrefs.putFloat("incAmmoThresh", 0.1f);
+            userPrefs.putFloat("incAmmoThresh", 0.4f);
             userPrefs.putFloat("initVelScale", 0.2f); // income orbs
             userPrefs.putFloat("incOrbGravScale", 2000f);
-            userPrefs.putFloat("incOrbSize", 0.01f);
+            userPrefs.putFloat("incOrbSize", 0.006f);
             userPrefs.putFloat("incOrbAlpha", 0.65f);
 
 			userPrefs.putFloat(SinglePlayerLevel.LEVEL1.toString(), 0f);  //LevelSelect

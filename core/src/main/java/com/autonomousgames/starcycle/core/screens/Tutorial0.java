@@ -3,98 +3,286 @@ package com.autonomousgames.starcycle.core.screens;
 import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.UserSettingz;
+import com.autonomousgames.starcycle.core.controllers.GameController;
 import com.autonomousgames.starcycle.core.model.*;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
+import com.autonomousgames.starcycle.core.ui.TextLayer;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.ArrayList;
-import java.util.ListIterator;
-
 public class Tutorial0 extends Tutorial {
 
+    LayeredButton welcomeText;
+    LayeredButton pauseArea;
     LayeredButton dragHand;
+    LayeredButton holdText;
     LayeredButton holdImage;
     LayeredButton aim;
     LayeredButton shoot;
+    LayeredButton orbit;
+    LayeredButton controlText;
+    LayeredButton topStar0;
+    LayeredButton topStar1;
+    LayeredButton topStar2;
+    LayeredButton topStar3;
+    LayeredButton topStar4;
+    LayeredButton topControl0;
+    LayeredButton topControl1;
+    LayeredButton topControl2;
+    LayeredButton lvl0Star;
+    LayeredButton lvl1Star;
+    LayeredButton lvl2Star;
+    LayeredButton lvl0Control;
+    LayeredButton lvl1Control;
+    LayeredButton lvl2Control;
+    LayeredButton lvlNums;
+    LayeredButton orbNames;
+    LayeredButton launch0;
+    LayeredButton launch1;
+    LayeredButton launch1b;
+    LayeredButton launch2;
+    LayeredButton launch2b;
+    LayeredButton launch2c;
 
+    int[] basePages;
+    int[] launchPages;
+    int[] taketePages;
 
-    Vector2 tileSize = new Vector2(sh*0.4f, sw*0.3f-sh*0.05f);
+    Vector2 tileSize = new Vector2(swipeSize.y/2f-bw, swipeSize.x-bw);
 
+    float starRadius = 1.5f * UserSettingz.getFloatSetting("starRadius");
 
-    public ArrayList<ImageOrb> fakeOrbs = new ArrayList<ImageOrb>();
-    Vector2 fakeBasePos0 = new Vector2(tileSize.y*153f/420f, sh*0.1f+tileSize.x*270/420f + sh);
-    Vector2 fakeBasePos1 = new Vector2(fakeBasePos0).add(0f, sh);
+    Vector2 fakeBasePos0 = new Vector2(tileSize.y*153f/420f, sh*0.1f+tileSize.x*270/420f);
+    Vector2 fakeBasePos1 = new Vector2(fakeBasePos0);
     Vector2 orbVel0 = new Vector2(-2f, 1.9f);
     Vector2 orbVel1 = new Vector2(-2.76f, 0f);
     Vector2 vel = new Vector2();
     float coolDown = UserSettingz.getFloatSetting("coolDown");
     float sinceLastShot;
 
-    public Tutorial0() {
-        super(Level.LevelType.NOSTARS, ScreenType.TUTORIAL0, ScreenType.TUTORIAL3, ScreenType.STARTMENU, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.MALUMA}, new Color[][]{Colors.cool, Colors.cool});
+    int orbKillPage = 4;
+    boolean starsMass = false;
 
-        pauseButton.deactivate();
+    public Tutorial0(boolean startAtEnd) {
+        super(Level.LevelType.DOUBLE, ScreenType.TUTORIAL0, ScreenType.TUTORIAL1, ScreenType.STARTMENU, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm});
 
-        borders(4);
+        Gdx.input.setInputProcessor(new GameController(this, 1));
+
+        pages = 5;
+
+        // Zeroth page
+        // Welcome, pausing, and swiping:
+        offset = 0f;
+
+        CharSequence text0 = "Welcome to StarCycle!";
+        CharSequence text1 = "Swipe within the upper area";
+        CharSequence text2 = "to progress through this tutorial.";
+        CharSequence text3 = "Access the pause menu by tapping";
+        CharSequence text4 = "within the blue rectangular area.";
+        Vector2 textDims = new Vector2(sh, sw/10f);
+        welcomeText = new LayeredButton(new Vector2(sw/2f - pauseButton.getDims().x/4f, sh/2f + offset));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikJumbo, text0, textDims).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text1, new Vector2(1.5f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text2, new Vector2(2.25f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text3, new Vector2(6.75f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text4, new Vector2(7.25f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
+        add(welcomeText);
+
+        pauseArea = new LayeredButton(pauseButton.getCenter());
+        pauseArea.addLayer(new SpriteLayer(StarCycle.tex.block, pauseButton.getDims()).setSpriteColor(Colors.navy).setSpriteAlpha(0.25f));
+        add(pauseArea);
 
         dragHand = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y+sh*0.3f));
         Vector2 slideVec = new Vector2(0f, -sh*0.6f);
         dragHand.addLayer(new SpriteLayer(StarCycle.tex.fingerRight, new Vector2(swipeSize.x/4f, swipeSize.x/3f)).rotateSprite(90f).slideAndReturn(slideVec, 2f));
-        ui.addActor(dragHand);
-        draggables.add(dragHand);
+        add(dragHand);
 
-        holdImage = new LayeredButton(new Vector2(sw*0.7f, sh*0.5f));
+        // Fist page
+        // Holding:
+        offset = sh;
+
+        holdText = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y + offset));
+        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Use two hands to play", swipeSize).rotateText(90f));
+        add(holdText);
+
+        holdImage = new LayeredButton(new Vector2(sw*0.7f, sh*0.5f+offset));
         float graphicSide = (sh < sw*0.6f) ? sh : sw*0.6f;
         holdImage.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[0], new Vector2(1f, 1f).scl(graphicSide)).rotateSprite(90f));
-        ui.addActor(holdImage);
-        draggables.add(holdImage);
+        add(holdImage);
 
-        aim = new LayeredButton(new Vector2(swipeCenter.x-0.025f*sh, swipeCenter.y + sh));
-        aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[1], new Vector2(0f, -sh*0.2f), tileSize));
-        aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[2], new Vector2(0f, -sh*0.2f), tileSize).blink(0.75f),LayerType.SPECIAL);
-        aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[3], new Vector2(0f, sh*0.2f), tileSize));
+        // Second page
+        // Aiming:
+        offset = 2f*sh;
+        basePages = new int[]{2, pages-1};
+
+        players[0].base.translateBase(0f, offset);
+        fakeBasePos0.add(0f, offset);
+
+        aim = new LayeredButton(new Vector2(swipeCenter.x-bw/2f, swipeCenter.y + offset));
+        aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[1], new Vector2(0f, -tileSize.x/2f), tileSize));
+        aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[2], new Vector2(0f, -tileSize.x/2f), tileSize).blink(0.75f),LayerType.SPECIAL);
+        aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[3], new Vector2(0f, tileSize.x/2f), tileSize));
         aim.rotateLayers(90f);
-        ui.addActor(aim);
-        draggables.add(aim);
+        add(aim);
 
-        shoot = new LayeredButton(new Vector2(swipeCenter.x-0.025f*sh, swipeCenter.y + 2f*sh));
-        shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[1], new Vector2(0f, -sh * 0.2f), tileSize));
-        shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[4], new Vector2(0f, sh * 0.2f), tileSize));
-        shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[5], new Vector2(0f, sh * 0.2f), tileSize).blink(1f), LayerType.SPECIAL);
+        // Third page
+        // Shooting:
+        offset = 3f*sh;
+        launchPages = new int[]{3, pages-1};
+
+        players[0].launchPad.movePos(0f, offset);
+        fakeBasePos1.add(0f, offset);
+
+        shoot = new LayeredButton(new Vector2(swipeCenter.x-bw/2f, swipeCenter.y + offset));
+        shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[1], new Vector2(0f, -tileSize.x/2f), tileSize));
+        shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[4], new Vector2(0f, tileSize.x/2f), tileSize));
+        shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[5], new Vector2(0f, tileSize.x/2f), tileSize).blink(1f), LayerType.SPECIAL);
         shoot.rotateLayers(90f);
-        ui.addActor(shoot);
-        draggables.add(shoot);
+        add(shoot);
+
+        // Fourth page
+        // Orbiting:
+        offset = 4f*sh;
+        taketePages = new int[]{4, pages-1};
+
+        players[1].base.moveBase(new Vector2(StarCycle.meterWidth/2f-1f, StarCycle.meterHeight*2f/3f+1f));
+        players[1].base.translateBase(0f, offset);
+        players[1].base.setPointer(2f, 2f);
+
+        for (int i = 0; i < model.stars.size(); i ++) {
+            Star star = model.stars.get(i);
+            star.mass = 0f;
+            star.moveStar(2f, -1f + i*2f + offset / StarCycle.pixelsPerMeter);
+        }
+
+        orbit = new LayeredButton(new Vector2(swipeCenter.x - bw, swipeCenter.y + offset));
+        orbit.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[6], new Vector2(swipeSize.y, swipeSize.x)).rotateSprite(90f));
+        add(orbit);
+
+        // Fifth page
+        // Transition:
+        offset = 5f*sh;
+
+        controlText = new LayeredButton(new Vector2(swipeSize.x/4f, sh/2f + offset));
+        controlText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture stars to gain abilities", swipeSize).rotateText(90f));
+        add(controlText);
+
+        float topRow = swipeCenter.x + swipeSize.x/6f;
+
+        topStar0 = Star.getButton(new Vector2(topRow, sh/6f + offset), starRadius*0.75f);
+        add(topStar0);
+
+        topStar1 = Star.getButton(new Vector2(topRow, sh*2f/6f + offset), starRadius*0.75f);
+        add(topStar1);
+
+        topControl0 = Star.getControlButton(topStar1.getCenter(), starRadius*0.75f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.25f);
+        add(topControl0);
+
+        topStar2 = Star.getButton(new Vector2(topRow, sh*3f/6f + offset), starRadius*0.75f);
+        topStar2.setLayerColor(Colors.cyan, 1);
+        add(topStar2);
+
+        topControl1 = Star.getControlButton(topStar2.getCenter(), starRadius*0.75f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.5f);
+        add(topControl1);
+
+        topStar3 = Star.getButton(new Vector2(topRow, sh*4f/6f + offset), starRadius*0.75f);
+        topStar3.setLayerColor(Colors.cyan, 1);
+        add(topStar3);
+
+        topControl2 = Star.getControlButton(topStar3.getCenter(), starRadius*0.75f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.75f);
+        add(topControl2);
+
+        topStar4 = Star.getButton(new Vector2(topRow, sh*5f/6f + offset), starRadius*0.75f);
+        for (int i = 2; i < topStar4.getLayerNum(); i ++) {
+            topStar4.setLayerColor(Colors.cyan, i);
+        }
+        add(topStar4);
+
+        float starh = sh/4f + offset;
+        float lph = sh * 9f/10f + offset;
+        float row0 = (sw - swipeSize.x)/6f + swipeSize.x;
+        float row1 = (sw - swipeSize.x)/2f + swipeSize.x;
+        float row2 = (sw - swipeSize.x)*5f/6f + swipeSize.x;
+
+        lvl0Star = Star.getButton(new Vector2(row0, starh), starRadius*0.9f);
+        lvl0Star.setLayerColor(Colors.cyan, 1);
+        add(lvl0Star);
+
+        lvl0Control = Star.getControlButton(lvl0Star.getCenter(), starRadius*0.9f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.5f);
+        add(lvl0Control);
+
+        lvl1Star = Star.getButton(new Vector2(row1, starh), starRadius*0.9f);
+        lvl1Star.setLayerColor(Colors.cyan, 1);
+        add(lvl1Star);
+
+        lvl1Control = Star.getControlButton(lvl1Star.getCenter(), starRadius*0.9f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.5f);
+        add(lvl1Control);
+
+        lvl2Star = Star.getButton(new Vector2(row2, starh), starRadius*0.9f);
+        lvl2Star.setLayerColor(Colors.cyan, 1);
+        add(lvl2Star);
+
+        lvl2Control = Star.getControlButton(lvl2Star.getCenter(), starRadius*0.9f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.5f);
+        add(lvl2Control);
+
+        Vector2 numberSize = new Vector2(2f, 1f).scl(StarCycle.pixelsPerMeter);
+        lvlNums = new LayeredButton(new Vector2(row0, sh/8f + offset));
+        lvlNums.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "0 x", numberSize).rotateText(90f));
+        lvlNums.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "1 x", new Vector2(row1-row0, 0f), numberSize).rotateText(90f));
+        lvlNums.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "2 x", new Vector2(row2 - row0, 0f), numberSize).rotateText(90f));
+        add(lvlNums);
+
+        orbNames = new LayeredButton(new Vector2(row0, sh*7f/16f + offset));
+        orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Orbs", numberSize).rotateText(90f));
+        orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Voids", new Vector2(row1-row0, 0f), numberSize).rotateText(90f));
+        orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Novas", new Vector2(row2 - row0, 0f), numberSize).rotateText(90f));
+        add(orbNames);
+
+        launch0 = players[0].launchPad.getOrbButton(new Vector2(row0+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        launch0.getLayer(1).toggleSpecial();
+        add(launch0);
+
+        launch1 = players[0].launchPad.getOrbButton(new Vector2(row1+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        add(launch1);
+
+        launch1b = players[0].launchPad.getPw1Button(new Vector2(row1+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        launch1b.activate();
+        launch1b.getLayer(1).toggleSpecial();
+        add(launch1b);
+
+        launch2 = players[0].launchPad.getOrbButton(new Vector2(row2+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        add(launch2);
+
+        launch2b = players[0].launchPad.getPw1Button(new Vector2(row2+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        launch2b.activate();
+        add(launch2b);
+
+        launch2c = players[0].launchPad.getPw2Button(new Vector2(row2+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        launch2c.activate();
+        launch2c.getLayer(1).toggleSpecial();
+        add(launch2c);
+
+        borders(pages + 1);
 
         ui.addActor(swiper);
 
-        players[1].base.moveBase(players[0].base.origin);
-        players[1].base.setPointer(-10f, 0f);
-        players[0].launchPad.movePos(0f, sh * 2f);
-        players[0].base.translateBase(0f, sh * 2f);
-        players[1].base.translateBase(0f, sh);
         orbFactory.setCosts(0f, 0f, 0f);
-        players[1].launchPad.streamOrbs = true;
+
+        if (startAtEnd) {
+            for (int i = 0; i < pages-1; i ++) {
+                moveDraggables(-sh);
+                currentBorder++;
+            }
+        }
+        startAtEnd = false; // The warning is a lie. StarCycle.java will check this value before disposing of the screen.
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
-
-        if (!moving && currentBorder == 3) {
-            isDone = true;
-        };
-
-        if (moving) {
-            moveDraggables(moveStep);
-            move++;
-            if (move == moves) {
-                moving = false;
-                move = 0;
-            }
-        }
 
         sinceLastShot = Math.min(sinceLastShot + delta, coolDown);
         if (sinceLastShot >= coolDown) {
@@ -105,31 +293,64 @@ public class Tutorial0 extends Tutorial {
                 vel.set(orbVel0);
             }
             if (0f < fakeBasePos0.y && fakeBasePos0.y < sh) {
-                fakeOrbs.add(new ImageOrb(StarCycle.tex.fakeorbTextures[0], 10f, fakeBasePos0, StarCycle.screenWidth,
+                fakeOrbs.add(new ImageOrb(StarCycle.tex.fakeorbTextures[0], fakeOrbRad, fakeBasePos0, StarCycle.screenWidth,
                         StarCycle.screenHeight, vel, new Vector2(0, 0)));
             }
             if (shoot.getLayer(2).drawCondition() && 0f < fakeBasePos1.y && fakeBasePos1.y < sh) {
-                fakeOrbs.add(new ImageOrb(StarCycle.tex.fakeorbTextures[0], 10f, fakeBasePos1, StarCycle.screenWidth,
+                fakeOrbs.add(new ImageOrb(StarCycle.tex.fakeorbTextures[0], fakeOrbRad, fakeBasePos1, StarCycle.screenWidth,
                         StarCycle.screenHeight, orbVel0, new Vector2(0, 0)));
             }
             sinceLastShot = 0f;
         }
 
-        if ((currentBorder != 1 && players[1].launchPad.streamOrbs) || (currentBorder == 1 && players[1].launchPad.streamOrbs == false)) {
+        if (((moving || dragging) && players[0].launchPad.streamOrbs) || (currentBorder == 2 && !moving && !dragging && players[0].launchPad.streamOrbs == false)) {
+            players[0].launchPad.streamOrbs = !(players[0].launchPad.streamOrbs);
+        }
+
+        if (((moving || dragging || model.stars.get(1).getOrbCount(Orb.OrbType.ORB) >= 15) && players[1].launchPad.streamOrbs) || (currentBorder == 4 && !moving && !dragging && model.stars.get(1).getOrbCount(Orb.OrbType.ORB) < 15 && players[1].launchPad.streamOrbs == false)) {
             players[1].launchPad.streamOrbs = !(players[1].launchPad.streamOrbs);
         }
-    }
 
-    @Override
-    public void render(float delta) {
-        super.render(delta);
-        batch.begin();
-        for (ListIterator<ImageOrb> itr = fakeOrbs.listIterator(); itr.hasNext();) {
-            FakeOrb orb = itr.next();
-            orb.draw(batch);
-            orb.update(delta);
+        if (currentBorder >= orbKillPage && (dragging || moving)) {
+            for (int i = 0; i < numPlayers; i ++) {
+                for (int j = 0; j < players[i].orbs.size(); j ++) {
+                    players[i].orbs.get(j).removeSelf();
+                }
+                for (int j = 0; j < players[i].voids.size(); j ++) {
+                    players[i].voids.get(j).removeSelf();
+                }
+                for (int j = 0; j < players[i].novas.size(); j ++) {
+                    players[i].novas.get(j).removeSelf();
+                }
+            }
         }
-        batch.end();
+
+        if (currentBorder >= 4 && !starsMass) {
+            for (int i = 0; i < model.stars.size(); i ++) {
+                Star star = model.stars.get(i);
+                star.mass = star.radius*star.radius;
+            }
+            starsMass = true;
+        }
+        if (currentBorder < 4 && !moving && starsMass) {
+            for (int i = 0; i < model.stars.size(); i ++) {
+                model.stars.get(i).mass = 0f;
+            }
+            starsMass = false;
+        }
+
+        for (int i = 0; i < numPlayers; i ++) {
+            for (int j = 0; j < players[i].orbs.size(); j ++) {
+                players[i].orbs.get(j).removeIfOff();
+            }
+            for (int j = 0; j < players[i].voids.size(); j ++) {
+                players[i].voids.get(j).removeIfOff();
+            }
+            for (int j = 0; j < players[i].novas.size(); j ++) {
+                players[i].novas.get(j).removeIfOff();
+            }
+        }
+
     }
 
     @Override
@@ -140,36 +361,19 @@ public class Tutorial0 extends Tutorial {
             players[i] = new Player(i, skins[i], colors[i], this, ui, true, i == 0);
             players[i].altWin = true;
             players[i].launchPad.showMeter(false);
+            players[i].showIncomeOrbs = false;
+            players[i].launchPad.manualLvl = true;
+            players[i].base.manualLvl = true;
         }
     }
 
     @Override
     public void moveDraggables(float y) {
-        players[0].launchPad.movePos(0f,y);
-        for (int i = 0; i < numPlayers; i ++) {
-            players[i].base.translateBase(0f,y);
-            for (int j = 0; j < players[i].orbs.size(); j ++) {
-                players[i].orbs.get(j).moveVisual(0f, y);
-            }
-        }
-       for (int i = 0; i < draggables.size(); i++) {
-           draggables.get(i).moveCenter(0f, y);
-       }
-        for (ListIterator<ImageOrb> itr = fakeOrbs.listIterator(); itr.hasNext();) {
-            itr.next().move(0f, y);
-        }
+        super.moveDraggables(y);
         fakeBasePos0.add(0f,y);
         fakeBasePos1.add(0f,y);
-
-//        for (int i = 0; i < model.stars.size(); i ++) {
-//            model.stars.get(i).moveStar(0f, y/StarCycle.pixelsPerMeter);
-//        }
+        moveBase(0, moveClamped(basePages[0], basePages[1], y));
+        moveLaunch(0, moveClamped(launchPages[0], basePages[1], y));
+        moveBase(1,moveClamped(taketePages[0], taketePages[1], y));
     }
-
-    @Override
-    public void sendDraggables(float y) {
-        moving = true;
-        moveStep = y/moves;
-    }
-
 }
