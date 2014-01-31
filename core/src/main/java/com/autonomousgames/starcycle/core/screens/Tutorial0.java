@@ -64,7 +64,7 @@ public class Tutorial0 extends Tutorial {
     float sinceLastShot;
 
     int orbKillPage = 4;
-    boolean starsMass = false;
+    boolean gravityOn = false;
 
     public Tutorial0(boolean startAtEnd) {
         super(Level.LevelType.DOUBLE, ScreenType.TUTORIAL0, ScreenType.TUTORIAL1, ScreenType.STARTMENU, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm});
@@ -172,30 +172,30 @@ public class Tutorial0 extends Tutorial {
 
         float topRow = swipeCenter.x + swipeSize.x/6f;
 
-        topStar0 = Star.getButton(new Vector2(topRow, sh/6f + offset), starRadius*0.75f);
+        topStar0 = Star.getButton(new Vector2(topRow, sh/6f + offset), starRadius*0.70f);
         add(topStar0);
 
-        topStar1 = Star.getButton(new Vector2(topRow, sh*2f/6f + offset), starRadius*0.75f);
+        topStar1 = Star.getButton(new Vector2(topRow, sh*2f/6f + offset), starRadius*0.70f);
         add(topStar1);
 
-        topControl0 = Star.getControlButton(topStar1.getCenter(), starRadius*0.75f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.25f);
+        topControl0 = Star.getControlButton(topStar1.getCenter(), starRadius*0.70f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.25f);
         add(topControl0);
 
-        topStar2 = Star.getButton(new Vector2(topRow, sh*3f/6f + offset), starRadius*0.75f);
+        topStar2 = Star.getButton(new Vector2(topRow, sh*3f/6f + offset), starRadius*0.90f);
         topStar2.setLayerColor(Colors.cyan, 1);
         add(topStar2);
 
-        topControl1 = Star.getControlButton(topStar2.getCenter(), starRadius*0.75f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.5f);
+        topControl1 = Star.getControlButton(topStar2.getCenter(), starRadius*0.90f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.5f);
         add(topControl1);
 
-        topStar3 = Star.getButton(new Vector2(topRow, sh*4f/6f + offset), starRadius*0.75f);
+        topStar3 = Star.getButton(new Vector2(topRow, sh*4f/6f + offset), starRadius*0.70f);
         topStar3.setLayerColor(Colors.cyan, 1);
         add(topStar3);
 
-        topControl2 = Star.getControlButton(topStar3.getCenter(), starRadius*0.75f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.75f);
+        topControl2 = Star.getControlButton(topStar3.getCenter(), starRadius*0.70f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.75f);
         add(topControl2);
 
-        topStar4 = Star.getButton(new Vector2(topRow, sh*5f/6f + offset), starRadius*0.75f);
+        topStar4 = Star.getButton(new Vector2(topRow, sh*5f/6f + offset), starRadius*0.70f);
         for (int i = 2; i < topStar4.getLayerNum(); i ++) {
             topStar4.setLayerColor(Colors.cyan, i);
         }
@@ -325,18 +325,18 @@ public class Tutorial0 extends Tutorial {
             }
         }
 
-        if (currentBorder >= 4 && !starsMass) {
+        if (currentBorder >= 4 && !gravityOn) {
             for (int i = 0; i < model.stars.size(); i ++) {
                 Star star = model.stars.get(i);
                 star.mass = star.radius*star.radius;
             }
-            starsMass = true;
+            gravityOn = true;
         }
-        if (currentBorder < 4 && !moving && starsMass) {
+        if (currentBorder < 4 && !moving && gravityOn) {
             for (int i = 0; i < model.stars.size(); i ++) {
                 model.stars.get(i).mass = 0f;
             }
-            starsMass = false;
+            gravityOn = false;
         }
 
         for (int i = 0; i < numPlayers; i ++) {

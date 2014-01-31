@@ -9,6 +9,7 @@ import com.autonomousgames.starcycle.core.model.ImageOrb;
 import com.autonomousgames.starcycle.core.model.Level;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
+import com.autonomousgames.starcycle.core.ui.TextLayer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -45,6 +46,7 @@ public abstract class Tutorial extends ModelScreen {
     public boolean startAtEnd = false;
 
     int[][] starClamp;
+    int[] orbClamp = new int[]{0, 0};
     int pages;
 
     public Tutorial (Level.LevelType lvlType, ScreenType screenType, ScreenType nextScreen, ScreenType prevScreen, BaseType[] skins, Color[][] colors) {
@@ -52,6 +54,11 @@ public abstract class Tutorial extends ModelScreen {
         this.nextScreen = nextScreen;
         this.prevScreen = prevScreen;
         silentSwitch = true;
+
+        ((SpriteLayer) resumeButton.getLayer(0)).setSpriteAlpha(0.90f);
+        resumeButton.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Resume", new Vector2(pauseButton.getDims().x*3f/8f, 0f), resumeButton.getDims()).rotateText(90f));
+        mainMenuButton.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Main Menu", new Vector2(pauseButton.getDims().x*3f/8f, 0f), resumeButton.getDims()).rotateText(90f));
+        backButton.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Quit Tutorial", new Vector2(pauseButton.getDims().x*3f/8f, 0f), resumeButton.getDims()).rotateText(90f));
 
         starClamp = new int[model.stars.size()][2];
         for (int i = 0; i < model.stars.size(); i ++) {
@@ -72,7 +79,7 @@ public abstract class Tutorial extends ModelScreen {
 
             @Override
             public void drag(InputEvent event, float x, float y, int pointer) {
-                if (swiper.touchOn(x,y) == false) {
+                if (swiper.touchOn(x,y) == false || moving) {
                     cancel();
                 }
                 else {
@@ -148,13 +155,13 @@ public abstract class Tutorial extends ModelScreen {
         }
         for (int i = 0; i < numPlayers; i ++) {
             for (int j = 0; j < players[i].orbs.size(); j ++) {
-                players[i].orbs.get(j).moveOrb(0f, y/StarCycle.pixelsPerMeter);
+                players[i].orbs.get(j).moveOrb(0f, moveClamped(orbClamp[0], orbClamp[1], y/StarCycle.pixelsPerMeter));
             }
             for (int j = 0; j < players[i].voids.size(); j ++) {
-                players[i].voids.get(j).moveOrb(0f, y/StarCycle.pixelsPerMeter);
+                players[i].voids.get(j).moveOrb(0f, moveClamped(orbClamp[0], orbClamp[1], y/StarCycle.pixelsPerMeter));
             }
             for (int j = 0; j < players[i].novas.size(); j ++) {
-                players[i].novas.get(j).moveOrb(0f, y/StarCycle.pixelsPerMeter);
+                players[i].novas.get(j).moveOrb(0f, moveClamped(orbClamp[0], orbClamp[1], y/StarCycle.pixelsPerMeter));
             }
         }
     }

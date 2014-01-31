@@ -387,4 +387,9 @@ public class Star extends Orbitable implements Collidable {
     public static LayeredButton getControlButton(Vector2 pos, float dims, Color color, int player) {
         return getControlButton(pos, dims, color, player, 0f);
     }
+
+    public void setControlPercent(int player, float percent) {
+//        controlPercents[player] = percent;
+        populations[player] = maxPop*percent;
+    }
 }

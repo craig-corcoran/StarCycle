@@ -163,7 +163,7 @@ public class SpriteLayer extends Layer{
 	
 	public SpriteLayer setSpriteAlpha(float a) {
 		Color color = image.getColor();
-		image.setColor(color.r, color.g, color.b, color.a * a);
+		image.setColor(color.r, color.g, color.b, a);
 		return this;
 	}
 	

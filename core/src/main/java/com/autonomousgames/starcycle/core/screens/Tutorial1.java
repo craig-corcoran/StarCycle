@@ -6,15 +6,21 @@ import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.controllers.GameController;
 import com.autonomousgames.starcycle.core.model.*;
-import com.autonomousgames.starcycle.core.ui.BaseButton;
-import com.autonomousgames.starcycle.core.ui.LayeredButton;
-import com.autonomousgames.starcycle.core.ui.SpriteLayer;
-import com.autonomousgames.starcycle.core.ui.TextLayer;
+import com.autonomousgames.starcycle.core.ui.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
 public class Tutorial1 extends Tutorial {
+
+    LayeredButton transStar0;
+    LayeredButton transStar1;
+    LayeredButton fakeLaunch;
+    LayeredButton fakeMaluma;
+    LayeredButton fakeAim0;
+    LayeredButton fakeTakete;
+    LayeredButton fakeAim1;
+    LayeredButton orbit;
 
     LayeredButton controlText;
     LayeredButton topStar0;
@@ -39,14 +45,15 @@ public class Tutorial1 extends Tutorial {
     LayeredButton launch2;
     LayeredButton launch2b;
     LayeredButton launch2c;
-    LayeredButton transStar0;
-    LayeredButton transStar1;
-    LayeredButton fakeLaunch;
-    LayeredButton fakeMaluma;
-    LayeredButton fakeAim0;
-    LayeredButton fakeTakete;
-    LayeredButton fakeAim1;
-    LayeredButton orbit;
+
+    LayeredButton voidText;
+    ChargeOrb orb;
+    LayeredButton voidHint;
+
+    LayeredButton novaText;
+
+    boolean page2orbLaunched = false;
+    boolean gravityOn = false;
 
     float starRadius = 1.5f * UserSettingz.getFloatSetting("starRadius");
 
@@ -59,7 +66,7 @@ public class Tutorial1 extends Tutorial {
 
         Gdx.input.setInputProcessor(new GameController(this, 1));
 
-        pages = 3;
+        pages = 5;
 
         // Zeroth page:
         // Return transition:
@@ -106,30 +113,30 @@ public class Tutorial1 extends Tutorial {
 
         float topRow = swipeCenter.x + swipeSize.x/6f;
 
-        topStar0 = Star.getButton(new Vector2(topRow, sh/6f + offset), starRadius*0.75f);
+        topStar0 = Star.getButton(new Vector2(topRow, sh/6f + offset), starRadius*0.70f);
         add(topStar0);
 
-        topStar1 = Star.getButton(new Vector2(topRow, sh*2f/6f + offset), starRadius*0.75f);
+        topStar1 = Star.getButton(new Vector2(topRow, sh*2f/6f + offset), starRadius*0.70f);
         add(topStar1);
 
-        topControl0 = Star.getControlButton(topStar1.getCenter(), starRadius*0.75f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.25f);
+        topControl0 = Star.getControlButton(topStar1.getCenter(), starRadius*0.70f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.25f);
         add(topControl0);
 
-        topStar2 = Star.getButton(new Vector2(topRow, sh*3f/6f + offset), starRadius*0.75f);
+        topStar2 = Star.getButton(new Vector2(topRow, sh*3f/6f + offset), starRadius*0.90f);
         topStar2.setLayerColor(Colors.cyan, 1);
         add(topStar2);
 
-        topControl1 = Star.getControlButton(topStar2.getCenter(), starRadius*0.75f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.5f);
+        topControl1 = Star.getControlButton(topStar2.getCenter(), starRadius*0.90f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.5f);
         add(topControl1);
 
-        topStar3 = Star.getButton(new Vector2(topRow, sh*4f/6f + offset), starRadius*0.75f);
+        topStar3 = Star.getButton(new Vector2(topRow, sh*4f/6f + offset), starRadius*0.70f);
         topStar3.setLayerColor(Colors.cyan, 1);
         add(topStar3);
 
-        topControl2 = Star.getControlButton(topStar3.getCenter(), starRadius*0.75f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.75f);
+        topControl2 = Star.getControlButton(topStar3.getCenter(), starRadius*0.70f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.75f);
         add(topControl2);
 
-        topStar4 = Star.getButton(new Vector2(topRow, sh*5f/6f + offset), starRadius*0.75f);
+        topStar4 = Star.getButton(new Vector2(topRow, sh*5f/6f + offset), starRadius*0.70f);
         for (int i = 2; i < topStar4.getLayerNum(); i ++) {
             topStar4.setLayerColor(Colors.cyan, i);
         }
@@ -203,18 +210,64 @@ public class Tutorial1 extends Tutorial {
         // Using voids:
         offset = 2f*sh;
 
+        voidText = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y + offset));
+        voidText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture a star to unlock voids", new Vector2(-swipeSize.x/8f, 0f), swipeSize).rotateText(90f));
+        voidText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Voids can destroy enemy orbs", new Vector2(swipeSize.x/8f, 0f), swipeSize).rotateText(90f));
+        add(voidText);
+
         players[0].base.translateBase(0f, offset);
         players[0].launchPad.movePos(0f, offset);
-        players[1].base.moveBase(new Vector2(StarCycle.meterWidth/2f-1f, StarCycle.meterHeight*2f/3f+1f));
-        players[1].base.translateBase(0f, offset);
         basePages = new int[]{2, pages-1};
         launchPages = new int[]{2, pages-1};
-        taketePages= new int[]{2, pages-1};
 
-        for (int i = 0; i < model.stars.size(); i ++) {
-            float vShift = (i != 2) ? -1f + i*2f : 0f;
-            model.stars.get(i).moveStar(2f, vShift + offset / StarCycle.pixelsPerMeter);
+        for (int i = 0; i < 2; i ++) {
+            Star star = model.stars.get(i);
+            star.moveStar(2f, -1f + i * 2f + offset / StarCycle.pixelsPerMeter);
+            star.mass = 0f;
+            starClamp[i][0] = 2;
+            starClamp[i][1] = pages-1;
         }
+        Vector2 orbDist = new Vector2(UserSettingz.getFloatSetting("chargeRadius"), 0f).scl(2f);
+        Vector2 starPos = new Vector2(model.stars.get(0).position);
+        for (int i = 0; i < numPlayers; i ++) {
+            model.stars.get(0).setControlPercent(i, 0.2f + i*0.6f);
+            for (int j = 0; j < 4; j ++) {
+                orbDist.rotate(30f);
+                orbFactory.createLockedOrb(players[i], new Vector2(starPos.x + orbDist.x, starPos.y + orbDist.y), -1f, model.stars.get(0), -120f);
+            }
+            orbDist.rotate(60f);
+        }
+        model.stars.get(1).setControlPercent(0, 0.49f);
+        orbClamp[0] = 2;
+        orbClamp[1] = pages-1;
+        Vector2 toStar = model.stars.get(1).position.cpy().sub(players[0].base.origin);
+        Vector2 aimVec = toStar.cpy().rotate(-90f).nor().scl(model.stars.get(0).radius+UserSettingz.getFloatSetting("chargeRadius")*0.95f);
+        aimVec.add(toStar);
+        players[0].base.setPointer(aimVec);
+
+        voidHint = new LayeredButton(new Vector2(sw-sh/12f, sh*7f/12f + offset));
+        voidHint.addLayer(new SpriteLayer(StarCycle.tex.fingerRight, new Vector2(swipeSize.x/6f, swipeSize.x/4.5f)), LayerType.ACTIVE);
+        voidHint.addLayer(new TextLayer(StarCycle.tex.gridnikSmall, "Launch a void!", new Vector2(-sh/12f, 0f), swipeSize).rotateText(90f), LayerType.ACTIVE);
+        voidHint.deactivate();
+        add(voidHint);
+
+        // Third Page
+        // Using novas:
+        offset = 3f*sh;
+
+        novaText = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y + offset));
+        novaText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Capture two stars to unlock novas", new Vector2(-swipeSize.x/8f, 0f), swipeSize).rotateText(90f));
+        novaText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Novas can instantly capture a star", new Vector2(swipeSize.x/8f, 0f), swipeSize).rotateText(90f));
+        add(novaText);
+
+        players[1].base.moveBase(new Vector2(StarCycle.meterWidth/2f-1f, StarCycle.meterHeight*2f/3f+1f));
+        players[1].base.translateBase(0f, offset);
+        taketePages= new int[]{3, pages-1};
+
+        model.stars.get(2).moveStar(1f, offset / StarCycle.pixelsPerMeter);
+        model.stars.get(2).mass = 0f;
+        starClamp[2][0] = 3;
+        starClamp[2][1] = pages-1;
 
         borders(pages + 1);
 
@@ -232,6 +285,31 @@ public class Tutorial1 extends Tutorial {
             startAtEnd = true;
             isDone = true;
         };
+
+        if (currentBorder == 2 && !moving) {
+            if (!page2orbLaunched) {
+                orbFactory.setCosts(0f, 0f, 0f);
+                orb = orbFactory.createChargeOrb(players[0], players[0].base.origin, players[0].base.getPointer().scl(UserSettingz.getFloatSetting("velScaleOrbFact")), -1f);
+                page2orbLaunched = true;
+            }
+        }
+        if (page2orbLaunched && !gravityOn) {
+            if (orb.orbiting) {
+                for (int i = 0; i < model.stars.size(); i ++) {
+                    Star star = model.stars.get(i);
+                    star.mass = star.radius*star.radius;
+                }
+                gravityOn = true;
+                orb.lockOn(model.stars.get(1), 180f/60f);
+            }
+        }
+        if (page2orbLaunched && players[0].base.level == 0) {
+            if (model.stars.get(1).controlPercents[0] >= 0.5f) {
+                players[0].setLevel(1);
+                players[0].base.setPointerPolar(2f, 150f);
+                voidHint.activate();
+            }
+        }
     }
 
     @Override
