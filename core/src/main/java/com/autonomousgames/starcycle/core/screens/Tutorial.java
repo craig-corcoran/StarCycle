@@ -79,7 +79,7 @@ public abstract class Tutorial extends ModelScreen {
 
             @Override
             public void drag(InputEvent event, float x, float y, int pointer) {
-                if (swiper.touchOn(x,y) == false || moving) {
+                if (swiper.touchOn(x,y) == false) {
                     cancel();
                 }
                 else {
@@ -123,6 +123,7 @@ public abstract class Tutorial extends ModelScreen {
             if (move == moves) {
                 moving = false;
                 move = 0;
+                swiper.activate();
             }
         }
 
@@ -169,6 +170,7 @@ public abstract class Tutorial extends ModelScreen {
     public void sendDraggables(float y) {
         moving = true;
         moveStep = y/moves;
+        swiper.deactivate();
     }
 
     void borders(int borderNum) {

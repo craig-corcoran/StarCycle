@@ -51,6 +51,7 @@ public class Tutorial1 extends Tutorial {
     LayeredButton voidHint;
 
     LayeredButton novaText;
+    LayeredButton novaHint;
 
     boolean page2orbLaunched = false;
     boolean gravityOn = false;
@@ -231,11 +232,11 @@ public class Tutorial1 extends Tutorial {
         Vector2 starPos = new Vector2(model.stars.get(0).position);
         for (int i = 0; i < numPlayers; i ++) {
             model.stars.get(0).setControlPercent(i, 0.2f + i*0.6f);
-            for (int j = 0; j < 4; j ++) {
+            for (int j = 0; j < 5; j ++) {
                 orbDist.rotate(30f);
                 orbFactory.createLockedOrb(players[i], new Vector2(starPos.x + orbDist.x, starPos.y + orbDist.y), -1f, model.stars.get(0), -120f);
             }
-            orbDist.rotate(60f);
+            orbDist.rotate(30f);
         }
         model.stars.get(1).setControlPercent(0, 0.49f);
         orbClamp[0] = 2;
@@ -260,14 +261,25 @@ public class Tutorial1 extends Tutorial {
         novaText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Novas can instantly capture a star", new Vector2(swipeSize.x/8f, 0f), swipeSize).rotateText(90f));
         add(novaText);
 
-        players[1].base.moveBase(new Vector2(StarCycle.meterWidth/2f-1f, StarCycle.meterHeight*2f/3f+1f));
-        players[1].base.translateBase(0f, offset);
         taketePages= new int[]{3, pages-1};
 
         model.stars.get(2).moveStar(1f, offset / StarCycle.pixelsPerMeter);
         model.stars.get(2).mass = 0f;
         starClamp[2][0] = 3;
         starClamp[2][1] = pages-1;
+
+        novaHint = new LayeredButton(new Vector2(sw - sh/3f, sh*8f/9f + offset));
+        novaHint.addLayer(new SpriteLayer(StarCycle.tex.fingerRight, new Vector2(swipeSize.x/8f, swipeSize.x/6f)).rotateSprite(-60f), LayerType.ACTIVE);
+        novaHint.addLayer(new TextLayer(StarCycle.tex.gridnikSmall, "Launch a nova!", new Vector2(-sh/12f, -sh/12f), swipeSize).rotateText(90f), LayerType.ACTIVE);
+        novaHint.deactivate();
+        add(novaHint);
+
+        // Fourth Page
+        //
+        offset = 4f*sh;
+
+        players[1].base.moveBase(new Vector2(StarCycle.meterWidth/2f-1f, StarCycle.meterHeight*2f/3f+1f));
+        players[1].base.translateBase(0f, offset);
 
         borders(pages + 1);
 
@@ -309,6 +321,21 @@ public class Tutorial1 extends Tutorial {
                 players[0].base.setPointerPolar(2f, 150f);
                 voidHint.activate();
             }
+        }
+
+        if (currentBorder == 2 && !moving && voidHint.isActive()) {
+            if (model.stars.get(0).controlPercents[0] >= 0.5f && players[0].base.level == 1) {
+                sendDraggables(-sh);
+                currentBorder++;
+            }
+        }
+        if (currentBorder == 3 && !moving && players[0].base.level == 1) {
+            orbFactory.setCosts(1000000f, 1000000f, 0f);
+            players[0].base.manualLvl = false;
+            players[0].launchPad.manualLvl = false;
+        }
+        if (players[0].base.level == 2 && !novaHint.isActive()) {
+            novaHint.activate();
         }
     }
 
