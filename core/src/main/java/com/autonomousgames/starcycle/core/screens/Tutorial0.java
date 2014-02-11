@@ -21,6 +21,9 @@ public class Tutorial0 extends Tutorial {
     LayeredButton holdText;
     LayeredButton holdImage;
     LayeredButton aim;
+    LayeredButton target0;
+    LayeredButton target1;
+    LayeredButton target2;
     LayeredButton shoot;
     LayeredButton orbit;
     LayeredButton controlText;
@@ -97,7 +100,7 @@ public class Tutorial0 extends Tutorial {
 
         dragHand = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y+sh*0.3f));
         Vector2 slideVec = new Vector2(0f, -sh*0.6f);
-        dragHand.addLayer(new SpriteLayer(StarCycle.tex.fingerRight, new Vector2(swipeSize.x/4f, swipeSize.x/3f)).rotateSprite(90f).slideAndReturn(slideVec, 2f));
+        dragHand.addLayer(new SpriteLayer(StarCycle.tex.fingerRight, new Vector2(swipeSize.x / 4f, swipeSize.x / 3f)).rotateSprite(90f).slideAndReturn(slideVec, 2f));
         add(dragHand);
 
         // Fist page
@@ -128,10 +131,31 @@ public class Tutorial0 extends Tutorial {
 
         aim = new LayeredButton(new Vector2(swipeCenter.x-bw/2f, swipeCenter.y + offset));
         aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[1], new Vector2(0f, -tileSize.x/2f), tileSize));
-        aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[2], new Vector2(0f, -tileSize.x/2f), tileSize).blink(0.75f),LayerType.SPECIAL);
+        aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[2], new Vector2(0f, -tileSize.x/2f), tileSize).blink(1.5f),LayerType.SPECIAL);
         aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[3], new Vector2(0f, tileSize.x/2f), tileSize));
         aim.rotateLayers(90f);
         add(aim);
+
+        Vector2 targetDims = new Vector2(0.75f,0.75f).scl(StarCycle.pixelsPerMeter);
+        Vector2 bo = players[0].base.baseButton.getCenter();
+        Vector2 targetVec = new Vector2(-Base.maxAimerLength, 0f).scl(1.75f).rotate(-25f);
+        target0 = new LayeredButton(new Vector2(bo.x + targetVec.x, bo.y + targetVec.y));
+        target0.addLayer(new SpriteLayer(StarCycle.tex.circle, targetDims).setSpriteColor(Colors.red).setSpriteAlpha(0.5f), LayerType.INACTIVE);
+        target0.addLayer(new SpriteLayer(StarCycle.tex.circle, targetDims).setSpriteColor(Colors.spinach).setSpriteAlpha(0.5f), LayerType.ACTIVE);
+        target0.deactivate();
+        targetVec.rotate(-20f);
+        target1 = new LayeredButton(new Vector2(bo.x + targetVec.x, bo.y + targetVec.y));
+        target1.addLayer(new SpriteLayer(StarCycle.tex.circle, targetDims).setSpriteColor(Colors.red).setSpriteAlpha(0.5f), LayerType.INACTIVE);
+        target1.addLayer(new SpriteLayer(StarCycle.tex.circle, targetDims).setSpriteColor(Colors.spinach).setSpriteAlpha(0.5f), LayerType.ACTIVE);
+        target1.deactivate();
+        targetVec.rotate(-20f);
+        target2 = new LayeredButton(new Vector2(bo.x + targetVec.x, bo.y + targetVec.y));
+        target2.addLayer(new SpriteLayer(StarCycle.tex.circle, targetDims).setSpriteColor(Colors.red).setSpriteAlpha(0.5f), LayerType.INACTIVE);
+        target2.addLayer(new SpriteLayer(StarCycle.tex.circle, targetDims).setSpriteColor(Colors.spinach).setSpriteAlpha(0.5f), LayerType.ACTIVE);
+        target2.deactivate();
+        add(target0);
+        add(target1);
+        add(target2);
 
         // Third page
         // Shooting:
@@ -144,7 +168,7 @@ public class Tutorial0 extends Tutorial {
         shoot = new LayeredButton(new Vector2(swipeCenter.x-bw/2f, swipeCenter.y + offset));
         shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[1], new Vector2(0f, -tileSize.x/2f), tileSize));
         shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[4], new Vector2(0f, tileSize.x/2f), tileSize));
-        shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[5], new Vector2(0f, tileSize.x/2f), tileSize).blink(1f), LayerType.SPECIAL);
+        shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[5], new Vector2(0f, tileSize.x/2f), tileSize).blink(1.5f), LayerType.SPECIAL);
         shoot.rotateLayers(90f);
         add(shoot);
 
@@ -276,6 +300,7 @@ public class Tutorial0 extends Tutorial {
         ui.addActor(swiper);
 
         orbFactory.setCosts(0f, 0f, 0f);
+        orbFactory.setLife(-1f, -1f);
 
         if (startAtEnd) {
             for (int i = 0; i < pages-1; i ++) {
@@ -313,7 +338,7 @@ public class Tutorial0 extends Tutorial {
             players[0].launchPad.streamOrbs = !(players[0].launchPad.streamOrbs);
         }
 
-        if (((moving || dragging || model.stars.get(1).getOrbCount(Orb.OrbType.ORB) >= 15) && players[1].launchPad.streamOrbs) || (currentBorder == 4 && !moving && !dragging && model.stars.get(1).getOrbCount(Orb.OrbType.ORB) < 15 && players[1].launchPad.streamOrbs == false)) {
+        if (((moving || dragging || model.stars.get(1).getOrbCount(Orb.OrbType.ORB) >= 10) && players[1].launchPad.streamOrbs) || (currentBorder == 4 && !moving && !dragging && model.stars.get(1).getOrbCount(Orb.OrbType.ORB) < 10 && players[1].launchPad.streamOrbs == false)) {
             players[1].launchPad.streamOrbs = !(players[1].launchPad.streamOrbs);
         }
 
@@ -354,6 +379,34 @@ public class Tutorial0 extends Tutorial {
             }
             for (int j = 0; j < players[i].novas.size(); j ++) {
                 players[i].novas.get(j).removeIfOff();
+            }
+        }
+
+        if (currentBorder == 2 && !pageDone.get(2)) {
+            float aimAng = players[0].base.getPointer().angle();
+            if (152.5f < aimAng && aimAng < 157.5f && !target0.isActive()) {
+                target0.activate();
+            }
+            if (132.5f < aimAng && aimAng < 137.5f && !target1.isActive()) {
+                target1.activate();
+            }
+            if (112.5f < aimAng && aimAng < 117.5f && !target2.isActive()) {
+                target2.activate();
+            }
+            if (target0.isActive() && target1.isActive() && target2.isActive()) {
+                pageDone.set(2, true);
+            }
+        }
+
+        if (currentBorder == 3 && !pageDone.get(3)) {
+            if (players[0].launchPad.streamOrbs) {
+                pageDone.set(3, true);
+            }
+        }
+
+        if (currentBorder == 4 && !pageDone.get(4)) {
+            if (model.stars.get(0).getOrbCount(Orb.OrbType.ORB) >= 5) {
+                pageDone.set(4, true);
             }
         }
 
