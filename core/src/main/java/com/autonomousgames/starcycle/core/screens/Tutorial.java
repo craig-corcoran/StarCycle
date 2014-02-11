@@ -22,7 +22,7 @@ public abstract class Tutorial extends ModelScreen {
 
     float sw = StarCycle.screenWidth;
     float sh = StarCycle.screenHeight;
-    Vector2 swipeSize = new Vector2(sh*0.45f, sh*0.9f);
+    Vector2 swipeSize = new Vector2(sh*0.5f, sh);
     Vector2 swipeCenter = new Vector2(swipeSize.x/2f, sh*0.5f);
     LayeredButton swiper =  new LayeredButton(swipeCenter, swipeSize);
     float bw = sh * 0.05f;
@@ -176,9 +176,9 @@ public abstract class Tutorial extends ModelScreen {
     void borders(int borderNum) {
         for (int i = 0; i < borderNum; i++) {
             LayeredButton button = new LayeredButton(swipeCenter, swipeSize);
-            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, sh * 0.425f), new Vector2(swipeSize.x, bw), Colors.night, 0f));
-            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(swipeCenter.x - bw / 2f, 0f), new Vector2(bw, sh * 0.9f), Colors.night, 0f));
-            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, -sh * 0.425f), new Vector2(swipeSize.x, bw), Colors.night, 0f));
+            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, swipeSize.y/2f -bw/2f), new Vector2(swipeSize.x, bw), Colors.night, 0f));
+            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(swipeSize.x/2f - bw/2f, 0f), new Vector2(bw, swipeSize.y), Colors.night, 0f));
+            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, -swipeSize.y/2f +bw/2f), new Vector2(swipeSize.x, bw), Colors.night, 0f));
             button.moveCenter(0f, sh*i);
             draggables.add(button);
             ui.addActor(button);
