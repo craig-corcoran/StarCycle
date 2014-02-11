@@ -55,7 +55,7 @@ public class Tutorial0 extends Tutorial {
 
     float starRadius = 1.5f * UserSettingz.getFloatSetting("starRadius");
 
-    Vector2 fakeBasePos0 = new Vector2(tileSize.y*153f/420f, sh*0.1f+tileSize.x*270/420f);
+    Vector2 fakeBasePos0 = new Vector2(tileSize.y*153f/420f, bw+tileSize.x*270/420f);
     Vector2 fakeBasePos1 = new Vector2(fakeBasePos0);
     Vector2 orbVel0 = new Vector2(-2f, 1.9f);
     Vector2 orbVel1 = new Vector2(-2.76f, 0f);
@@ -77,18 +77,18 @@ public class Tutorial0 extends Tutorial {
         // Welcome, pausing, and swiping:
         offset = 0f;
 
-        CharSequence text0 = "Welcome to StarCycle!";
-        CharSequence text1 = "Swipe within the upper area";
-        CharSequence text2 = "to progress through this tutorial.";
-        CharSequence text3 = "Access the pause menu by tapping";
-        CharSequence text4 = "within the blue rectangular area.";
+        CharSequence text00 = "Welcome to StarCycle!";
+        CharSequence text01 = "Swipe within the upper area";
+        CharSequence text02 = "to progress through this tutorial.";
+        CharSequence text03 = "Access the pause menu by tapping";
+        CharSequence text04 = "within the blue rectangular area.";
         Vector2 textDims = new Vector2(sh, sw/10f);
         welcomeText = new LayeredButton(new Vector2(sw/2f - pauseButton.getDims().x/4f, sh/2f + offset));
-        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikJumbo, text0, textDims).rotateText(90f));
-        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text1, new Vector2(1.5f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
-        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text2, new Vector2(2.25f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
-        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text3, new Vector2(6.75f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
-        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text4, new Vector2(7.25f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikJumbo, text00, textDims).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text01, new Vector2(1.5f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text02, new Vector2(2.25f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text03, new Vector2(6.75f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text04, new Vector2(7.25f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
         add(welcomeText);
 
         pauseArea = new LayeredButton(pauseButton.getCenter());
@@ -104,8 +104,13 @@ public class Tutorial0 extends Tutorial {
         // Holding:
         offset = sh;
 
-        holdText = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y + offset));
-        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Use two hands to play", swipeSize).rotateText(90f));
+        CharSequence text10 = "Use two hands to play";
+        CharSequence text11 = "The dots indicate a good time to go on,";
+        CharSequence text12 = "but feel free to move at your own pace.";
+        holdText = new LayeredButton(new Vector2(swipeCenter.x-bw*2.5f, swipeCenter.y + offset));
+        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikJumbo, text10, swipeSize).rotateText(90f));
+        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text11, new Vector2(bw*3.5f, 0f), swipeSize).rotateText(90f));
+        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text12, new Vector2(bw*5f, 0f), swipeSize).rotateText(90f));
         add(holdText);
 
         holdImage = new LayeredButton(new Vector2(sw*0.7f, sh*0.5f+offset));
@@ -266,6 +271,7 @@ public class Tutorial0 extends Tutorial {
         add(launch2c);
 
         borders(pages + 1);
+        pageDone.set(1, true);
 
         ui.addActor(swiper);
 
