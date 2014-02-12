@@ -187,7 +187,7 @@ public abstract class Tutorial extends ModelScreen {
         for (int i = 0; i < borderNum; i++) {
             LayeredButton border = new LayeredButton(swipeCenter, swipeSize);
             border.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, swipeSize.y/2f -bw/2f), new Vector2(swipeSize.x, bw), Colors.night, 0f));
-            border.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(swipeSize.x/2f - bw/2f, 0f), new Vector2(bw, swipeSize.y), Colors.night, 0f));
+            border.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(swipeSize.x/2f - bw/2f, 0f), new Vector2(bw, swipeSize.y*1.05f), Colors.night, 0f));
             border.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, -swipeSize.y/2f +bw/2f), new Vector2(swipeSize.x, bw), Colors.night, 0f));
             border.moveCenter(0f, sh*i);
             add(border);

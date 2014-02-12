@@ -282,6 +282,7 @@ public class Tutorial1 extends Tutorial {
         players[1].base.translateBase(0f, offset);
 
         borders(pages + 1);
+        pageDone.set(1,true);
 
         ui.addActor(swiper);
 
@@ -298,12 +299,10 @@ public class Tutorial1 extends Tutorial {
             isDone = true;
         };
 
-        if (currentBorder == 2 && !moving) {
-            if (!page2orbLaunched) {
-                orbFactory.setCosts(0f, 0f, 0f);
-                orb = orbFactory.createChargeOrb(players[0], players[0].base.origin, players[0].base.getPointer().scl(UserSettingz.getFloatSetting("velScaleOrbFact")), -1f);
-                page2orbLaunched = true;
-            }
+        if (currentBorder == 2 && !moving && !page2orbLaunched) {
+            orbFactory.setCosts(0f, 0f, 0f);
+            orb = orbFactory.createChargeOrb(players[0], players[0].base.origin, players[0].base.getPointer().scl(UserSettingz.getFloatSetting("velScaleOrbFact")), -1f);
+            page2orbLaunched = true;
         }
         if (page2orbLaunched && !gravityOn) {
             if (orb.orbiting) {
@@ -319,20 +318,23 @@ public class Tutorial1 extends Tutorial {
             if (model.stars.get(1).controlPercents[0] >= 0.5f) {
                 players[0].setLevel(1);
                 players[0].base.setPointerPolar(2f, 150f);
+                players[0].base.manualLvl = false;
+                players[0].launchPad.manualLvl = false;
                 voidHint.activate();
+
             }
         }
 
-        if (currentBorder == 2 && !moving && voidHint.isActive()) {
-            if (model.stars.get(0).controlPercents[0] >= 0.5f && players[0].base.level == 1) {
-                sendDraggables(-sh);
-                currentBorder++;
+        if (currentBorder == 2 && !pageDone.get(2)) {
+            if (model.stars.get(0).getPlayerOrbs(1) == 0) {
+                pageDone.set(2, true);
+
             }
         }
-        if (currentBorder == 3 && !moving && players[0].base.level == 1) {
-            orbFactory.setCosts(1000000f, 1000000f, 0f);
-            players[0].base.manualLvl = false;
-            players[0].launchPad.manualLvl = false;
+        if (currentBorder == 3 && !pageDone.get(3)) {
+            if (model.stars.get(2).hitByNova) {
+                pageDone.set(3, true);
+            }
         }
         if (players[0].base.level == 2 && !novaHint.isActive()) {
             novaHint.activate();

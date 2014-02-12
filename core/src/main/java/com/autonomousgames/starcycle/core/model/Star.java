@@ -47,6 +47,7 @@ public class Star extends Orbitable implements Collidable {
 	private Player[] players;
 	private PathType pathMap = null;
 	private float startPercent;
+    public boolean hitByNova = false;
 
 	// Drawing stuff
 	LayeredButton starButton;
@@ -391,5 +392,9 @@ public class Star extends Orbitable implements Collidable {
     public void setControlPercent(int player, float percent) {
 //        controlPercents[player] = percent;
         populations[player] = maxPop*percent;
+    }
+
+    public int getPlayerOrbs(int player) {
+        return numOrbs[player];
     }
 }

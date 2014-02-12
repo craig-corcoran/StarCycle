@@ -136,7 +136,7 @@ public class Tutorial0 extends Tutorial {
         aim.rotateLayers(90f);
         add(aim);
 
-        Vector2 targetDims = new Vector2(0.75f,0.75f).scl(StarCycle.pixelsPerMeter);
+        Vector2 targetDims = new Vector2(0.5f,0.5f).scl(StarCycle.pixelsPerMeter);
         Vector2 bo = players[0].base.baseButton.getCenter();
         Vector2 targetVec = new Vector2(-Base.maxAimerLength, 0f).scl(1.75f).rotate(-25f);
         target0 = new LayeredButton(new Vector2(bo.x + targetVec.x, bo.y + targetVec.y));
