@@ -16,6 +16,7 @@ public class Nova extends Orb implements Collidable {
 		if (obj instanceof Star) {
 			((Star) obj).addPop(((Star) obj).maxPop * 2f, player.number);
 			StarCycle.audio.landnukeSound.play(StarCycle.audio.sfxVolume);
+            ((Star) obj).hitByNova = true;
 		}
 		else {
 			StarCycle.audio.gravkillnukeSound.play(StarCycle.audio.sfxVolume);

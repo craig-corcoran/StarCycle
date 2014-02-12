@@ -5,6 +5,7 @@ import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -19,6 +20,7 @@ public class ChargeOrb extends Orb implements Collidable {
     public Star chargeStar = null;
 	public boolean orbiting = false;
     public boolean lockedOn = false;
+    boolean setForRemoval = false;
 
     private float dTheta = 0f; // Measured difference in radians.
     private float rotDeg = 0f; // Vector rotation in degrees, used after lockOn.
@@ -188,10 +190,14 @@ public class ChargeOrb extends Orb implements Collidable {
 
 	@Override
 	public void removeSelf() {
+        if (setForRemoval) {
+            Gdx.app.log("ChargeOrb","Already set for removal!");
+        }
 		if (lockedOn) {
             lockedOn = false;
 			chargeStar.removeOrb(this);
 		}
+        setForRemoval = true;
 		super.removeSelf();
 	}
 

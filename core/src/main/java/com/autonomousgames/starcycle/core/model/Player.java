@@ -205,4 +205,9 @@ public class Player {
 		ammo = 0f;
 //		launchPad.drawAmmo = false;
 	}
+
+    public void setLevel(int i) {
+        base.setLvl(i);
+        launchPad.setLvl(i);
+    }
 }

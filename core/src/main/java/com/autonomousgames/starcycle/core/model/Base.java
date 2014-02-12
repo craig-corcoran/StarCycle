@@ -108,19 +108,7 @@ public class Base {
 
         if (!manualLvl) {
             if (Math.min(maxLevel, player.starsCaptured) != level) {
-                if (Math.min(maxLevel, player.starsCaptured) > level) {
-                    if (player.starsCaptured == 1){
-                        StarCycle.audio.levelup1Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
-                    }
-                    if (player.starsCaptured == 2) {
-                        StarCycle.audio.levelup2Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
-                    }
-
-                } else {
-                    StarCycle.audio.leveldownSound.play(UserSettingz.getFloatSetting("sfxVolume"));
-                }
-                level = Math.min(maxLevel, player.starsCaptured);
-                baseButton.setLevel(level);
+                setLvl(Math.min(maxLevel, player.starsCaptured));
             }
         }
 	}
@@ -180,5 +168,21 @@ public class Base {
             button.addLayer(new SpriteLayer(StarCycle.tex.aimer[i + 1], new Vector2(0f, 1f).scl((maxPointerLength + minPointerLength)*StarCycle.pixelsPerMeter / 2f), chevronImDims).setSpriteColor(colors[i]));
         }
         return button;
+    }
+
+    public void setLvl(int i) {
+        if (i > level) {
+            if (i == 1){
+                StarCycle.audio.levelup1Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
+            }
+            if (i == 2) {
+                StarCycle.audio.levelup2Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
+            }
+        }
+        else if (i < level) {
+            StarCycle.audio.leveldownSound.play(UserSettingz.getFloatSetting("sfxVolume"));
+        }
+        baseButton.setLevel(i);
+        level = i;
     }
 }

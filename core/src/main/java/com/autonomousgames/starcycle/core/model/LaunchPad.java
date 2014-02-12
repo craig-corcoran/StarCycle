@@ -57,9 +57,9 @@ public class LaunchPad {
     LayeredButton bgButton;
     SpriteLayer meter;
     float meterAngle;
-    ArcButton orbButton;
-    ArcButton pw1Button;
-    ArcButton pw2Button;
+    public ArcButton orbButton;
+    public ArcButton pw1Button;
+    public ArcButton pw2Button;
     ArrayList<LayeredButton> buttons = new ArrayList<LayeredButton>();
 
     public boolean streamOrbs = false;
@@ -289,5 +289,23 @@ public class LaunchPad {
         button.rotate(angle);
         button.deactivate();
         return button;
+    }
+
+    public void setLvl(int i) {
+        switch (i) {
+            case 0:
+                pw1Button.deactivate();
+                pw2Button.deactivate();
+                break;
+            case 1:
+                pw1Button.activate();
+                pw2Button.deactivate();
+                break;
+            case 2:
+                pw1Button.activate();
+                pw2Button.activate();
+                break;
+        }
+
     }
 }
