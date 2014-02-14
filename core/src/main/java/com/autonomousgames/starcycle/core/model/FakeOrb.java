@@ -44,7 +44,7 @@ public abstract class FakeOrb {
             velocity.add(acceleration);
             position.add(velocity);
         }
-        age++;
+        age++; // Do these ever get removed?
 	}
 
     public void move(float x, float y) {
