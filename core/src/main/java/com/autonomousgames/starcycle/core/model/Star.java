@@ -245,7 +245,7 @@ public class Star extends Orbitable implements Collidable {
             rate = ammoRate * numOrbs[i];
             player.ammo += rate;
             playerIncome[i] += rate;
-            nonlinearIncome[i] += ammoRate * ((float) Math.sqrt(((double) numOrbs[i])));
+            nonlinearIncome[i] += ammoRate * ((float) Math.pow(((double) numOrbs[i]), ((double)2/3)));
 
             while(player.showIncomeOrbs && (nonlinearIncome[i] > incAmmoThresh)) {
                 // emit fake income orb
@@ -396,5 +396,13 @@ public class Star extends Orbitable implements Collidable {
 
     public int getPlayerOrbs(int player) {
         return numOrbs[player];
+    }
+
+    public void gravityOff() {
+        mass = 0f;
+    }
+
+    public void gravityOn() {
+        mass = radius * radius;
     }
 }

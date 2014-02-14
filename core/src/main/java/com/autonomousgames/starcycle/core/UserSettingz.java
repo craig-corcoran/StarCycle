@@ -70,7 +70,7 @@ public class UserSettingz {
 			userPrefs.putFloat("ammoRate",0.008f);         // OrbFactory
 			userPrefs.putFloat("popRate",0.005f);          // OrbFactory
 
-            userPrefs.putFloat("incAmmoThresh", 0.4f);
+            userPrefs.putFloat("incAmmoThresh", 0.3f);
             userPrefs.putFloat("initVelScale", 0.2f); // income orbs
             userPrefs.putFloat("incOrbGravScale", 2000f);
             userPrefs.putFloat("incOrbSize", 0.006f);

@@ -172,4 +172,13 @@ public class OrbFactory {
         orb.lockOn(star, angle/60f); // Angle should be in degrees per second, assuming 60fps.
     }
 
+    public void resetCosts() {
+        chargeOrbCost = UserSettingz.getFloatSetting("chargeOrbCost");
+        gravWellCost = UserSettingz.getFloatSetting("gravWellCost");
+        nukeCost = UserSettingz.getFloatSetting("nukeCost");
+        orbCosts[0] = chargeOrbCost;
+        orbCosts[1] = gravWellCost;
+        orbCosts[2] = nukeCost;
+    }
+
 }
