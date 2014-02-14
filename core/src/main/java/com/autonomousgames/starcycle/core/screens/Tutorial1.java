@@ -53,21 +53,31 @@ public class Tutorial1 extends Tutorial {
     LayeredButton novaText;
     LayeredButton novaHint;
 
+    LayeredButton ammoText;
+
+    LayeredButton winText;
+    LayeredButton outroText;
+
+    LayeredButton fakeBack;
+    LayeredButton fakeSolo;
+    LayeredButton fakeMulti;
+    LayeredButton fakeTutorial;
+
     boolean page2orbLaunched = false;
     boolean gravityOn = false;
+    boolean ammoStarOnly = false;
 
     float starRadius = 1.5f * UserSettingz.getFloatSetting("starRadius");
 
     int[] basePages;
     int[] launchPages;
-    int[] taketePages;
 
     public Tutorial1() {
-        super(Level.LevelType.TRIPLE, ScreenType.TUTORIAL1, ScreenType.TUTORIAL7, ScreenType.TUTORIAL0, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm});
+        super(Level.LevelType.QUAD2, ScreenType.TUTORIAL1, ScreenType.STARTMENU, ScreenType.TUTORIAL0, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm});
 
         Gdx.input.setInputProcessor(new GameController(this, 1));
 
-        pages = 5;
+        pages = 6;
 
         // Zeroth page:
         // Return transition:
@@ -218,15 +228,15 @@ public class Tutorial1 extends Tutorial {
 
         players[0].base.translateBase(0f, offset);
         players[0].launchPad.movePos(0f, offset);
-        basePages = new int[]{2, pages-1};
-        launchPages = new int[]{2, pages-1};
+        basePages = new int[]{2, pages-2};
+        launchPages = new int[]{2, pages-2};
 
         for (int i = 0; i < 2; i ++) {
             Star star = model.stars.get(i);
             star.moveStar(2f, -1f + i * 2f + offset / StarCycle.pixelsPerMeter);
-            star.mass = 0f;
+            star.gravityOff();
             starClamp[i][0] = 2;
-            starClamp[i][1] = pages-1;
+            starClamp[i][1] = 3;
         }
         Vector2 orbDist = new Vector2(UserSettingz.getFloatSetting("chargeRadius"), 0f).scl(2f);
         Vector2 starPos = new Vector2(model.stars.get(0).position);
@@ -240,7 +250,7 @@ public class Tutorial1 extends Tutorial {
         }
         model.stars.get(1).setControlPercent(0, 0.49f);
         orbClamp[0] = 2;
-        orbClamp[1] = pages-1;
+        orbClamp[1] = 3;
         Vector2 toStar = model.stars.get(1).position.cpy().sub(players[0].base.origin);
         Vector2 aimVec = toStar.cpy().rotate(-90f).nor().scl(model.stars.get(0).radius+UserSettingz.getFloatSetting("chargeRadius")*0.95f);
         aimVec.add(toStar);
@@ -261,12 +271,10 @@ public class Tutorial1 extends Tutorial {
         novaText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Novas can instantly capture a star", new Vector2(swipeSize.x/8f, 0f), swipeSize).rotateText(90f));
         add(novaText);
 
-        taketePages= new int[]{3, pages-1};
-
         model.stars.get(2).moveStar(1f, offset / StarCycle.pixelsPerMeter);
-        model.stars.get(2).mass = 0f;
+        model.stars.get(2).gravityOff();
         starClamp[2][0] = 3;
-        starClamp[2][1] = pages-1;
+        starClamp[2][1] = 3;
 
         novaHint = new LayeredButton(new Vector2(sw - sh/3f, sh*8f/9f + offset));
         novaHint.addLayer(new SpriteLayer(StarCycle.tex.fingerRight, new Vector2(swipeSize.x/8f, swipeSize.x/6f)).rotateSprite(-60f), LayerType.ACTIVE);
@@ -275,19 +283,72 @@ public class Tutorial1 extends Tutorial {
         add(novaHint);
 
         // Fourth Page
-        //
+        // Ammo and income:
         offset = 4f*sh;
 
-        players[1].base.moveBase(new Vector2(StarCycle.meterWidth/2f-1f, StarCycle.meterHeight*2f/3f+1f));
-        players[1].base.translateBase(0f, offset);
+        ammoText = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y + offset));
+        ammoText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Orbs gather energy from stars.", new Vector2(-swipeSize.x/4f, 0f), swipeSize).rotateText(90f));
+        ammoText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Launching each orb requires energy.", new Vector2(-swipeSize.x/16f, 0f), swipeSize).rotateText(90f));
+        ammoText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Voids need more energy than orbs.", new Vector2(swipeSize.x/16f, 0f), swipeSize).rotateText(90f));
+        ammoText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Novas use lots of energy, so aim carefully!", new Vector2(swipeSize.x*3f/16f, 0f), swipeSize).rotateText(90f));
+        add(ammoText);
 
-        borders(pages + 1);
+        model.stars.get(3).moveStar(-2f, offset / StarCycle.pixelsPerMeter);
+        model.stars.get(3).gravityOff();
+
+        // Fifth Page
+        // Win condition and outro:
+        offset = 5f*sh;
+
+        winText = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y + offset));
+        winText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture all stars to win!", swipeSize).rotateText(90f));
+        add(winText);
+
+        outroText = new LayeredButton(new Vector2(sw/2f, sh/2f + offset));
+        outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "This concludes the tutorial.", swipeSize).rotateText(90f));
+        outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Now you are ready to play StarCycle!", new Vector2(bw*1.5f, 0f), swipeSize).rotateText(90f));
+        outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Jump into the solo campaign,", new Vector2(bw*4f, 0f), swipeSize).rotateText(90f));
+        outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "or challenge a friend in multiplayer!", new Vector2(bw*5.5f, 0f), swipeSize).rotateText(90f));
+        add(outroText);
+
+        // Sixth Page
+        // Transition:
+        offset = 6*sh;
+
+        Vector2 fakeIconsize = new Vector2(sh/5f, sh/5f);
+
+        fakeBack = new LayeredButton(new Vector2(backPosition.x, backPosition.y + offset));
+        fakeBack.addLayer(new SpriteLayer(StarCycle.tex.backIcon, backSize).rotateSprite(90f));
+        add(fakeBack);
+
+        fakeSolo = new LayeredButton(new Vector2(sw/4f, sh/2f + offset));
+        fakeSolo.addLayer(new SpriteLayer(StarCycle.tex.soloIcon, fakeIconsize).rotateSprite(90f));
+        add(fakeSolo);
+
+        fakeMulti = new LayeredButton(new Vector2(sw/2f, sh/2f + offset));
+        fakeMulti.addLayer(new SpriteLayer(StarCycle.tex.multiplayerIcon, new Vector2(fakeIconsize.x*4f/3f, fakeIconsize.y)).rotateSprite(90f));
+        add(fakeMulti);
+
+        fakeTutorial = new LayeredButton(new Vector2(sw*3f/4f, sh/2f + offset));
+        fakeTutorial.addLayer(new SpriteLayer(StarCycle.tex.questionIcon, fakeIconsize.cpy().div(2f)).rotateSprite(90f));
+        add(fakeTutorial);
+
+        borders(pages);
         pageDone.set(1,true);
 
         ui.addActor(swiper);
 
-        moveDraggables(-sh);
-        currentBorder = 1;
+        if (startAtEnd) {
+            for (int i = 0; i < pages-1; i ++) {
+                moveDraggables(-sh);
+                currentBorder++;
+            }
+            startAtEnd = false;
+        }
+        else {
+            moveDraggables(-sh);
+            currentBorder = 1;
+        }
     }
 
     @Override
@@ -306,9 +367,9 @@ public class Tutorial1 extends Tutorial {
         }
         if (page2orbLaunched && !gravityOn) {
             if (orb.orbiting) {
-                for (int i = 0; i < model.stars.size(); i ++) {
+                for (int i = 0; i < 3; i ++) {
                     Star star = model.stars.get(i);
-                    star.mass = star.radius*star.radius;
+                    star.gravityOn();
                 }
                 gravityOn = true;
                 orb.lockOn(model.stars.get(1), 180f/60f);
@@ -339,6 +400,46 @@ public class Tutorial1 extends Tutorial {
         if (players[0].base.level == 2 && !novaHint.isActive()) {
             novaHint.activate();
         }
+
+        if (currentBorder == 4 && !moving && !players[0].showIncomeOrbs) {
+            orbFactory.resetCosts();
+            for (int i = 0; i < numPlayers; i ++) {
+                for (int j = 0; j < players[i].orbs.size(); j ++) {
+                    players[i].orbs.get(j).removeIfOff();
+                }
+                for (int j = 0; j < players[i].voids.size(); j ++) {
+                    players[i].voids.get(j).removeIfOff();
+                }
+                for (int j = 0; j < players[i].novas.size(); j ++) {
+                    players[i].novas.get(j).removeIfOff();
+                }
+            }
+            players[0].ammo = UserSettingz.getFloatSetting("nukeCost");
+            players[0].showIncomeOrbs = true;
+            players[0].launchPad.showMeter(true);
+            Vector2 starPos = new Vector2(model.stars.get(3).position);
+            Vector2 orbDist = new Vector2(UserSettingz.getFloatSetting("chargeRadius"), 0f).scl(2f);
+            for (int i = 0; i < 3; i ++) {
+                orbDist.rotate(120f);
+                orbFactory.createLockedOrb(players[0], new Vector2(starPos.x + orbDist.x, starPos.y + orbDist.y), -1f, model.stars.get(3), -180f);
+            }
+            pageDone.set(4, true);
+        }
+
+        if (currentBorder == 4 && !moving && !ammoStarOnly) {
+            for (int i = 0; i < 3; i ++) {
+                model.stars.get(i).gravityOff();
+            }
+            model.stars.get(3).gravityOn();
+            ammoStarOnly = true;
+        }
+        else if (currentBorder != 4 && ammoStarOnly) {
+            for (int i = 0; i < 3; i ++) {
+                model.stars.get(i).gravityOn();
+            }
+            model.stars.get(3).gravityOff();
+            ammoStarOnly = false;
+        }
     }
 
     @Override
@@ -346,7 +447,7 @@ public class Tutorial1 extends Tutorial {
         numPlayers = 2;
         players = new Player[numPlayers];
         for (int i = 0; i < numPlayers; i ++) {
-            players[i] = new Player(i, skins[i], colors[i], this, ui, true, i ==0);
+            players[i] = new Player(i, skins[i], colors[i], this, ui, i ==0);
             players[i].altWin = true;
             players[i].launchPad.showMeter(false);
             players[i].showIncomeOrbs = false;
@@ -360,6 +461,5 @@ public class Tutorial1 extends Tutorial {
         super.moveDraggables(y);
         moveBase(0, moveClamped(basePages[0], basePages[1], y));
         moveLaunch(0, moveClamped(launchPages[0], basePages[1], y));
-        moveBase(1,moveClamped(taketePages[0], taketePages[1], y));
     }
 }

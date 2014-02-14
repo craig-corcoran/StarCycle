@@ -33,10 +33,10 @@ public abstract class FakeOrb {
 	}
     public abstract void draw(SpriteBatch batch);
 
-    public boolean insideView() { // TODO add buffer?
-        return ((position.x > 0 - radius) & (position.y > 0 - radius)
-                & (position.x < vpWidth + radius)
-                & (position.y < vpHeight + radius));
+    public boolean insideView() {
+        return ((position.x > 0 - radius*2f) & (position.y > 0 - radius*2f)
+                & (position.x < vpWidth + radius*2f)
+                & (position.y < vpHeight + radius*2f));
     }
 
 	public void update(float delta) {

@@ -183,7 +183,7 @@ public class Tutorial0 extends Tutorial {
 
         for (int i = 0; i < model.stars.size(); i ++) {
             Star star = model.stars.get(i);
-            star.mass = 0f;
+            star.gravityOff();
             star.moveStar(2f, -1f + i*2f + offset / StarCycle.pixelsPerMeter);
         }
 
@@ -359,13 +359,13 @@ public class Tutorial0 extends Tutorial {
         if (currentBorder >= 4 && !gravityOn) {
             for (int i = 0; i < model.stars.size(); i ++) {
                 Star star = model.stars.get(i);
-                star.mass = star.radius*star.radius;
+                star.gravityOn();
             }
             gravityOn = true;
         }
         if (currentBorder < 4 && !moving && gravityOn) {
             for (int i = 0; i < model.stars.size(); i ++) {
-                model.stars.get(i).mass = 0f;
+                model.stars.get(i).gravityOff();
             }
             gravityOn = false;
         }

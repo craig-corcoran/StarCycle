@@ -21,7 +21,7 @@ public class Level {
 	//private Player[] players;
 
 	public static enum LevelType {
-		DOUBLEBINARY, TREFOIL, VENNDIAGRAM, CONCENTRIC, SINGLE, DOUBLE, TRIPLE, QUAD, NOSTARS
+		DOUBLEBINARY, TREFOIL, VENNDIAGRAM, CONCENTRIC, SINGLE, DOUBLE, TRIPLE, QUAD, QUAD2, NOSTARS
 	}
 
 	public Level(World world, LevelType lvl, Player[] players) {
@@ -35,6 +35,8 @@ public class Level {
 				(1 / 3f) * StarCycle.meterHeight);
 		Vector2 centerLeft = new Vector2((1 / 2f) * StarCycle.meterWidth,
 				(2 / 3f) * StarCycle.meterHeight);
+        Vector2 farCenter = new Vector2((1 / 3f) * StarCycle.meterWidth, (1 / 2f) * StarCycle.meterHeight);
+        Vector2 nearCenter = new Vector2((2 / 3f) * StarCycle.meterWidth, (1 / 2f) * StarCycle.meterHeight);
 		
 		EllipticalPath ellipsePath = new EllipticalPath(3f, 4f, center);
 		
@@ -53,7 +55,6 @@ public class Level {
 		case TRIPLE:
 			numStars = 3;
 			stars = new ArrayList<Star>(numStars);
-			Vector2 farCenter = new Vector2((1 / 3f) * StarCycle.meterWidth, (1 / 2f) * StarCycle.meterHeight);
 			addStaticStar(players, 0, centerRight, 1.5f * starRadius);
 			addStaticStar(players, 1, centerLeft, 1.5f * starRadius);
 			addStaticStar(players, 2, farCenter, 1.5f * starRadius);
@@ -73,6 +74,14 @@ public class Level {
 			addStaticStar(players, 2, upperFarRight, 1.5f * starRadius);
 			addStaticStar(players, 3, lowerLeft, 1.5f * starRadius);
 			break;
+        case QUAD2:
+            numStars = 4;
+            stars = new ArrayList<Star>(numStars);
+            addStaticStar(players, 0, centerRight, 1.5f * starRadius);
+            addStaticStar(players, 1, centerLeft, 1.5f * starRadius);
+            addStaticStar(players, 2, farCenter, 1.5f * starRadius);
+            addStaticStar(players, 3, nearCenter, 1.5f * starRadius);
+            break;
 		case DOUBLEBINARY:
 			numStars = 4;
 			stars = new ArrayList<Star>(numStars);
