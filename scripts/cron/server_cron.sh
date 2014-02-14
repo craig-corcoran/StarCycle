@@ -12,6 +12,7 @@ echo $reslog
 export ANDROID_HOME=/home/blake/android-sdk-linux
 
 if [[ "${reslog}" != "" ]] ; then
+#if [[ "1" == "1" ]] ; then
 
     echo "CHANGE IN MASTER DETECTED!"
     TIMESTAMP=$(date +%Y%m%d%H%M%S)
@@ -45,7 +46,7 @@ if [[ "${reslog}" != "" ]] ; then
     
     echo "sending android project"
     s3cmd put -P $NEW_APK $S3_APK_LOC
-    
+
     echo "building desktop project"
     mvn clean package -Pdesktop
     S3_JAR_LOC=s3://autonomousgames/nightlies/desktop/$TIMESTAMP-$BRANCH-starcycle-desktop.jar
