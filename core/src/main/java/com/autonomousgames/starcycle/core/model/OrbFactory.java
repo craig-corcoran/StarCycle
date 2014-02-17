@@ -1,6 +1,7 @@
 package com.autonomousgames.starcycle.core.model;
 
 import com.autonomousgames.starcycle.core.UserSettingz;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class OrbFactory {
@@ -96,45 +97,19 @@ public class OrbFactory {
 	}
 	
 	public void createOrb(Orb.OrbType type, Player player, Vector2 pos, Vector2 vel, float lifespan) {
-		
 		switch (type) {
 		case ORB:
-			if (player.number == 0) {
-				p1orbs++;
-			}
-			else if (player.number == 1){
-				p2orbs++;
-			}
-
-            ChargeOrb orb = new ChargeOrb(player, pos, vel, model, type);
-			orb.setLifeSpan(lifespan);
-			player.orbs.add(orb);
+			createChargeOrb(player, pos, vel, lifespan);
 			break;
 
 		case VOID:
-			if (player.number == 0) {
-				p1voids++;
-			}
-			else if (player.number == 1){
-				p2voids++;
-			}
-            Void orbVoid = new Void(player, pos, vel, model, type);
-			orbVoid.setLifeSpan(lifespan);
-			player.voids.add(orbVoid);
+			createVoid(player, pos, vel, lifespan);
 			break;
 
 		case NOVA:
-			if (player.number == 0) {
-				p1novas++;
-			}
-			else if (player.number == 1){
-				p2novas++;
-			}
-            Nova nova = new Nova(player, pos, vel, model, type);
-			nova.setLifeSpan(lifespan);
-			player.novas.add(nova);
+			createNova(player, pos, vel, lifespan);
 			break;
-		}	
+		}
 	}
 
 	public void createOrb(Orb.OrbType type, Player player, Vector2 pos, Vector2 vel) {
@@ -152,4 +127,58 @@ public class OrbFactory {
 		}
 		createOrb(type, player, pos, vel, lifespan);
 	}
+
+    public ChargeOrb createChargeOrb(Player player, Vector2 pos, Vector2 vel, float lifespan) {
+        if (player.number == 0) {
+            p1orbs++;
+        }
+        else if (player.number == 1){
+            p2orbs++;
+        }
+        ChargeOrb orb = new ChargeOrb(player, pos, vel, model, Orb.OrbType.ORB);
+        orb.setLifeSpan(lifespan);
+        player.orbs.add(orb);
+        return orb;
+    }
+
+    public Void createVoid(Player player, Vector2 pos, Vector2 vel, float lifespan) {
+        if (player.number == 0) {
+            p1voids++;
+        }
+        else if (player.number == 1){
+            p2voids++;
+        }
+        Void orbVoid = new Void(player, pos, vel, model, Orb.OrbType.VOID);
+        orbVoid.setLifeSpan(lifespan);
+        player.voids.add(orbVoid);
+        return orbVoid;
+    }
+
+    public Nova createNova(Player player, Vector2 pos, Vector2 vel, float lifespan) {
+        if (player.number == 0) {
+            p1novas++;
+        }
+        else if (player.number == 1){
+            p2novas++;
+        }
+        Nova nova = new Nova(player, pos, vel, model, Orb.OrbType.NOVA);
+        nova.setLifeSpan(lifespan);
+        player.novas.add(nova);
+        return nova;
+    }
+
+    public void createLockedOrb(Player player, Vector2 pos, float lifespan, Star star, float angle) {
+        ChargeOrb orb = createChargeOrb(player, pos, new Vector2(0f, 0f), lifespan);
+        orb.lockOn(star, angle/60f); // Angle should be in degrees per second, assuming 60fps.
+    }
+
+    public void resetCosts() {
+        chargeOrbCost = UserSettingz.getFloatSetting("chargeOrbCost");
+        gravWellCost = UserSettingz.getFloatSetting("gravWellCost");
+        nukeCost = UserSettingz.getFloatSetting("nukeCost");
+        orbCosts[0] = chargeOrbCost;
+        orbCosts[1] = gravWellCost;
+        orbCosts[2] = nukeCost;
+    }
+
 }

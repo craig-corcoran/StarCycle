@@ -21,6 +21,9 @@ public class Tutorial0 extends Tutorial {
     LayeredButton holdText;
     LayeredButton holdImage;
     LayeredButton aim;
+    LayeredButton target0;
+    LayeredButton target1;
+    LayeredButton target2;
     LayeredButton shoot;
     LayeredButton orbit;
     LayeredButton controlText;
@@ -55,7 +58,7 @@ public class Tutorial0 extends Tutorial {
 
     float starRadius = 1.5f * UserSettingz.getFloatSetting("starRadius");
 
-    Vector2 fakeBasePos0 = new Vector2(tileSize.y*153f/420f, sh*0.1f+tileSize.x*270/420f);
+    Vector2 fakeBasePos0 = new Vector2(tileSize.y*153f/420f, bw+tileSize.x*270/420f);
     Vector2 fakeBasePos1 = new Vector2(fakeBasePos0);
     Vector2 orbVel0 = new Vector2(-2f, 1.9f);
     Vector2 orbVel1 = new Vector2(-2.76f, 0f);
@@ -64,7 +67,7 @@ public class Tutorial0 extends Tutorial {
     float sinceLastShot;
 
     int orbKillPage = 4;
-    boolean starsMass = false;
+    boolean gravityOn = false;
 
     public Tutorial0(boolean startAtEnd) {
         super(Level.LevelType.DOUBLE, ScreenType.TUTORIAL0, ScreenType.TUTORIAL1, ScreenType.STARTMENU, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm});
@@ -77,18 +80,18 @@ public class Tutorial0 extends Tutorial {
         // Welcome, pausing, and swiping:
         offset = 0f;
 
-        CharSequence text0 = "Welcome to StarCycle!";
-        CharSequence text1 = "Swipe within the upper area";
-        CharSequence text2 = "to progress through this tutorial.";
-        CharSequence text3 = "Access the pause menu by tapping";
-        CharSequence text4 = "within the blue rectangular area.";
+        CharSequence text00 = "Welcome to StarCycle!";
+        CharSequence text01 = "Swipe within the upper area";
+        CharSequence text02 = "to progress through this tutorial.";
+        CharSequence text03 = "Access the pause menu by tapping";
+        CharSequence text04 = "within the blue rectangular area.";
         Vector2 textDims = new Vector2(sh, sw/10f);
         welcomeText = new LayeredButton(new Vector2(sw/2f - pauseButton.getDims().x/4f, sh/2f + offset));
-        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikJumbo, text0, textDims).rotateText(90f));
-        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text1, new Vector2(1.5f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
-        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text2, new Vector2(2.25f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
-        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text3, new Vector2(6.75f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
-        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text4, new Vector2(7.25f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikJumbo, text00, textDims).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text01, new Vector2(1.5f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text02, new Vector2(2.25f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text03, new Vector2(6.75f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text04, new Vector2(7.25f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
         add(welcomeText);
 
         pauseArea = new LayeredButton(pauseButton.getCenter());
@@ -97,15 +100,20 @@ public class Tutorial0 extends Tutorial {
 
         dragHand = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y+sh*0.3f));
         Vector2 slideVec = new Vector2(0f, -sh*0.6f);
-        dragHand.addLayer(new SpriteLayer(StarCycle.tex.fingerRight, new Vector2(swipeSize.x/4f, swipeSize.x/3f)).rotateSprite(90f).slideAndReturn(slideVec, 2f));
+        dragHand.addLayer(new SpriteLayer(StarCycle.tex.fingerRight, new Vector2(swipeSize.x / 4f, swipeSize.x / 3f)).rotateSprite(90f).slideAndReturn(slideVec, 2f));
         add(dragHand);
 
         // Fist page
         // Holding:
         offset = sh;
 
-        holdText = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y + offset));
-        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Use two hands to play", swipeSize).rotateText(90f));
+        CharSequence text10 = "Use two hands to play";
+        CharSequence text11 = "The dots indicate a good time to go on,";
+        CharSequence text12 = "but feel free to move at your own pace.";
+        holdText = new LayeredButton(new Vector2(swipeCenter.x-bw*2.5f, swipeCenter.y + offset));
+        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikJumbo, text10, swipeSize).rotateText(90f));
+        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text11, new Vector2(bw*3.5f, 0f), swipeSize).rotateText(90f));
+        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text12, new Vector2(bw*5f, 0f), swipeSize).rotateText(90f));
         add(holdText);
 
         holdImage = new LayeredButton(new Vector2(sw*0.7f, sh*0.5f+offset));
@@ -123,10 +131,31 @@ public class Tutorial0 extends Tutorial {
 
         aim = new LayeredButton(new Vector2(swipeCenter.x-bw/2f, swipeCenter.y + offset));
         aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[1], new Vector2(0f, -tileSize.x/2f), tileSize));
-        aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[2], new Vector2(0f, -tileSize.x/2f), tileSize).blink(0.75f),LayerType.SPECIAL);
+        aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[2], new Vector2(0f, -tileSize.x/2f), tileSize).blink(1.5f),LayerType.SPECIAL);
         aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[3], new Vector2(0f, tileSize.x/2f), tileSize));
         aim.rotateLayers(90f);
         add(aim);
+
+        Vector2 targetDims = new Vector2(0.5f,0.5f).scl(StarCycle.pixelsPerMeter);
+        Vector2 bo = players[0].base.baseButton.getCenter();
+        Vector2 targetVec = new Vector2(-Base.maxAimerLength, 0f).scl(1.75f).rotate(-25f);
+        target0 = new LayeredButton(new Vector2(bo.x + targetVec.x, bo.y + targetVec.y));
+        target0.addLayer(new SpriteLayer(StarCycle.tex.circle, targetDims).setSpriteColor(Colors.red).setSpriteAlpha(0.5f), LayerType.INACTIVE);
+        target0.addLayer(new SpriteLayer(StarCycle.tex.circle, targetDims).setSpriteColor(Colors.spinach).setSpriteAlpha(0.5f), LayerType.ACTIVE);
+        target0.deactivate();
+        targetVec.rotate(-20f);
+        target1 = new LayeredButton(new Vector2(bo.x + targetVec.x, bo.y + targetVec.y));
+        target1.addLayer(new SpriteLayer(StarCycle.tex.circle, targetDims).setSpriteColor(Colors.red).setSpriteAlpha(0.5f), LayerType.INACTIVE);
+        target1.addLayer(new SpriteLayer(StarCycle.tex.circle, targetDims).setSpriteColor(Colors.spinach).setSpriteAlpha(0.5f), LayerType.ACTIVE);
+        target1.deactivate();
+        targetVec.rotate(-20f);
+        target2 = new LayeredButton(new Vector2(bo.x + targetVec.x, bo.y + targetVec.y));
+        target2.addLayer(new SpriteLayer(StarCycle.tex.circle, targetDims).setSpriteColor(Colors.red).setSpriteAlpha(0.5f), LayerType.INACTIVE);
+        target2.addLayer(new SpriteLayer(StarCycle.tex.circle, targetDims).setSpriteColor(Colors.spinach).setSpriteAlpha(0.5f), LayerType.ACTIVE);
+        target2.deactivate();
+        add(target0);
+        add(target1);
+        add(target2);
 
         // Third page
         // Shooting:
@@ -139,7 +168,7 @@ public class Tutorial0 extends Tutorial {
         shoot = new LayeredButton(new Vector2(swipeCenter.x-bw/2f, swipeCenter.y + offset));
         shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[1], new Vector2(0f, -tileSize.x/2f), tileSize));
         shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[4], new Vector2(0f, tileSize.x/2f), tileSize));
-        shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[5], new Vector2(0f, tileSize.x/2f), tileSize).blink(1f), LayerType.SPECIAL);
+        shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[5], new Vector2(0f, tileSize.x/2f), tileSize).blink(1.5f), LayerType.SPECIAL);
         shoot.rotateLayers(90f);
         add(shoot);
 
@@ -154,7 +183,7 @@ public class Tutorial0 extends Tutorial {
 
         for (int i = 0; i < model.stars.size(); i ++) {
             Star star = model.stars.get(i);
-            star.mass = 0f;
+            star.gravityOff();
             star.moveStar(2f, -1f + i*2f + offset / StarCycle.pixelsPerMeter);
         }
 
@@ -172,30 +201,30 @@ public class Tutorial0 extends Tutorial {
 
         float topRow = swipeCenter.x + swipeSize.x/6f;
 
-        topStar0 = Star.getButton(new Vector2(topRow, sh/6f + offset), starRadius*0.75f);
+        topStar0 = Star.getButton(new Vector2(topRow, sh/6f + offset), starRadius*0.70f);
         add(topStar0);
 
-        topStar1 = Star.getButton(new Vector2(topRow, sh*2f/6f + offset), starRadius*0.75f);
+        topStar1 = Star.getButton(new Vector2(topRow, sh*2f/6f + offset), starRadius*0.70f);
         add(topStar1);
 
-        topControl0 = Star.getControlButton(topStar1.getCenter(), starRadius*0.75f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.25f);
+        topControl0 = Star.getControlButton(topStar1.getCenter(), starRadius*0.70f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.25f);
         add(topControl0);
 
-        topStar2 = Star.getButton(new Vector2(topRow, sh*3f/6f + offset), starRadius*0.75f);
+        topStar2 = Star.getButton(new Vector2(topRow, sh*3f/6f + offset), starRadius*0.90f);
         topStar2.setLayerColor(Colors.cyan, 1);
         add(topStar2);
 
-        topControl1 = Star.getControlButton(topStar2.getCenter(), starRadius*0.75f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.5f);
+        topControl1 = Star.getControlButton(topStar2.getCenter(), starRadius*0.90f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.5f);
         add(topControl1);
 
-        topStar3 = Star.getButton(new Vector2(topRow, sh*4f/6f + offset), starRadius*0.75f);
+        topStar3 = Star.getButton(new Vector2(topRow, sh*4f/6f + offset), starRadius*0.70f);
         topStar3.setLayerColor(Colors.cyan, 1);
         add(topStar3);
 
-        topControl2 = Star.getControlButton(topStar3.getCenter(), starRadius*0.75f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.75f);
+        topControl2 = Star.getControlButton(topStar3.getCenter(), starRadius*0.70f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.75f);
         add(topControl2);
 
-        topStar4 = Star.getButton(new Vector2(topRow, sh*5f/6f + offset), starRadius*0.75f);
+        topStar4 = Star.getButton(new Vector2(topRow, sh*5f/6f + offset), starRadius*0.70f);
         for (int i = 2; i < topStar4.getLayerNum(); i ++) {
             topStar4.setLayerColor(Colors.cyan, i);
         }
@@ -266,10 +295,12 @@ public class Tutorial0 extends Tutorial {
         add(launch2c);
 
         borders(pages + 1);
+        pageDone.set(1, true);
 
         ui.addActor(swiper);
 
         orbFactory.setCosts(0f, 0f, 0f);
+        orbFactory.setLife(-1f, -1f);
 
         if (startAtEnd) {
             for (int i = 0; i < pages-1; i ++) {
@@ -307,7 +338,7 @@ public class Tutorial0 extends Tutorial {
             players[0].launchPad.streamOrbs = !(players[0].launchPad.streamOrbs);
         }
 
-        if (((moving || dragging || model.stars.get(1).getOrbCount(Orb.OrbType.ORB) >= 15) && players[1].launchPad.streamOrbs) || (currentBorder == 4 && !moving && !dragging && model.stars.get(1).getOrbCount(Orb.OrbType.ORB) < 15 && players[1].launchPad.streamOrbs == false)) {
+        if (((moving || dragging || model.stars.get(1).getOrbCount(Orb.OrbType.ORB) >= 10) && players[1].launchPad.streamOrbs) || (currentBorder == 4 && !moving && !dragging && model.stars.get(1).getOrbCount(Orb.OrbType.ORB) < 10 && players[1].launchPad.streamOrbs == false)) {
             players[1].launchPad.streamOrbs = !(players[1].launchPad.streamOrbs);
         }
 
@@ -325,18 +356,18 @@ public class Tutorial0 extends Tutorial {
             }
         }
 
-        if (currentBorder >= 4 && !starsMass) {
+        if (currentBorder >= 4 && !gravityOn) {
             for (int i = 0; i < model.stars.size(); i ++) {
                 Star star = model.stars.get(i);
-                star.mass = star.radius*star.radius;
+                star.gravityOn();
             }
-            starsMass = true;
+            gravityOn = true;
         }
-        if (currentBorder < 4 && !moving && starsMass) {
+        if (currentBorder < 4 && !moving && gravityOn) {
             for (int i = 0; i < model.stars.size(); i ++) {
-                model.stars.get(i).mass = 0f;
+                model.stars.get(i).gravityOff();
             }
-            starsMass = false;
+            gravityOn = false;
         }
 
         for (int i = 0; i < numPlayers; i ++) {
@@ -348,6 +379,34 @@ public class Tutorial0 extends Tutorial {
             }
             for (int j = 0; j < players[i].novas.size(); j ++) {
                 players[i].novas.get(j).removeIfOff();
+            }
+        }
+
+        if (currentBorder == 2 && !pageDone.get(2)) {
+            float aimAng = players[0].base.getPointer().angle();
+            if (152.5f < aimAng && aimAng < 157.5f && !target0.isActive()) {
+                target0.activate();
+            }
+            if (132.5f < aimAng && aimAng < 137.5f && !target1.isActive()) {
+                target1.activate();
+            }
+            if (112.5f < aimAng && aimAng < 117.5f && !target2.isActive()) {
+                target2.activate();
+            }
+            if (target0.isActive() && target1.isActive() && target2.isActive()) {
+                pageDone.set(2, true);
+            }
+        }
+
+        if (currentBorder == 3 && !pageDone.get(3)) {
+            if (players[0].launchPad.streamOrbs) {
+                pageDone.set(3, true);
+            }
+        }
+
+        if (currentBorder == 4 && !pageDone.get(4)) {
+            if (model.stars.get(0).getOrbCount(Orb.OrbType.ORB) >= 5) {
+                pageDone.set(4, true);
             }
         }
 

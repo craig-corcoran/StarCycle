@@ -21,7 +21,7 @@ public class StarCycle implements ApplicationListener {
     public static StarCycleAssetManager assetManager;
     private static BackgroundManager background;
     private GameScreen screen;
-	public static com.autonomousgames.starcycle.core.LogHandler logHandler;
+	public static LogHandler logHandler;
 	public static long startTime;
 	public static float padding;
     public static Soundz audio;
@@ -54,7 +54,7 @@ public class StarCycle implements ApplicationListener {
 		logMap.put("currentTime", System.currentTimeMillis());
 		logHandler.logScreen(json.toJson(logMap));
 		Gdx.app.log("msg",logHandler.toString());
-		logHandler.processLogs();
+		logHandler.run();
 	}
 
 	@Override
@@ -74,6 +74,7 @@ public class StarCycle implements ApplicationListener {
         assetManager.update();
 		if (screen.isDone) {
 			logHandler.writeLogs();
+            //logHandler.start();
 			HashMap<String,Object> logMap = new HashMap<String,Object>();
 			logMap.put("currentScreen", screen.toString());
 			logMap.put("sessionTime", StarCycle.startTime);

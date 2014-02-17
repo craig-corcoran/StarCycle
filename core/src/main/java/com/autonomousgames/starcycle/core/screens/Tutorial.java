@@ -7,8 +7,10 @@ import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.FakeOrb;
 import com.autonomousgames.starcycle.core.model.ImageOrb;
 import com.autonomousgames.starcycle.core.model.Level;
+import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
+import com.autonomousgames.starcycle.core.ui.TextLayer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -21,7 +23,7 @@ public abstract class Tutorial extends ModelScreen {
 
     float sw = StarCycle.screenWidth;
     float sh = StarCycle.screenHeight;
-    Vector2 swipeSize = new Vector2(sh*0.45f, sh*0.9f);
+    Vector2 swipeSize = new Vector2(sh*0.5f, sh);
     Vector2 swipeCenter = new Vector2(swipeSize.x/2f, sh*0.5f);
     LayeredButton swiper =  new LayeredButton(swipeCenter, swipeSize);
     float bw = sh * 0.05f;
@@ -36,15 +38,18 @@ public abstract class Tutorial extends ModelScreen {
     int move = 0;
     float moveStep = 0f;
     ArrayList<LayeredButton> draggables = new ArrayList<LayeredButton>();
+    ArrayList<Boolean> pageDone = new ArrayList<Boolean>();
     public ArrayList<ImageOrb> fakeOrbs = new ArrayList<ImageOrb>();
     float fakeOrbRad = UserSettingz.getFloatSetting("chargeOrbRadius")*StarCycle.pixelsPerMeter;
 
     float offset;
     int currentBorder = 0;
+    ArrayList<LayeredButton> ellipses = new ArrayList<LayeredButton>();
     ScreenType prevScreen;
     public boolean startAtEnd = false;
 
     int[][] starClamp;
+    int[] orbClamp = new int[]{0, 0};
     int pages;
 
     public Tutorial (Level.LevelType lvlType, ScreenType screenType, ScreenType nextScreen, ScreenType prevScreen, BaseType[] skins, Color[][] colors) {
@@ -52,6 +57,11 @@ public abstract class Tutorial extends ModelScreen {
         this.nextScreen = nextScreen;
         this.prevScreen = prevScreen;
         silentSwitch = true;
+
+        ((SpriteLayer) resumeButton.getLayer(0)).setSpriteAlpha(1f);
+        resumeButton.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Resume", new Vector2(pauseButton.getDims().x*3f/8f, 0f), resumeButton.getDims()).rotateText(90f));
+        mainMenuButton.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Main Menu", new Vector2(pauseButton.getDims().x*3f/8f, 0f), resumeButton.getDims()).rotateText(90f));
+        backButton.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Quit Tutorial", new Vector2(pauseButton.getDims().x*3f/8f, 0f), resumeButton.getDims()).rotateText(90f));
 
         starClamp = new int[model.stars.size()][2];
         for (int i = 0; i < model.stars.size(); i ++) {
@@ -116,12 +126,20 @@ public abstract class Tutorial extends ModelScreen {
             if (move == moves) {
                 moving = false;
                 move = 0;
+                swiper.activate();
             }
         }
 
         if (!moving && currentBorder == pages) {
             isDone = true;
         };
+
+        for (int i = 0; i < pages; i ++) {
+            if (pageDone.get(i) && !ellipses.get(i).isActive()) {
+                ui.addActor(ellipses.get(i));
+                ellipses.get(i).activate();
+            }
+        }
     }
 
     @Override
@@ -148,13 +166,13 @@ public abstract class Tutorial extends ModelScreen {
         }
         for (int i = 0; i < numPlayers; i ++) {
             for (int j = 0; j < players[i].orbs.size(); j ++) {
-                players[i].orbs.get(j).moveOrb(0f, y/StarCycle.pixelsPerMeter);
+                players[i].orbs.get(j).moveOrb(0f, moveClamped(orbClamp[0], orbClamp[1], y/StarCycle.pixelsPerMeter));
             }
             for (int j = 0; j < players[i].voids.size(); j ++) {
-                players[i].voids.get(j).moveOrb(0f, y/StarCycle.pixelsPerMeter);
+                players[i].voids.get(j).moveOrb(0f, moveClamped(orbClamp[0], orbClamp[1], y/StarCycle.pixelsPerMeter));
             }
             for (int j = 0; j < players[i].novas.size(); j ++) {
-                players[i].novas.get(j).moveOrb(0f, y/StarCycle.pixelsPerMeter);
+                players[i].novas.get(j).moveOrb(0f, moveClamped(orbClamp[0], orbClamp[1], y/StarCycle.pixelsPerMeter));
             }
         }
     }
@@ -162,17 +180,26 @@ public abstract class Tutorial extends ModelScreen {
     public void sendDraggables(float y) {
         moving = true;
         moveStep = y/moves;
+        swiper.deactivate();
     }
 
     void borders(int borderNum) {
         for (int i = 0; i < borderNum; i++) {
-            LayeredButton button = new LayeredButton(swipeCenter, swipeSize);
-            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, sh * 0.425f), new Vector2(swipeSize.x, bw), Colors.night, 0f));
-            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(swipeCenter.x - bw / 2f, 0f), new Vector2(bw, sh * 0.9f), Colors.night, 0f));
-            button.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, -sh * 0.425f), new Vector2(swipeSize.x, bw), Colors.night, 0f));
-            button.moveCenter(0f, sh*i);
-            draggables.add(button);
-            ui.addActor(button);
+            LayeredButton border = new LayeredButton(swipeCenter, swipeSize);
+            border.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, swipeSize.y/2f -bw/2f), new Vector2(swipeSize.x, bw), Colors.night, 0f));
+            border.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(swipeSize.x/2f - bw/2f, -swipeSize.y*0.01f), new Vector2(bw, swipeSize.y*1.02f), Colors.night, 0f));
+            border.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, -swipeSize.y/2f +bw/2f), new Vector2(swipeSize.x, bw), Colors.night, 0f));
+            border.moveCenter(0f, sh*i);
+            add(border);
+            LayeredButton ellipsis = new LayeredButton(new Vector2(swipeCenter.x+swipeSize.x/2f - bw/2f, sh - bw*3.5f));
+            ellipsis.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(bw/2f, bw/2f)).blinkOn(0.25f, 1f), LayerType.SPECIAL);
+            ellipsis.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, bw), new Vector2(bw/2f, bw/2f)).blinkOn(0.5f, 0.75f), LayerType.SPECIAL);
+            ellipsis.addLayer(new SpriteLayer(StarCycle.tex.block, new Vector2(0f, bw*2f), new Vector2(bw/2f, bw/2f)).blinkOn(0.75f, 0.5f), LayerType.SPECIAL);
+            ellipsis.moveCenter(0f,sh*i);
+            ellipsis.deactivate();
+            draggables.add(ellipsis);
+            ellipses.add(ellipsis);
+            pageDone.add(false);
         }
     }
 

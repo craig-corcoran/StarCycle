@@ -63,12 +63,17 @@ public abstract class ModelScreen extends GameScreen{
 			}
 		}
 
-		if (this.screentype == ScreenType.MULTIPLAYER) {
-			backScreen = ScreenType.MULTIPLAYERSELECT;
-		}
-		else {
-			backScreen = ScreenType.CAMPAIGNSELECT;
-		}
+        switch (this.screentype) {
+            case MULTIPLAYER:
+                backScreen = ScreenType.MULTIPLAYERSELECT;
+                break;
+            case SINGLEPLAYER:
+                backScreen = ScreenType.CAMPAIGNSELECT;
+                break;
+            default:
+                backScreen = ScreenType.STARTMENU;
+                break;
+        }
 		
 		// add pause button
         Vector2 pauseSize = new Vector2(StarCycle.screenWidth/2f, StarCycle.screenHeight/2f);

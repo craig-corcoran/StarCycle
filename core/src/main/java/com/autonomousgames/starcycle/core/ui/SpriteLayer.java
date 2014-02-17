@@ -118,6 +118,29 @@ public class SpriteLayer extends Layer{
         return this;
     }
 
+    public SpriteLayer blinkOn(float off, float on) {
+        final int offPeriod = MathUtils.round(off * 60f);
+        final int onPeriod = MathUtils.round(on * 60f);
+
+        Action blink = new Action(){
+            int step = 0;
+            int period = offPeriod + onPeriod;
+
+            public boolean act(float delta) {
+                if (step == offPeriod) {
+                    specialDraw = true;
+                }
+                else if (step == 0) {
+                    specialDraw = false;
+                }
+                step = (step + 1)%(period);
+                return false;
+            }
+        };
+        this.addAction(blink);
+        return this;
+    }
+
     public SpriteLayer blink(float eachPeriod) {
         return blink(eachPeriod, eachPeriod);
     }
@@ -163,7 +186,7 @@ public class SpriteLayer extends Layer{
 	
 	public SpriteLayer setSpriteAlpha(float a) {
 		Color color = image.getColor();
-		image.setColor(color.r, color.g, color.b, color.a * a);
+		image.setColor(color.r, color.g, color.b, a);
 		return this;
 	}
 	
