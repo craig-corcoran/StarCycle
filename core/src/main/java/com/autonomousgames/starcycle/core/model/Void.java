@@ -1,7 +1,7 @@
 package com.autonomousgames.starcycle.core.model;
 
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.UserSettingz;
 import com.badlogic.gdx.math.Vector2;
 
 public class Void extends ChargeOrb implements Collidable {
@@ -10,17 +10,17 @@ public class Void extends ChargeOrb implements Collidable {
 			Vector2 velocity, Model model, OrbType type) {
 		super(player, position, velocity, model, type);
 
-        float absorbRadius = UserSettingz.getFloatSetting("gravWellSensorRadius");
+        float absorbRadius = ModelSettings.getFloatSetting("gravWellSensorRadius");
 		Sensor.addSensor(this, body, absorbRadius);
 		
-		orbitScal = UserSettingz.getFloatSetting("orbitScalGravWell");
+		orbitScal = ModelSettings.getFloatSetting("orbitScalGravWell");
 	}
 
 	@Override
 	public void beginSensorContact(Collidable obj) {
 		if ((obj instanceof Orb)) {
 			if ((obj instanceof Void)) {
-				StarCycle.audio.gravkillgravSound.play(UserSettingz.getFloatSetting("sfxVolume"));
+				StarCycle.audio.gravkillgravSound.play(ModelSettings.getFloatSetting("sfxVolume"));
 			}
 			obj.collision(this);
 		} else {

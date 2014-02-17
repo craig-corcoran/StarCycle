@@ -1,14 +1,11 @@
 package com.autonomousgames.starcycle.core.model;
 
-import com.autonomousgames.starcycle.core.Soundz;
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.Texturez.TextureType;
-import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -16,7 +13,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 import java.util.ArrayList;
-import java.util.ListIterator;
 
 public class Orb implements Collidable {
 
@@ -52,7 +48,7 @@ public class Orb implements Collidable {
 
 	public Orb(Player player, Vector2 position,
 			Vector2 velocity, Model model, OrbType type) {
-		lifeSpan = UserSettingz.getFloatSetting("lifeSpan");
+		lifeSpan = ModelSettings.getFloatSetting("lifeSpan");
 		this.player = player;
 		this.position = position;
 		maxRadius = OrbFactory.orbRadii[type.ordinal()];
@@ -73,7 +69,7 @@ public class Orb implements Collidable {
 			break;
 		case VOID:
 			orbList = player.voids;
-			Vector2 voidRingDims = new Vector2(UserSettingz.getFloatSetting("gravWellSensorRadius"), UserSettingz.getFloatSetting("gravWellSensorRadius")).scl(2f);
+			Vector2 voidRingDims = new Vector2(ModelSettings.getFloatSetting("gravWellSensorRadius"), ModelSettings.getFloatSetting("gravWellSensorRadius")).scl(2f);
 			orbButton.addLayer(new SpriteLayer(StarCycle.tex.voidRing, voidRingDims.cpy().scl(StarCycle.pixelsPerMeter)).setSpriteColor(player.colors[0]));
 			textures = new AtlasRegion[]{StarCycle.tex.skinMap.get(player.basetype).get(TextureType.VOID0), StarCycle.tex.skinMap.get(player.basetype).get(TextureType.VOID1)};
 			break;
@@ -176,7 +172,7 @@ public class Orb implements Collidable {
 	public void collision(Collidable obj) {
         removeSelf();
         if (obj instanceof Star) {
-            StarCycle.audio.orbCrash.play(UserSettingz.getFloatSetting("sfxVolume"));
+            StarCycle.audio.orbCrash.play(ModelSettings.getFloatSetting("sfxVolume"));
         }
 	}
 

@@ -22,3 +22,5 @@ extensions/
 assets/
 target/
 servermode.yes
+user_id.txt
+user_progress.json

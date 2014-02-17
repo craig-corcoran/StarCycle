@@ -1,8 +1,7 @@
 package com.autonomousgames.starcycle.core.model;
 
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
-import com.autonomousgames.starcycle.core.UserSettingz;
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.ui.BaseButton;
 import com.autonomousgames.starcycle.core.ui.Layer;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
@@ -34,7 +33,7 @@ public class Base {
 	public static float minPointerLength = 1.2f;
 	public static float maxAimerLength = maxPointerLength*StarCycle.pixelsPerMeter;
 	//public static float minSpeed;
-	public static float velScale = (Float) UserSettingz.getFloatSetting("velScale");
+	public static float velScale = (Float) ModelSettings.getFloatSetting("velScale");
 	private boolean UIVisible = true;
 	private float UIScaleFactor;
 
@@ -50,7 +49,7 @@ public class Base {
     //constructor with optional ui visible parameter
 	public Base(Player player, Vector2 origin, float baseRadius, Stage ui, boolean UIVisible) {
 		
-		baseRotationSpeed = UserSettingz.getFloatSetting("baseRotationSpeed");
+		baseRotationSpeed = ModelSettings.getFloatSetting("baseRotationSpeed");
 		this.origin = new Vector2(origin.x, origin.y);
 		this.player = player;
 		this.UIVisible = UIVisible;
@@ -173,14 +172,14 @@ public class Base {
     public void setLvl(int i) {
         if (i > level) {
             if (i == 1){
-                StarCycle.audio.levelup1Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
+                StarCycle.audio.levelup1Sound.play(ModelSettings.getFloatSetting("sfxVolume"));
             }
             if (i == 2) {
-                StarCycle.audio.levelup2Sound.play(UserSettingz.getFloatSetting("sfxVolume"));
+                StarCycle.audio.levelup2Sound.play(ModelSettings.getFloatSetting("sfxVolume"));
             }
         }
         else if (i < level) {
-            StarCycle.audio.leveldownSound.play(UserSettingz.getFloatSetting("sfxVolume"));
+            StarCycle.audio.leveldownSound.play(ModelSettings.getFloatSetting("sfxVolume"));
         }
         baseButton.setLevel(i);
         level = i;

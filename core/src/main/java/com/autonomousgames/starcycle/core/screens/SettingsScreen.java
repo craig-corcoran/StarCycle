@@ -2,7 +2,7 @@ package com.autonomousgames.starcycle.core.screens;
 
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Colors;
-import com.autonomousgames.starcycle.core.UserSettingz;
+import com.autonomousgames.starcycle.core.UserSettings;
 import com.autonomousgames.starcycle.core.ui.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -35,14 +35,14 @@ public class SettingsScreen extends MenuScreen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (musIcon.toggled) {
-					musVolSlider.setPercent(0f);
-					StarCycle.audio.gameMusic.setVolume(0f);
-					UserSettingz.setFloatSetting("musicVolume", 0f);
+					musVolSlider.setPercent(0.001f);
+					StarCycle.audio.gameMusic.setVolume(0.001f);
+					UserSettings.setFloatSetting("musicVolume", 0.001f);
 				}
 				else {
 					musVolSlider.setPercent(0.5f);
 					StarCycle.audio.gameMusic.setVolume(0.5f);
-					UserSettingz.setFloatSetting("musicVolume", 0.5f);
+					UserSettings.setFloatSetting("musicVolume", 0.5f);
 				}
 			}
 		});
@@ -52,9 +52,12 @@ public class SettingsScreen extends MenuScreen {
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				if (super.touchDown(event, x, y, pointer, button)) {
 					musVolSlider.setSlider(x, y);
+                    if (musVolSlider.getPercent() == 0.0f) {
+                        musVolSlider.setPercent(0.001f);
+                    }
 					StarCycle.audio.gameMusic.setVolume(musVolSlider.getPercent());
-					UserSettingz.setFloatSetting("musicVolume", musVolSlider.getPercent());
-                    musIcon.toggled = musVolSlider.getPercent() == 0f;
+					UserSettings.setFloatSetting("musicVolume", musVolSlider.getPercent());
+                    musIcon.toggled = musVolSlider.getPercent() == 0.001f;
 					return true;
 				}
 				else {
@@ -64,15 +67,18 @@ public class SettingsScreen extends MenuScreen {
 			
 			public void drag(InputEvent event, float x, float y, int pointer) {
 				musVolSlider.setSlider(x, y);
+                if (musVolSlider.getPercent() == 0.0f) {
+                    musVolSlider.setPercent(0.001f);
+                }
 				StarCycle.audio.gameMusic.setVolume(musVolSlider.getPercent());
-				UserSettingz.setFloatSetting("musicVolume", musVolSlider.getPercent());
-                musIcon.toggled = musVolSlider.getPercent() == 0f;
+				UserSettings.setFloatSetting("musicVolume", musVolSlider.getPercent());
+                musIcon.toggled = musVolSlider.getPercent() == 0.001f;
 			}
 		});
 		
-		musVolSlider.setPercent(UserSettingz.getFloatSetting("musicVolume"));
+		musVolSlider.setPercent(UserSettings.getFloatSetting("musicVolume"));
 
-        musIcon.toggled = musVolSlider.getPercent() == 0f;
+        musIcon.toggled = musVolSlider.getPercent() == 0.001f;
 		
 		sfxIcon = new ToggleButton(new Vector2(ui.getWidth()*3f/8f, ui.getHeight()/10f), touchSize);
 		sfxIcon.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, touchSize), LayerType.DOWN);
@@ -85,12 +91,12 @@ public class SettingsScreen extends MenuScreen {
 				if (sfxIcon.toggled) {
 					sfxVolSlider.setPercent(0f);
 					StarCycle.audio.sfxVolume = 0f;
-					UserSettingz.setFloatSetting("sfxVolume", 0f);
+					UserSettings.setFloatSetting("sfxVolume", 0f);
 				}
 				else {
 					sfxVolSlider.setPercent(0.5f);
 					StarCycle.audio.sfxVolume = 0.5f;
-					UserSettingz.setFloatSetting("sfxVolume", 0.5f);
+					UserSettings.setFloatSetting("sfxVolume", 0.5f);
 					if (sfxLastTime + sfxCooldown < System.currentTimeMillis()) {
 						StarCycle.audio.levelup1Sound.play(StarCycle.audio.sfxVolume);
 						sfxLastTime = System.currentTimeMillis();
@@ -105,7 +111,7 @@ public class SettingsScreen extends MenuScreen {
 				if (super.touchDown(event, x, y, pointer, button)) {
 					sfxVolSlider.setSlider(x, y);
 					StarCycle.audio.sfxVolume = sfxVolSlider.getPercent();
-					UserSettingz.setFloatSetting("sfxVolume", sfxVolSlider.getPercent());
+					UserSettings.setFloatSetting("sfxVolume", sfxVolSlider.getPercent());
 					if (sfxLastTime + sfxCooldown < System.currentTimeMillis()) {
 						StarCycle.audio.levelup1Sound.play(StarCycle.audio.sfxVolume);
 						sfxLastTime = System.currentTimeMillis();
@@ -121,7 +127,7 @@ public class SettingsScreen extends MenuScreen {
 			public void drag(InputEvent event, float x, float y, int pointer) {
 				sfxVolSlider.setSlider(x, y);
 				StarCycle.audio.sfxVolume = sfxVolSlider.getPercent();
-				UserSettingz.setFloatSetting("sfxVolume", sfxVolSlider.getPercent());
+				UserSettings.setFloatSetting("sfxVolume", sfxVolSlider.getPercent());
                 sfxIcon.toggled = sfxVolSlider.getPercent() == 0f;
 			}
 			
@@ -133,7 +139,7 @@ public class SettingsScreen extends MenuScreen {
 			}
 		});
 		
-		sfxVolSlider.setPercent(UserSettingz.getFloatSetting("sfxVolume"));
+		sfxVolSlider.setPercent(UserSettings.getFloatSetting("sfxVolume"));
 
         sfxIcon.toggled = sfxVolSlider.getPercent() == 0f;
 		

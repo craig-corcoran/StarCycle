@@ -1,16 +1,14 @@
 package com.autonomousgames.starcycle.core.model;
 
 import com.autonomousgames.starcycle.core.Colors;
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.ui.Layer;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -37,8 +35,8 @@ public class Star extends Orbitable implements Collidable {
     public int[] numOrbs = new int[]{0, 0};
     public int[] numVoids = new int[]{0, 0};
 
-    private final float ammoRate = UserSettingz.getFloatSetting("ammoRate");
-    private final float popRate = UserSettingz.getFloatSetting("popRate");
+    private final float ammoRate = ModelSettings.getFloatSetting("ammoRate");
+    private final float popRate = ModelSettings.getFloatSetting("popRate");
 
     private LinkedList<ChargeOrb> activeOrbs = new LinkedList<ChargeOrb>();
 	private HashSet<Void> activeVoids = new HashSet<Void>();
@@ -70,8 +68,8 @@ public class Star extends Orbitable implements Collidable {
 	// constructor for single stars. Constructed in Level.java
 	public Star(float radius, Vector2 position,
 			Player[] players, World world, int index, float rotSpeed) {
-		captureRatio = UserSettingz.getFloatSetting("captureRatio");
-        maxOrbs = UserSettingz.getFloatSetting("maxOrbs");
+		captureRatio = ModelSettings.getFloatSetting("captureRatio");
+        maxOrbs = ModelSettings.getFloatSetting("maxOrbs");
 		this.radius = radius;
 		this.mass = this.radius * this.radius;
 		this.maxPop = 100 * radius;
@@ -103,7 +101,7 @@ public class Star extends Orbitable implements Collidable {
 		// (box2d returns bodies that collide)
 		starShape.dispose();
 
-		float chargeRadius = UserSettingz.getFloatSetting("chargeRadius") + this.radius;
+		float chargeRadius = ModelSettings.getFloatSetting("chargeRadius") + this.radius;
 
 		// add charge sensor 
 		Sensor.addSensor(this, body, chargeRadius);
@@ -228,10 +226,10 @@ public class Star extends Orbitable implements Collidable {
 
     private Player player;
     private float rate;
-    private float incAmmoThresh = UserSettingz.getFloatSetting("incAmmoThresh");
-    private float initVelScale = UserSettingz.getFloatSetting("initVelScale");
-    private float incOrbSize = UserSettingz.getFloatSetting("incOrbSize");
-    private float incOrbAlpha = UserSettingz.getFloatSetting("incOrbAlpha");
+    private float incAmmoThresh = ModelSettings.getFloatSetting("incAmmoThresh");
+    private float initVelScale = ModelSettings.getFloatSetting("initVelScale");
+    private float incOrbSize = ModelSettings.getFloatSetting("incOrbSize");
+    private float incOrbAlpha = ModelSettings.getFloatSetting("incOrbAlpha");
     private Vector2 pos = new Vector2();
     private Vector2 vel = new Vector2();
     private float nor = 0;

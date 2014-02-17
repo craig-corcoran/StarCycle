@@ -22,8 +22,8 @@ public class Soundz {
 	public float sfxVolume;
 
 	public Soundz() {
-        musicVolume = UserSettingz.getFloatSetting("musicVolume");
-        sfxVolume = UserSettingz.getFloatSetting("sfxVolume");
+        musicVolume = UserSettings.getFloatSetting("musicVolume");
+        sfxVolume = UserSettings.getFloatSetting("sfxVolume");
         launchnukeSound = StarCycle.assetManager.get("audio/launchnuke.mp3", Sound.class);
         gravkillgravSound = StarCycle.assetManager.get("audio/grav_annihilate.mp3", Sound.class);
         gravkillnukeSound = StarCycle.assetManager.get("audio/killnuke.mp3", Sound.class);

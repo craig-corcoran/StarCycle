@@ -15,7 +15,7 @@ public class MainMenu extends MenuScreen {
 		
 		float startButtonWidth = ui.getWidth()/3f;
 		Vector2 startButtonDims = new Vector2(startButtonWidth, startButtonWidth);
-		ScreenType startDestination = ScreenType.STARTMENU;//(UserSettingz.getSetting(SinglePlayerLevel.TUTORIAL.toString()) == 1f) ? ScreenType.STARTMENU : ScreenType.TUTORIAL_ORB; 
+		ScreenType startDestination = ScreenType.STARTMENU;//(ModelSettings.getSetting(SinglePlayerLevel.TUTORIAL.toString()) == 1f) ? ScreenType.STARTMENU : ScreenType.TUTORIAL_ORB;
 		
 		StandardButton startButton = new StandardButton(new Vector2(ui.getWidth()/3f, ui.getHeight()/2f), startButtonDims, StarCycle.tex.genericLogo, padding);
 		startButton.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Start", startButtonDims));

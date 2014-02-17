@@ -71,7 +71,7 @@ public class LogHandler extends Thread{
 	@SuppressWarnings("unchecked")
 	public void run() {
 		HashMap<String,Object> logMap = new HashMap<String,Object>();
-		logMap.put("uid", UserSettingz.getLongSetting("uid"));
+		logMap.put("uid", StarCycle.uidHandler.getId());
 		logMap.put("start", StarCycle.startTime);
 		logMap.put("platform", Gdx.app.getType().toString());
 		logMap.put("touch", new ArrayList<HashMap<String,Object>>());

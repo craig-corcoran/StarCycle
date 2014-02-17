@@ -1,7 +1,7 @@
 package com.autonomousgames.starcycle.core.model;
 
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
@@ -28,15 +28,15 @@ public class ChargeOrb extends Orb implements Collidable {
 
 	LayeredButton chargeButton;
 
-    private static final float angleThresh = UserSettingz.getFloatSetting("angleThresh");
+    private static final float angleThresh = ModelSettings.getFloatSetting("angleThresh");
 	private static final float beamWidth = 0.1f*StarCycle.pixelsPerMeter;
-	private static final float chargeRadius = UserSettingz.getFloatSetting("chargeRadius")*StarCycle.pixelsPerMeter;
+	private static final float chargeRadius = ModelSettings.getFloatSetting("chargeRadius")*StarCycle.pixelsPerMeter;
 
 	public ChargeOrb(Player player, Vector2 position,
 			Vector2 velocity, Model model, OrbType type) {
 		super(player, position, velocity, model, type);
 
-		orbitScal = UserSettingz.getFloatSetting("orbitScal");
+		orbitScal = ModelSettings.getFloatSetting("orbitScal");
 
 		chargeButton = new LayeredButton(orbButton.getCenter(),orbButton.getDims());
 		chargeButton.addLayer(new SpriteLayer(StarCycle.tex.chargeBeam, new Vector2(chargeRadius/2f, 0f), new Vector2(chargeRadius,beamWidth)).setSpriteColor(player.colors[1]),LayerType.ACTIVE);
