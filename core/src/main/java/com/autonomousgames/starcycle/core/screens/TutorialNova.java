@@ -4,7 +4,7 @@
 //
 //import com.autonomousgames.starcycle.core.StarCycle;
 //import com.autonomousgames.starcycle.core.Texturez;
-//import com.autonomousgames.starcycle.core.UserSettingz;
+//import com.autonomousgames.starcycle.core.ModelSettings;
 //import Base.BaseType;
 //import Level.LevelType;
 //import Orb.OrbType;
@@ -102,8 +102,8 @@
 //			for (int i = 0; i <  numInitOrbs; i++) {
 //				pos = p==0 ? lowerRight.cpy() : upperFarRight.cpy();
 //				deg = 360f * ((float) i) / numInitOrbs;
-//				offset.set(UserSettingz.getSetting("chargeRadius") * MathUtils.cosDeg(deg), 
-//						UserSettingz.getSetting("chargeRadius") * MathUtils.sinDeg(deg));
+//				offset.set(ModelSettings.getSetting("chargeRadius") * MathUtils.cosDeg(deg),
+//						ModelSettings.getSetting("chargeRadius") * MathUtils.sinDeg(deg));
 //	
 //				pos.set(pos.x + 2f * offset.x, 
 //						pos.y + 2f * offset.y);
@@ -117,8 +117,8 @@
 //		for (int i = 0; i <  numInitOrbs; i++) {
 //			pos = upperCenter.cpy();
 //			deg = 360f * ((float) i) / numInitOrbs;
-//			offset.set(UserSettingz.getSetting("chargeRadius") * MathUtils.cosDeg(deg), 
-//					   UserSettingz.getSetting("chargeRadius") * MathUtils.sinDeg(deg));
+//			offset.set(ModelSettings.getSetting("chargeRadius") * MathUtils.cosDeg(deg),
+//					   ModelSettings.getSetting("chargeRadius") * MathUtils.sinDeg(deg));
 //			
 //			pos.set(pos.x + 2f * offset.x, 
 //					pos.y + 2f * offset.y);
@@ -144,7 +144,7 @@
 //	
 //	@Override
 //	public void dispose() {
-//		//UserSettingz.setSetting(SinglePlayerLevel.TUTORIAL.toString(), 1f);
+//		//ModelSettings.setSetting(SinglePlayerLevel.TUTORIAL.toString(), 1f);
 //	}
 //	
 //}

@@ -1,9 +1,7 @@
 package com.autonomousgames.starcycle.core.screens;
 
-import com.autonomousgames.starcycle.core.Soundz;
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
-import com.autonomousgames.starcycle.core.UserSettingz;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 
@@ -43,7 +41,7 @@ public class SplashScreen extends GameScreen {
         float splashTime = 3f;
         if (displayedTime >= splashTime) {
 			isDone = true;
-			StarCycle.audio.gameMusic.setVolume(UserSettingz.getFloatSetting("musicVolume"));
+			StarCycle.audio.gameMusic.setVolume(StarCycle.audio.musicVolume);
 			StarCycle.audio.gameMusic.setLooping(true);
 			StarCycle.audio.gameMusic.play();
 		}

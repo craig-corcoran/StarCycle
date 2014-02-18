@@ -1,6 +1,6 @@
 package com.autonomousgames.starcycle.core.screens;
 
-import com.autonomousgames.starcycle.core.UserSettingz;
+import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.controllers.GameController;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Bot;
@@ -37,7 +37,7 @@ public class SinglePlayer extends ModelScreen {
 		}
 	}
 	void pushLevelCompletion(){
-		UserSettingz.setFloatSetting(this.leveltype.toString(), 1f);
+		StarCycle.progressHandler.setLevelComplete(this.leveltype.toString(), "true");
 	}
 	
 	// TODO clean up, you win, you lose
@@ -46,7 +46,9 @@ public class SinglePlayer extends ModelScreen {
 		super.addWinBanner(winner);
 		winButton.addListener(new ScreenDoneClickListener(this, backScreen));
 		ui.addActor(winButton);
-		pushLevelCompletion();
+		if (winner.number == 0) {
+            pushLevelCompletion();
+        }
 	}
 	
 	public String toString(){

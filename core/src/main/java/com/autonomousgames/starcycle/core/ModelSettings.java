@@ -5,22 +5,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.MathUtils;
 
-public class UserSettingz {
+public class ModelSettings {
 	private static Preferences userPrefs;
-	private static Preferences sessionPrefs;
 	static {
-		userPrefs = Gdx.app.getPreferences("StarCycle-user-preferences");
-		sessionPrefs = Gdx.app.getPreferences("StarCycle-session-preferences");
+		userPrefs = Gdx.app.getPreferences("StarCycle-model-settings");
 		int clientSettingsVersion = userPrefs.getInteger("settingsVersion");
 		int currentSettingsVersion = 23;
 		if (clientSettingsVersion != currentSettingsVersion) {
-			Gdx.app.log("UserSettingz", "rewriting settings file");
+			Gdx.app.log("ModelSettings", "rewriting settings file");
 			userPrefs.putInteger("settingsVersion", currentSettingsVersion);
-			userPrefs.putLong("uid", MathUtils.random.nextLong()); //MathUtils.random(1f,1000*1000*1000*1000f*1000f)
-			userPrefs.putFloat("musicVolume", 0.5f);
-			userPrefs.putFloat("musicVolume", 0.5f);       // Soundz
-			userPrefs.putFloat("sfxVolume",0.5f);          // Soundz
-
             userPrefs.putFloat("maxOrbs", 32f); // Star parameters
             userPrefs.putFloat("angleThresh", MathUtils.PI2); // charge orb lock on threshold
 			
@@ -76,32 +69,15 @@ public class UserSettingz {
             userPrefs.putFloat("incOrbSize", 0.006f);
             userPrefs.putFloat("incOrbAlpha", 0.65f);
 
-			userPrefs.putFloat(SinglePlayerLevel.LEVEL1.toString(), 0f);  //LevelSelect
-			userPrefs.putFloat(SinglePlayerLevel.LEVEL2.toString(), 0f); //LevelSelect
-			userPrefs.putFloat(SinglePlayerLevel.LEVEL3.toString(), 0f);  //LevelSelect
-			userPrefs.putFloat(SinglePlayerLevel.LEVEL4.toString(), 0f); //LevelSelect
-
-			
 			userPrefs.flush();
 		}
 	}
 	
 	public static float getFloatSetting(String istring) {
-		return UserSettingz.userPrefs.getFloat(istring);
+		return ModelSettings.userPrefs.getFloat(istring);
 	}
 	
 	public static long getLongSetting(String istring) {
-		return UserSettingz.userPrefs.getLong(istring);
+		return ModelSettings.userPrefs.getLong(istring);
 	}
-	
-	public static void setFloatSetting(String istring, float ifloat){
-		UserSettingz.userPrefs.putFloat(istring, ifloat);
-		UserSettingz.userPrefs.flush();
-	}
-	
-	public static void setSessionSetting(String istring, float ifloat){
-		UserSettingz.sessionPrefs.putFloat(istring, ifloat);
-	}
-	
-	
 }

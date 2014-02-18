@@ -1,21 +1,16 @@
 package com.autonomousgames.starcycle.core.model;
 
-import com.autonomousgames.starcycle.core.Soundz;
-import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
-import com.autonomousgames.starcycle.core.UserSettingz;
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.ArrayList;
-import java.util.ListIterator;
 
 public class Model {
 
-	public static float gravityScalar = UserSettingz.getFloatSetting("gravScalar");
+	public static float gravityScalar = ModelSettings.getFloatSetting("gravScalar");
 	
 	public static final short starCat = 0x0001;   		// 0000000000000001
 	public static final short chargeCat = 0x0002; 		// 0000000000000010
@@ -87,8 +82,6 @@ public class Model {
             if (orb.type == Orb.OrbType.VOID) {
                 orb.player.voids.remove(orb);
             }
-
-//            Soundz.orbCrash.play(UserSettingz.getFloatSetting("sfxVolume"));
         }
         toDestroyList.clear();
     }

@@ -1,12 +1,12 @@
 package com.autonomousgames.starcycle.core;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
 public class Soundz {
 
     public final Music gameMusic;
-	//public static final Sound bootupSound;
 	public final Sound launchnukeSound;
 	public final Sound gravkillgravSound;
 	public final Sound gravkillnukeSound;
@@ -22,8 +22,8 @@ public class Soundz {
 	public float sfxVolume;
 
 	public Soundz() {
-        musicVolume = UserSettingz.getFloatSetting("musicVolume");
-        sfxVolume = UserSettingz.getFloatSetting("sfxVolume");
+        musicVolume = UserSettings.getFloatSetting("musicVolume");
+        sfxVolume = UserSettings.getFloatSetting("sfxVolume");
         launchnukeSound = StarCycle.assetManager.get("audio/launchnuke.mp3", Sound.class);
         gravkillgravSound = StarCycle.assetManager.get("audio/grav_annihilate.mp3", Sound.class);
         gravkillnukeSound = StarCycle.assetManager.get("audio/killnuke.mp3", Sound.class);
