@@ -35,9 +35,9 @@ public class SettingsScreen extends MenuScreen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (musIcon.toggled) {
-					musVolSlider.setPercent(0.001f);
-					StarCycle.audio.gameMusic.setVolume(0.001f);
-					UserSettings.setFloatSetting("musicVolume", 0.001f);
+					musVolSlider.setPercent(0f);
+					StarCycle.audio.gameMusic.setVolume(0f);
+					UserSettings.setFloatSetting("musicVolume", 0f);
 				}
 				else {
 					musVolSlider.setPercent(0.5f);
@@ -52,12 +52,9 @@ public class SettingsScreen extends MenuScreen {
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				if (super.touchDown(event, x, y, pointer, button)) {
 					musVolSlider.setSlider(x, y);
-                    if (musVolSlider.getPercent() == 0.0f) {
-                        musVolSlider.setPercent(0.001f);
-                    }
 					StarCycle.audio.gameMusic.setVolume(musVolSlider.getPercent());
 					UserSettings.setFloatSetting("musicVolume", musVolSlider.getPercent());
-                    musIcon.toggled = musVolSlider.getPercent() == 0.001f;
+                    musIcon.toggled = musVolSlider.getPercent() == 0f;
 					return true;
 				}
 				else {
@@ -67,18 +64,15 @@ public class SettingsScreen extends MenuScreen {
 			
 			public void drag(InputEvent event, float x, float y, int pointer) {
 				musVolSlider.setSlider(x, y);
-                if (musVolSlider.getPercent() == 0.0f) {
-                    musVolSlider.setPercent(0.001f);
-                }
 				StarCycle.audio.gameMusic.setVolume(musVolSlider.getPercent());
 				UserSettings.setFloatSetting("musicVolume", musVolSlider.getPercent());
-                musIcon.toggled = musVolSlider.getPercent() == 0.001f;
+                musIcon.toggled = musVolSlider.getPercent() == 0f;
 			}
 		});
 		
 		musVolSlider.setPercent(UserSettings.getFloatSetting("musicVolume"));
 
-        musIcon.toggled = musVolSlider.getPercent() == 0.001f;
+        musIcon.toggled = musVolSlider.getPercent() == 0f;
 		
 		sfxIcon = new ToggleButton(new Vector2(ui.getWidth()*3f/8f, ui.getHeight()/10f), touchSize);
 		sfxIcon.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, touchSize), LayerType.DOWN);

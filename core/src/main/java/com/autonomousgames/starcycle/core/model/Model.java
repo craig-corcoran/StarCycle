@@ -82,8 +82,6 @@ public class Model {
             if (orb.type == Orb.OrbType.VOID) {
                 orb.player.voids.remove(orb);
             }
-
-//            Soundz.orbCrash.play(ModelSettings.getFloatSetting("sfxVolume"));
         }
         toDestroyList.clear();
     }

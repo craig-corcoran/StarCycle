@@ -20,7 +20,7 @@ public class Void extends ChargeOrb implements Collidable {
 	public void beginSensorContact(Collidable obj) {
 		if ((obj instanceof Orb)) {
 			if ((obj instanceof Void)) {
-				StarCycle.audio.gravkillgravSound.play(ModelSettings.getFloatSetting("sfxVolume"));
+                StarCycle.audio.gravkillgravSound.play(StarCycle.audio.sfxVolume);
 			}
 			obj.collision(this);
 		} else {

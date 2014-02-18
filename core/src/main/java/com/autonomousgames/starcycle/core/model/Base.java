@@ -172,14 +172,14 @@ public class Base {
     public void setLvl(int i) {
         if (i > level) {
             if (i == 1){
-                StarCycle.audio.levelup1Sound.play(ModelSettings.getFloatSetting("sfxVolume"));
+                StarCycle.audio.levelup1Sound.play(StarCycle.audio.sfxVolume);
             }
             if (i == 2) {
-                StarCycle.audio.levelup2Sound.play(ModelSettings.getFloatSetting("sfxVolume"));
+                StarCycle.audio.levelup2Sound.play(StarCycle.audio.sfxVolume);
             }
         }
         else if (i < level) {
-            StarCycle.audio.leveldownSound.play(ModelSettings.getFloatSetting("sfxVolume"));
+            StarCycle.audio.leveldownSound.play(StarCycle.audio.sfxVolume);
         }
         baseButton.setLevel(i);
         level = i;

@@ -6,7 +6,6 @@ import com.badlogic.gdx.audio.Sound;
 public class Soundz {
 
     public final Music gameMusic;
-	//public static final Sound bootupSound;
 	public final Sound launchnukeSound;
 	public final Sound gravkillgravSound;
 	public final Sound gravkillnukeSound;

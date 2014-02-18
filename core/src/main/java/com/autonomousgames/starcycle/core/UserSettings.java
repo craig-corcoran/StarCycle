@@ -7,11 +7,12 @@ public class UserSettings {
 	private static Preferences userPrefs;
 	static {
 		userPrefs = Gdx.app.getPreferences("StarCycle-user-settings");
-		if (userPrefs.getFloat("musicVolume") == 0.0f) {
+		if (userPrefs.getFloat("settingsExist") == 0f) {
 			Gdx.app.log("UserSettings", "rewriting settings file");
 			userPrefs.putFloat("musicVolume", 0.5f);
 			userPrefs.putFloat("musicVolume", 0.5f);
-			userPrefs.putFloat("sfxVolume",0.5f);
+            userPrefs.putFloat("sfxVolume", 0.5f);
+			userPrefs.putFloat("settingsExist", 1f);
 			userPrefs.flush();
 		}
 	}

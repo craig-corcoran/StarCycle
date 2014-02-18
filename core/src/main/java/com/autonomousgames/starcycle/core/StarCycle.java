@@ -76,7 +76,6 @@ public class StarCycle implements ApplicationListener {
         assetManager.update();
 		if (screen.isDone) {
 			logHandler.writeLogs();
-            //logHandler.start();
 			HashMap<String,Object> logMap = new HashMap<String,Object>();
 			logMap.put("currentScreen", screen.toString());
 			logMap.put("sessionTime", StarCycle.startTime);
@@ -84,7 +83,7 @@ public class StarCycle implements ApplicationListener {
 			logHandler.logScreen(json.toJson(logMap));
 			// dispose the current screen
             if (!screen.silentSwitch) {
-			    audio.screenswitchSound.play(UserSettings.getFloatSetting("sfxVolume"));
+			    audio.screenswitchSound.play(audio.sfxVolume);
             }
 			if (screen instanceof Tutorial) {
                 startAtEnd = ((Tutorial) screen).startAtEnd;
