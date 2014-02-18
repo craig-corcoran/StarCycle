@@ -41,7 +41,7 @@ public class SplashScreen extends GameScreen {
         float splashTime = 3f;
         if (displayedTime >= splashTime) {
 			isDone = true;
-			StarCycle.audio.gameMusic.setVolume(ModelSettings.getFloatSetting("musicVolume"));
+			StarCycle.audio.gameMusic.setVolume(StarCycle.audio.musicVolume);
 			StarCycle.audio.gameMusic.setLooping(true);
 			StarCycle.audio.gameMusic.play();
 		}
