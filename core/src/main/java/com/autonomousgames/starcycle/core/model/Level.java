@@ -1,13 +1,11 @@
 package com.autonomousgames.starcycle.core.model;
 
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
-import com.autonomousgames.starcycle.core.UserSettingz;
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
-import javax.lang.model.type.ArrayType;
 import java.util.ArrayList;
 
 public class Level {
@@ -25,8 +23,8 @@ public class Level {
 	}
 
 	public Level(World world, LevelType lvl, Player[] players) {
-        float orbitSpeed = UserSettingz.getFloatSetting("orbitSpeed");
-        float starRadius = UserSettingz.getFloatSetting("starRadius");
+        float orbitSpeed = ModelSettings.getFloatSetting("orbitSpeed");
+        float starRadius = ModelSettings.getFloatSetting("starRadius");
 		this.world = world;
 		
 		Vector2 center = new Vector2((1 / 2f) * StarCycle.meterWidth,

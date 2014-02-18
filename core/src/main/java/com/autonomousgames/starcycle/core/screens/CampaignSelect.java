@@ -2,7 +2,6 @@ package com.autonomousgames.starcycle.core.screens;
 
 import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.BotType;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
@@ -42,7 +41,7 @@ public class CampaignSelect extends LevelSelectScreen {
 		
 		BaseButton level1 = new BaseButton(BaseType.TAKETE, Colors.warm, posMap.get(SinglePlayerLevel.LEVEL1), baseDims);
 		level1.addBottomLayer(new SpriteLayer(StarCycle.tex.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
-		if (UserSettingz.getFloatSetting(SinglePlayerLevel.LEVEL1.toString()) != 1f) {
+		if (!StarCycle.progressHandler.getLevelComplete(SinglePlayerLevel.LEVEL1.toString()).equals("true")) {
 			level1.addBottomLayer(new SpriteLayer(StarCycle.tex.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
 		}
 		level1.addListener(new ClickListener(){
@@ -60,7 +59,7 @@ public class CampaignSelect extends LevelSelectScreen {
 		
 		BaseButton level2 = new BaseButton(BaseType.TARGET, Colors.floral, posMap.get(SinglePlayerLevel.LEVEL2), baseDims);
 		level2.addBottomLayer(new SpriteLayer(StarCycle.tex.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
-		if (UserSettingz.getFloatSetting(SinglePlayerLevel.LEVEL2.toString()) != 1f) {
+		if (!StarCycle.progressHandler.getLevelComplete(SinglePlayerLevel.LEVEL2.toString()).equals("true")) {
 			level2.addBottomLayer(new SpriteLayer(StarCycle.tex.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
 		}
 		level2.addListener(new ClickListener(){
@@ -77,7 +76,7 @@ public class CampaignSelect extends LevelSelectScreen {
 		
 		BaseButton level3 = new BaseButton(BaseType.DERELICT, Colors.neutral, posMap.get(SinglePlayerLevel.LEVEL3), baseDims);
 		level3.addBottomLayer(new SpriteLayer(StarCycle.tex.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
-		if (UserSettingz.getFloatSetting(SinglePlayerLevel.LEVEL3.toString()) != 1f) {
+		if (!StarCycle.progressHandler.getLevelComplete(SinglePlayerLevel.LEVEL3.toString()).equals("true")) {
 			level3.addBottomLayer(new SpriteLayer(StarCycle.tex.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
 		}
 		level3.addListener(new ClickListener(){
@@ -94,7 +93,7 @@ public class CampaignSelect extends LevelSelectScreen {
 		
 		BaseButton level4 = new BaseButton(BaseType.CLOCKWORK, Colors.metallic, posMap.get(SinglePlayerLevel.LEVEL4), baseDims);
 		level4.addBottomLayer(new SpriteLayer(StarCycle.tex.gradientRound, baseDims.cpy().scl(1.5f)), LayerType.DOWN);
-		if (UserSettingz.getFloatSetting(SinglePlayerLevel.LEVEL4.toString()) != 1f) {
+		if (!StarCycle.progressHandler.getLevelComplete(SinglePlayerLevel.LEVEL4.toString()).equals("true")) {
 			level4.addBottomLayer(new SpriteLayer(StarCycle.tex.voidRing, baseDims.cpy().scl(1.25f)).setSpriteAlpha(0.4f));
 		}
 		level4.addListener(new ClickListener(){
@@ -127,7 +126,6 @@ public class CampaignSelect extends LevelSelectScreen {
 	
 	private void addEdges(HashMap<SinglePlayerLevel,	Vector2> posMap) {
 		ArrayList<SinglePlayerLevel[]> edgeList = new ArrayList<SinglePlayerLevel[]>();
-		//edgeList.add(new SinglePlayerLevel[]{SinglePlayerLevel.TUTORIAL,SinglePlayerLevel.LEVEL1});
 		edgeList.add(new SinglePlayerLevel[]{SinglePlayerLevel.LEVEL1,SinglePlayerLevel.LEVEL2});
 		edgeList.add(new SinglePlayerLevel[]{SinglePlayerLevel.LEVEL1,SinglePlayerLevel.LEVEL3});
 		edgeList.add(new SinglePlayerLevel[]{SinglePlayerLevel.LEVEL2,SinglePlayerLevel.LEVEL3});
@@ -159,7 +157,7 @@ public class CampaignSelect extends LevelSelectScreen {
 		ArrayList<String> completedLevels = new ArrayList<String>();
 		for (int n=0;n<SinglePlayerLevel.values().length;n++){
 			String lvl = SinglePlayerLevel.values()[n].toString();
-			if (UserSettingz.getFloatSetting(lvl) == 1f){
+			if (StarCycle.progressHandler.getLevelComplete(lvl).equals("true")) {
 				completedLevels.add(SinglePlayerLevel.values()[n].toString());
 			}
 		}

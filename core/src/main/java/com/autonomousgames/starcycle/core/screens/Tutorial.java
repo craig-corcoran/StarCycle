@@ -1,8 +1,8 @@
 package com.autonomousgames.starcycle.core.screens;
 
 import com.autonomousgames.starcycle.core.Colors;
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.FakeOrb;
 import com.autonomousgames.starcycle.core.model.ImageOrb;
@@ -40,7 +40,7 @@ public abstract class Tutorial extends ModelScreen {
     ArrayList<LayeredButton> draggables = new ArrayList<LayeredButton>();
     ArrayList<Boolean> pageDone = new ArrayList<Boolean>();
     public ArrayList<ImageOrb> fakeOrbs = new ArrayList<ImageOrb>();
-    float fakeOrbRad = UserSettingz.getFloatSetting("chargeOrbRadius")*StarCycle.pixelsPerMeter;
+    float fakeOrbRad = ModelSettings.getFloatSetting("chargeOrbRadius")*StarCycle.pixelsPerMeter;
 
     float offset;
     int currentBorder = 0;

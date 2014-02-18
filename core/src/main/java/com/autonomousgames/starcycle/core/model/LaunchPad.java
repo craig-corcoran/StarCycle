@@ -1,14 +1,13 @@
 package com.autonomousgames.starcycle.core.model;
 
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
-import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.screens.ModelScreen;
 import com.autonomousgames.starcycle.core.ui.ArcButton;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -23,7 +22,7 @@ public class LaunchPad {
     ModelScreen screen;
     Player player;
     boolean visible;
-    float coolDown = UserSettingz.getFloatSetting("coolDown");
+    float coolDown = ModelSettings.getFloatSetting("coolDown");
     private float sinceLastShot = 0f;
     Vector2 position;
     float angle;
@@ -64,11 +63,11 @@ public class LaunchPad {
 
     public boolean streamOrbs = false;
 
-    float voidStars = UserSettingz.getFloatSetting("gravWellStars");
-    float novaStars = UserSettingz.getFloatSetting("nukeStars");
-    float orbCost = UserSettingz.getFloatSetting("chargeOrbCost");
-    float voidCost = UserSettingz.getFloatSetting("gravWellCost");
-    float novaCost = UserSettingz.getFloatSetting("nukeCost");
+    float voidStars = ModelSettings.getFloatSetting("gravWellStars");
+    float novaStars = ModelSettings.getFloatSetting("nukeStars");
+    float orbCost = ModelSettings.getFloatSetting("chargeOrbCost");
+    float voidCost = ModelSettings.getFloatSetting("gravWellCost");
+    float novaCost = ModelSettings.getFloatSetting("nukeCost");
 
     public boolean manualLvl = false;
 

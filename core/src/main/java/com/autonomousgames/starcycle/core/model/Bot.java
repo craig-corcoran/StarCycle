@@ -1,6 +1,6 @@
 package com.autonomousgames.starcycle.core.model;
 
-import com.autonomousgames.starcycle.core.UserSettingz;
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.screens.ModelScreen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
@@ -35,8 +35,8 @@ public class Bot extends Player {
 		this.screen = screen;
 		other = (num == 0) ? 1 : 0;
 		
-//		maxOrbSpeed = Base.maxPointerLength*UserSettingz.getSetting("velScaleOrbFact");
-		chargeRadius = UserSettingz.getFloatSetting("chargeRadius");
+//		maxOrbSpeed = Base.maxPointerLength*ModelSettings.getSetting("velScaleOrbFact");
+		chargeRadius = ModelSettings.getFloatSetting("chargeRadius");
 		launchPad.streamOrbs = true;
 	}
 	
@@ -97,7 +97,7 @@ public class Bot extends Player {
 			//launch voids!
 			if ((voidCounter >= voidPeriod) & 
 					((targetStar.numOrbs[other] >= voidThreshold) || (targetStar.numOrbs[this.number] >= voidThreshold)) &
-					(this.starsCaptured >= UserSettingz.getFloatSetting("gravWellStars"))) {
+					(this.starsCaptured >= ModelSettings.getFloatSetting("gravWellStars"))) {
 				if (MathUtils.random() < .3f ){
 					base.setPointer(new Vector2(MathUtils.random()*Base.maxPointerLength,(MathUtils.random()-0.5f)*Base.maxPointerLength*2));
 				}
@@ -107,7 +107,7 @@ public class Bot extends Player {
 			
 			// launch novas!
 			if ((novaCounter >= novaPeriod) & (targetStar.numOrbs[other] >= novaThreshold) &
-					(this.starsCaptured >= UserSettingz.getFloatSetting("nukeStars"))) {
+					(this.starsCaptured >= ModelSettings.getFloatSetting("nukeStars"))) {
 				base.setPointer(new Vector2(MathUtils.random()*Base.maxPointerLength,(MathUtils.random()-0.5f)*Base.maxPointerLength*2));
 				screen.launch(Orb.OrbType.NOVA, this);
 				novaCounter = 0f;

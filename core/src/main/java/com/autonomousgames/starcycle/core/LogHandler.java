@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.zip.GZIPOutputStream;
 
-public class LogHandler {
+public class LogHandler extends Thread{
 	String baseURL = "http://autonomousgam.es/api";
 	//String baseURL = "http://127.0.0.1:5000/api";
 	private FileHandle touchLog;
@@ -28,7 +28,7 @@ public class LogHandler {
 	private static ArrayList<String> queuedGames = new ArrayList<String>();
 
 	public LogHandler () {
-		 StarCycle.json.setOutputType(JsonWriter.OutputType.json);
+		StarCycle.json.setOutputType(JsonWriter.OutputType.json);
         String touchLogPath = "touch.log";
         touchLog = Gdx.files.local(touchLogPath);
         String screenLogPath = "screen.log";
@@ -36,7 +36,7 @@ public class LogHandler {
         String gameLogPath = "game.log";
         gameLog = Gdx.files.local(gameLogPath);
 	}
-	 
+
 	public void pushLog (String istring) throws Exception {
 		if (!istring.isEmpty()) {
 			//Gdx.app.log("loghandler", istring);
@@ -67,11 +67,11 @@ public class LogHandler {
 			Gdx.app.log("loghandler", "no logs found");
 		}
 	}
-	
+    @Override
 	@SuppressWarnings("unchecked")
-	public void processLogs() {
+	public void run() {
 		HashMap<String,Object> logMap = new HashMap<String,Object>();
-		logMap.put("uid", UserSettingz.getLongSetting("uid"));
+		logMap.put("uid", StarCycle.uidHandler.getId());
 		logMap.put("start", StarCycle.startTime);
 		logMap.put("platform", Gdx.app.getType().toString());
 		logMap.put("touch", new ArrayList<HashMap<String,Object>>());
@@ -109,7 +109,7 @@ public class LogHandler {
 			Gdx.app.log("loghandler", e.getMessage());
 		}
 	}
-	
+
 	public void writeLogs() {
 		writeLog(queuedTouches,touchLog);
 		writeLog(queuedScreens,screenLog);
@@ -117,12 +117,8 @@ public class LogHandler {
 	}
 	
 	public void writeLog(ArrayList<String> logData, FileHandle logFile) {
-		if (!logData.isEmpty()) {
-			for (int i=0; i<logData.size(); i++) {
-				logFile.writeString(logData.get(i) + "\n", true);
-			}
-			logData.clear();
-		}
+        LogWriter logWriter = new LogWriter(logData, logFile);
+        logWriter.start();
 	}
 	
 	public void logTouch(String istring){
