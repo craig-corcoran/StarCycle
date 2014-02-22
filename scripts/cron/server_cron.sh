@@ -17,6 +17,7 @@ echo "$TIMESTAMP"
 
 echo "generating doxygen documentation"
 doxygen Doxyfile
+chmod -R a+rwx docs
 mv docs /home/www/starcycle/static
 
 git checkout $BRANCH
