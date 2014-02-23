@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import java.util.ArrayList;
 
 public class LayeredButton extends Group {
-    boolean pressedDown = false; // Is the button being touched right now?
+    public boolean pressedDown = false; // Is the button being touched right now?
     boolean active = true; // Is the button able to be pressed?
     boolean locked = false;
 

@@ -26,13 +26,13 @@ public class Orb implements Collidable {
 
 	public final OrbType type;
 	final Player player;
-	final Body body; // Physics 2D body
+	public final Body body; // Physics 2D body
 	float radius;
 	Vector2 dimensions;
 	final float maxRadius;
 	final float rotVel;
 
-	Vector2 position;
+	public Vector2 position;
 	Vector2 force = new Vector2();
 
 	ArrayList orbList;
