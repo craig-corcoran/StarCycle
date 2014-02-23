@@ -1,10 +1,9 @@
 package com.autonomousgames.starcycle.core.model;
 
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.UserSettingz;
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.screens.ModelScreen;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -50,9 +49,9 @@ public class Player {
 	public Player(int num, BaseType basetype, Color[] colors, ModelScreen screen, 
 				Stage ui, boolean baseVisible, boolean launchpadVisible) {
 		this.number = num;
-        float baseRadius = UserSettingz.getFloatSetting("baseRadius");
-		this.initAmmo = UserSettingz.getFloatSetting("initAmmo");
-		this.ammoDripRate = UserSettingz.getFloatSetting("ammoDripRate");
+        float baseRadius = ModelSettings.getFloatSetting("baseRadius");
+		this.initAmmo = ModelSettings.getFloatSetting("initAmmo");
+		this.ammoDripRate = ModelSettings.getFloatSetting("ammoDripRate");
 		this.ammo = initAmmo;
 		this.basetype = basetype;
 		this.colors = colors;
@@ -67,7 +66,7 @@ public class Player {
 		this(num, basetype, colors, screen, ui, UIVisible, UIVisible);
 	}
 
-    private float incOrbGravScale = UserSettingz.getFloatSetting("incOrbGravScale");
+    private float incOrbGravScale = ModelSettings.getFloatSetting("incOrbGravScale");
     private Vector2 difference = new Vector2();
     private float minDiff = 50f;
     private float r = 0;
@@ -194,7 +193,7 @@ public class Player {
 	}
 	
 	public void startDrip() {
-		UserSettingz.getFloatSetting("ammoDripRate");
+		ModelSettings.getFloatSetting("ammoDripRate");
 	}
     public void setWinner() {
         winner = true;

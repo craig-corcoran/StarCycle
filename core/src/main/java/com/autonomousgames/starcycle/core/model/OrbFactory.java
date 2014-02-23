@@ -1,7 +1,6 @@
 package com.autonomousgames.starcycle.core.model;
 
-import com.autonomousgames.starcycle.core.UserSettingz;
-import com.badlogic.gdx.Gdx;
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.badlogic.gdx.math.Vector2;
 
 public class OrbFactory {
@@ -39,21 +38,21 @@ public class OrbFactory {
 		p2voids = 0;
 		p2novas = 0;
 		
-		chargeOrbCost = UserSettingz.getFloatSetting("chargeOrbCost");
-		gravWellCost = UserSettingz.getFloatSetting("gravWellCost");
-		nukeCost = UserSettingz.getFloatSetting("nukeCost");
+		chargeOrbCost = ModelSettings.getFloatSetting("chargeOrbCost");
+		gravWellCost = ModelSettings.getFloatSetting("gravWellCost");
+		nukeCost = ModelSettings.getFloatSetting("nukeCost");
 		orbCosts = new float[] { chargeOrbCost, gravWellCost, nukeCost };
 
-		chargeOrbRadius = UserSettingz.getFloatSetting("chargeOrbRadius");
-		gravWellRadius = UserSettingz.getFloatSetting("gravWellRadius");
-		nukeRadius = UserSettingz.getFloatSetting("nukeRadius");
+		chargeOrbRadius = ModelSettings.getFloatSetting("chargeOrbRadius");
+		gravWellRadius = ModelSettings.getFloatSetting("gravWellRadius");
+		nukeRadius = ModelSettings.getFloatSetting("nukeRadius");
 		orbRadii = new float[] { chargeOrbRadius, gravWellRadius, nukeRadius };
 
-		orbLifeSpan = UserSettingz.getFloatSetting("orbLifeSpan");
-		powerupLifeSpan = UserSettingz.getFloatSetting("powerupLifeSpan");
-		velScaleOrbFact = UserSettingz.getFloatSetting("velScaleOrbFact");
-		ammoRate = UserSettingz.getFloatSetting("ammoRate");
-		popRate = UserSettingz.getFloatSetting("popRate");
+		orbLifeSpan = ModelSettings.getFloatSetting("orbLifeSpan");
+		powerupLifeSpan = ModelSettings.getFloatSetting("powerupLifeSpan");
+		velScaleOrbFact = ModelSettings.getFloatSetting("velScaleOrbFact");
+		ammoRate = ModelSettings.getFloatSetting("ammoRate");
+		popRate = ModelSettings.getFloatSetting("popRate");
 
 		this.model = model;
 	}
@@ -173,9 +172,9 @@ public class OrbFactory {
     }
 
     public void resetCosts() {
-        chargeOrbCost = UserSettingz.getFloatSetting("chargeOrbCost");
-        gravWellCost = UserSettingz.getFloatSetting("gravWellCost");
-        nukeCost = UserSettingz.getFloatSetting("nukeCost");
+        chargeOrbCost = ModelSettings.getFloatSetting("chargeOrbCost");
+        gravWellCost = ModelSettings.getFloatSetting("gravWellCost");
+        nukeCost = ModelSettings.getFloatSetting("nukeCost");
         orbCosts[0] = chargeOrbCost;
         orbCosts[1] = gravWellCost;
         orbCosts[2] = nukeCost;

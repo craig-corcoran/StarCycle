@@ -2,7 +2,7 @@ package com.autonomousgames.starcycle.core.screens;
 
 import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.UserSettingz;
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.controllers.GameController;
 import com.autonomousgames.starcycle.core.model.*;
 import com.autonomousgames.starcycle.core.ui.LayerType;
@@ -56,14 +56,14 @@ public class Tutorial0 extends Tutorial {
 
     Vector2 tileSize = new Vector2(swipeSize.y/2f-bw, swipeSize.x-bw);
 
-    float starRadius = 1.5f * UserSettingz.getFloatSetting("starRadius");
+    float starRadius = 1.5f * ModelSettings.getFloatSetting("starRadius");
 
     Vector2 fakeBasePos0 = new Vector2(tileSize.y*153f/420f, bw+tileSize.x*270/420f);
     Vector2 fakeBasePos1 = new Vector2(fakeBasePos0);
     Vector2 orbVel0 = new Vector2(-2f, 1.9f);
     Vector2 orbVel1 = new Vector2(-2.76f, 0f);
     Vector2 vel = new Vector2();
-    float coolDown = UserSettingz.getFloatSetting("coolDown");
+    float coolDown = ModelSettings.getFloatSetting("coolDown");
     float sinceLastShot;
 
     int orbKillPage = 4;

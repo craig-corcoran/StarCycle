@@ -1,7 +1,7 @@
 package com.autonomousgames.starcycle.core.screens;
 
 import com.autonomousgames.starcycle.core.Colors;
-import com.autonomousgames.starcycle.core.UserSettingz;
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Bot;
 import com.autonomousgames.starcycle.core.model.BotType;
@@ -23,7 +23,7 @@ public class Tutorial6 extends TutorialSandbox {
 	@Override
 	void setInitialConditions() {
 		orbFactory.setCosts(0f, 0f, -1f);
-		orbDist = new Vector2(UserSettingz.getFloatSetting("chargeRadius"), 0f).scl(2f);
+		orbDist = new Vector2(ModelSettings.getFloatSetting("chargeRadius"), 0f).scl(2f);
 		for (int i = 0; i < 2; i++) {
 			starPos = new Vector2(model.stars.get((i+1)%2).position);
 			for (int j = 0; j < 9; j++) {

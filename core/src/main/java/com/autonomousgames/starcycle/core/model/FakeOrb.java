@@ -1,6 +1,6 @@
 package com.autonomousgames.starcycle.core.model;
 
-import com.autonomousgames.starcycle.core.UserSettingz;
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -14,7 +14,7 @@ public abstract class FakeOrb {
 	float vpWidth; // size of viewport (pixels or meters?)
 	float vpHeight;
     public int age = 0;
-    public int lifespan = (int) UserSettingz.getFloatSetting("incOrbLifeSpan");
+    public int lifespan = (int) ModelSettings.getFloatSetting("incOrbLifeSpan");
 
     public FakeOrb(Float radius, Vector2 position, float vpWidth, float vpHeight) {
         this.radius = radius;

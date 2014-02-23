@@ -2,8 +2,8 @@ package com.autonomousgames.starcycle.core.screens;
 
 
 import com.autonomousgames.starcycle.core.Colors;
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.controllers.GameController;
 import com.autonomousgames.starcycle.core.model.*;
 import com.autonomousgames.starcycle.core.ui.*;
@@ -67,7 +67,7 @@ public class Tutorial1 extends Tutorial {
     boolean gravityOn = false;
     boolean ammoStarOnly = false;
 
-    float starRadius = 1.5f * UserSettingz.getFloatSetting("starRadius");
+    float starRadius = 1.5f * ModelSettings.getFloatSetting("starRadius");
 
     int[] basePages;
     int[] launchPages;
@@ -92,7 +92,7 @@ public class Tutorial1 extends Tutorial {
         add(fakeLaunch);
 
         Vector2 malumaPos = new Vector2(sw-sh/4.2f, sh/4.2f + offset);
-        fakeMaluma = new BaseButton(Base.BaseType.MALUMA, players[0].colors, malumaPos, new Vector2(1f,1f).scl(UserSettingz.getFloatSetting("baseRadius")*StarCycle.pixelsPerMeter));
+        fakeMaluma = new BaseButton(Base.BaseType.MALUMA, players[0].colors, malumaPos, new Vector2(1f,1f).scl(ModelSettings.getFloatSetting("baseRadius")*StarCycle.pixelsPerMeter));
         add(fakeMaluma);
 
         fakeAim0 = players[0].base.getAimer(malumaPos, new Vector2(), players[0].colors);
@@ -100,7 +100,7 @@ public class Tutorial1 extends Tutorial {
         add(fakeAim0);
 
         Vector2 taketePos = new Vector2(sw/2f-StarCycle.pixelsPerMeter, sh*2f/3f+StarCycle.pixelsPerMeter + offset);
-        fakeTakete = new BaseButton(Base.BaseType.TAKETE, players[1].colors, taketePos, new Vector2(1f,1f).scl(UserSettingz.getFloatSetting("baseRadius")*StarCycle.pixelsPerMeter));
+        fakeTakete = new BaseButton(Base.BaseType.TAKETE, players[1].colors, taketePos, new Vector2(1f,1f).scl(ModelSettings.getFloatSetting("baseRadius")*StarCycle.pixelsPerMeter));
         add(fakeTakete);
 
         fakeAim1 = players[1].base.getAimer(taketePos, new Vector2(), players[1].colors);
@@ -238,7 +238,7 @@ public class Tutorial1 extends Tutorial {
             starClamp[i][0] = 2;
             starClamp[i][1] = 3;
         }
-        Vector2 orbDist = new Vector2(UserSettingz.getFloatSetting("chargeRadius"), 0f).scl(2f);
+        Vector2 orbDist = new Vector2(ModelSettings.getFloatSetting("chargeRadius"), 0f).scl(2f);
         Vector2 starPos = new Vector2(model.stars.get(0).position);
         for (int i = 0; i < numPlayers; i ++) {
             model.stars.get(0).setControlPercent(i, 0.2f + i*0.6f);
@@ -252,7 +252,7 @@ public class Tutorial1 extends Tutorial {
         orbClamp[0] = 2;
         orbClamp[1] = 3;
         Vector2 toStar = model.stars.get(1).position.cpy().sub(players[0].base.origin);
-        Vector2 aimVec = toStar.cpy().rotate(-90f).nor().scl(model.stars.get(0).radius+UserSettingz.getFloatSetting("chargeRadius")*0.95f);
+        Vector2 aimVec = toStar.cpy().rotate(-90f).nor().scl(model.stars.get(0).radius+ ModelSettings.getFloatSetting("chargeRadius")*0.95f);
         aimVec.add(toStar);
         players[0].base.setPointer(aimVec);
 
@@ -362,7 +362,7 @@ public class Tutorial1 extends Tutorial {
 
         if (currentBorder == 2 && !moving && !page2orbLaunched) {
             orbFactory.setCosts(0f, 0f, 0f);
-            orb = orbFactory.createChargeOrb(players[0], players[0].base.origin, players[0].base.getPointer().scl(UserSettingz.getFloatSetting("velScaleOrbFact")), -1f);
+            orb = orbFactory.createChargeOrb(players[0], players[0].base.origin, players[0].base.getPointer().scl(ModelSettings.getFloatSetting("velScaleOrbFact")), -1f);
             page2orbLaunched = true;
         }
         if (page2orbLaunched && !gravityOn) {
@@ -414,11 +414,11 @@ public class Tutorial1 extends Tutorial {
                     players[i].novas.get(j).removeIfOff();
                 }
             }
-            players[0].ammo = UserSettingz.getFloatSetting("nukeCost");
+            players[0].ammo = ModelSettings.getFloatSetting("nukeCost");
             players[0].showIncomeOrbs = true;
             players[0].launchPad.showMeter(true);
             Vector2 starPos = new Vector2(model.stars.get(3).position);
-            Vector2 orbDist = new Vector2(UserSettingz.getFloatSetting("chargeRadius"), 0f).scl(2f);
+            Vector2 orbDist = new Vector2(ModelSettings.getFloatSetting("chargeRadius"), 0f).scl(2f);
             for (int i = 0; i < 3; i ++) {
                 orbDist.rotate(120f);
                 orbFactory.createLockedOrb(players[0], new Vector2(starPos.x + orbDist.x, starPos.y + orbDist.y), -1f, model.stars.get(3), -180f);

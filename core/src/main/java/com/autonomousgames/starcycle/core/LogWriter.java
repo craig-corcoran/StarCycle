@@ -3,7 +3,7 @@ package com.autonomousgames.starcycle.core;
 import com.badlogic.gdx.files.FileHandle;
 import java.util.ArrayList;
 
-public class LogWriter extends Thread{
+public class LogWriter extends Thread {
     public ArrayList<String> logData;
     public FileHandle logFile;
     public LogWriter(ArrayList<String> logData, FileHandle logFile) {

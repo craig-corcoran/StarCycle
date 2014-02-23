@@ -1,7 +1,7 @@
 package com.autonomousgames.starcycle.core.screens;
 
+import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.UserSettingz;
 import com.autonomousgames.starcycle.core.model.BackgroundManager;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
@@ -24,7 +24,7 @@ public abstract class GameScreen implements Screen {
 	
 	Vector2 backPosition = new Vector2(ui.getWidth()*8f/9f, ui.getHeight()*6/7f);
 	Vector2 backSize = new Vector2(ui.getHeight()/8f, ui.getHeight()/8f*0.75f);
-	float padding = StarCycle.pixelsPerMeter * UserSettingz.getFloatSetting("paddingMeters");
+	float padding = StarCycle.pixelsPerMeter * ModelSettings.getFloatSetting("paddingMeters");
 	
 	// These need to be in both GameScreen and MenuScreen because MultiPlayerSelect gets made after StartMenu and after MultiPlayer.
 	public LevelType nextLvlConfig;

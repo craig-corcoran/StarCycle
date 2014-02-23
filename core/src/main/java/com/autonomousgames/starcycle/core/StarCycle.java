@@ -26,15 +26,16 @@ public class StarCycle implements ApplicationListener {
 	public static float padding;
     public static Soundz audio;
     public static Texturez tex;
-	public UserSettingz settings;
-	public static Json json = new Json();
+    public static Json json = new Json();
     boolean startAtEnd;
+    public static UserId uidHandler;
+    public static UserProgress progressHandler;
 
-	@Override
+    @Override
 	public void create() {
 		json.setOutputType(JsonWriter.OutputType.json);
 		pixelsPerMeter = Gdx.graphics.getHeight()/10f;
-		padding = pixelsPerMeter * UserSettingz.getFloatSetting("paddingMeters"); // relative padding size for UI buttons
+		padding = pixelsPerMeter * ModelSettings.getFloatSetting("paddingMeters"); // relative padding size for UI buttons
 		screenWidth = Gdx.graphics.getWidth();
 		screenHeight = Gdx.graphics.getHeight();
 		meterWidth = screenWidth/pixelsPerMeter;
@@ -45,7 +46,8 @@ public class StarCycle implements ApplicationListener {
         meterScreenCenter = new Vector2(meterWidth/2f, meterHeight/2f);
 		pixelScreenCenter = new Vector2(screenWidth/2f, screenHeight/2f);
 		screen = new SplashScreen();
-
+        uidHandler = new UserId();
+        progressHandler = new UserProgress();
 		logHandler = new LogHandler();
 		startTime = System.currentTimeMillis();
 		HashMap<String,Object> logMap = new HashMap<String,Object>();
@@ -74,7 +76,6 @@ public class StarCycle implements ApplicationListener {
         assetManager.update();
 		if (screen.isDone) {
 			logHandler.writeLogs();
-            //logHandler.start();
 			HashMap<String,Object> logMap = new HashMap<String,Object>();
 			logMap.put("currentScreen", screen.toString());
 			logMap.put("sessionTime", StarCycle.startTime);
@@ -82,7 +83,7 @@ public class StarCycle implements ApplicationListener {
 			logHandler.logScreen(json.toJson(logMap));
 			// dispose the current screen
             if (!screen.silentSwitch) {
-			    audio.screenswitchSound.play(UserSettingz.getFloatSetting("sfxVolume"));
+			    audio.screenswitchSound.play(audio.sfxVolume);
             }
 			if (screen instanceof Tutorial) {
                 startAtEnd = ((Tutorial) screen).startAtEnd;
