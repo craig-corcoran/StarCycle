@@ -15,7 +15,12 @@ pack_textures() {
         echo "Fail: no ~/Dropbox/assets"
         exit 1
     fi
-    
+
+    if [ ! -f $HOME/.m2/repository/com/badlogicgames/gdx/gdx-tools/0.9.9/gdx-tools-0.9.9.jar ] ; then
+        mkdir -p $HOME/.m2/repository/com/badlogicgames/gdx/gdx-tools/0.9.9
+        s3cmd get s3://autonomousgames/gdx-tools-0.9.9.jar $HOME/.m2/repository/com/badlogicgames/gdx/gdx-tools/0.9.9
+    fi
+        
     export TPCLASSDIR=$(pwd)/$line/tools/src/main/java/com/autonomousgames/starcycle/tools
     export CLASSPATH="$HOME/.m2/repository/com/badlogicgames/gdx/gdx-tools/0.9.9/gdx-tools-0.9.9.jar:$TPCLASSDIR"
 
@@ -23,6 +28,12 @@ pack_textures() {
 
     echo "COMPILING"
     $JAVA_HOME/bin/javac -g -d $SC_DIR/tools/src/main/java/com/autonomousgames/starcycle/tools $SC_DIR/tools/src/main/java/com/autonomousgames/starcycle/tools/StarCycleTexturePacker.java
+
+    if [ $(uname) == "Darwin" ] ; then
+        if [ -f $HOME/Dropbox/assets/Icon? ] ; then
+            rm $HOME/Dropbox/assets/Icon?
+        fi
+    fi
 
     echo "RUNNING"
     $JAVA_HOME/bin/java com.autonomousgames.starcycle.tools.StarCycleTexturePacker
@@ -32,5 +43,7 @@ pack_textures() {
     
     echo "DONE"
 }
+
+
 
 pack_textures

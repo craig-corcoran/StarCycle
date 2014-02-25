@@ -8,6 +8,7 @@ import com.autonomousgames.starcycle.core.model.*;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
 import com.autonomousgames.starcycle.core.model.Orb.OrbType;
+import com.autonomousgames.starcycle.core.model.Void;
 import com.autonomousgames.starcycle.core.ui.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -19,10 +20,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class ModelScreen extends GameScreen{
 	public Model model;
+    public final State state;
 	public Player[] players;
 	public int numPlayers;
 	OrbFactory orbFactory;
@@ -112,6 +116,8 @@ public abstract class ModelScreen extends GameScreen{
         backButton.setColor(Colors.red);
 		
 		ui.addActor(pauseButton);
+
+        state = new State();
 	}
 	
 	abstract void setPlayers();
@@ -130,11 +136,11 @@ public abstract class ModelScreen extends GameScreen{
 
     public void logState() {
         HashMap<String,Object> logMap = new HashMap<String,Object>();
-        logMap.put("screenType",this.toString());
+        logMap.put("screenType", this.toString());
         logMap.put("numPlayers",this.numPlayers);
         logMap.put("sessionTime",StarCycle.startTime);
         logMap.put("gameStartTime", gameStartTime);
-        logMap.put("currentTime",System.currentTimeMillis());
+        logMap.put("currentTime", System.currentTimeMillis());
         logMap.put("p1orbs",this.orbFactory.p1orbs);
         logMap.put("p2orbs",this.orbFactory.p2orbs);
         logMap.put("p1voids",this.orbFactory.p1voids);
@@ -208,7 +214,61 @@ public abstract class ModelScreen extends GameScreen{
                 player.setWinner();
             }
         }
-	}
+
+        state.updateState();
+    }
+	  
+    class State implements Serializable {
+
+        ArrayList<Vector2>[] orbPos = new ArrayList[numPlayers];
+        ArrayList<Vector2>[] orbVel = new ArrayList[numPlayers];
+        ArrayList<Vector2>[] voidPos = new ArrayList[numPlayers];
+        ArrayList<Vector2>[] voidVel = new ArrayList[numPlayers];
+        ArrayList<Vector2>[] novaPos = new ArrayList[numPlayers];
+        ArrayList<Vector2>[] novaVel = new ArrayList[numPlayers];
+        ArrayList<Vector2>[] starPos = new ArrayList[model.level.numStars];
+        boolean[][] pressed = new boolean[numPlayers][3];
+        float[] ammo = new float[numPlayers];
+
+        public State() {
+            for (Player p: players) {
+                orbPos[p.number] = new ArrayList<Vector2>();
+                orbVel[p.number] = new ArrayList<Vector2>();
+                voidPos[p.number] = new ArrayList<Vector2>();
+                voidVel[p.number] = new ArrayList<Vector2>();
+                novaPos[p.number] = new ArrayList<Vector2>();
+                novaVel[p.number] = new ArrayList<Vector2>();
+            }
+        }
+
+        void updateState() {
+            for (Player p: players) {
+
+                ammo[p.number] = p.ammo;
+
+                for (int i=0; i < 3; i++) {
+                    pressed[p.number][i] = p.launchPad.orbButton.pressedDown;
+                }
+
+                for (int i=0; i < p.orbs.size(); i++) {
+
+                    orbPos[p.number].add(i, p.orbs.get(i).position);
+                    orbVel[p.number].add(i, p.orbs.get(i).body.getLinearVelocity());
+
+                }
+
+                for (int i=0; i < p.voids.size(); i++) {
+                    voidPos[p.number].add(i, p.voids.get(i).position);
+                    voidVel[p.number].add(i, p.voids.get(i).body.getLinearVelocity());
+                }
+                for (int i=0; i < p.novas.size(); i++) {
+                    novaPos[p.number].add(i, p.novas.get(i).position);
+                    novaVel[p.number].add(i, p.novas.get(i).body.getLinearVelocity());
+                }
+            }
+        }
+    }
+
 	
 	void renderSprites(float delta) {
 		batch.begin();

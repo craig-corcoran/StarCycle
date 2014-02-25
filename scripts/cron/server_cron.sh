@@ -18,8 +18,8 @@ echo "$TIMESTAMP"
 echo "generating doxygen documentation"
 doxygen Doxyfile
 chmod -R a+rwx docs
-rm -rf /home/www/starcycle/static/docs
-mv docs /home/www/starcycle/static
+rm -rf /home/www/starcycle/docs
+mv docs /home/www/starcycle
 
 git checkout $BRANCH
 echo "packing textures"
