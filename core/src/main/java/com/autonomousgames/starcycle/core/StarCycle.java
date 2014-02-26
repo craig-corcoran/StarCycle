@@ -109,24 +109,6 @@ public class StarCycle implements ApplicationListener {
 			case TUTORIAL1:
 				screen = new Tutorial1();
 				break;
-			case TUTORIAL3:
-				screen = new Tutorial3();
-				break;
-			case TUTORIAL4:
-				screen = new Tutorial4();
-				break;
-			case TUTORIAL5:
-				screen = new Tutorial5();
-				break;
-			case TUTORIAL6:
-				screen = new Tutorial6();
-				break;
-			case TUTORIAL7:
-				screen = new Tutorial7();
-				break;
-			case TUTORIAL8:
-				screen = new Tutorial8();
-				break;
 			case ABOUT:
 				screen = new AboutScreen();
 				break;
@@ -142,11 +124,17 @@ public class StarCycle implements ApplicationListener {
 			case CAMPAIGNSELECT:
 				screen = new CampaignSelect();
 				break;
-			case MULTIPLAYERSELECT:
-				screen = new MultiplayerSelect(screen.nextLvlConfig, screen.skins, screen.colors);
+            case MULTIPLAYERLEVELSELECT:
+                screen = new MultiplayerSelect(screen.nextLvlConfig, screen.skins, screen.colors);
+                break;
+            case NETWORKEDPREGAME:
+                screen = new NetworkedPregame();
+                break;
+			case MULTIPLAYERMODESELECT:
+				screen = new MultiplayerModeScreen();
 				break;
 			default:
-				throw new AssertionError("No valid next screen set when scren isDone is true");
+				throw new AssertionError("No valid next screen set when screen isDone is true");
 			}
 		}
 	}
