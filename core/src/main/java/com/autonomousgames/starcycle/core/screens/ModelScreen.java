@@ -26,7 +26,7 @@ import java.util.HashMap;
 
 public abstract class ModelScreen extends GameScreen{
 	public Model model;
-    public final State state;
+    public final GameState state;
 	public Player[] players;
 	public int numPlayers;
 	OrbFactory orbFactory;
@@ -117,7 +117,7 @@ public abstract class ModelScreen extends GameScreen{
 		
 		ui.addActor(pauseButton);
 
-        state = new State();
+        state = new GameState(players.length, model.level.numStars);
 	}
 	
 	abstract void setPlayers();
@@ -215,59 +215,10 @@ public abstract class ModelScreen extends GameScreen{
             }
         }
 
-        state.updateState();
+        state.updateState(players, model);
     }
-	  
-    class State implements Serializable {
 
-        ArrayList<Vector2>[] orbPos = new ArrayList[numPlayers];
-        ArrayList<Vector2>[] orbVel = new ArrayList[numPlayers];
-        ArrayList<Vector2>[] voidPos = new ArrayList[numPlayers];
-        ArrayList<Vector2>[] voidVel = new ArrayList[numPlayers];
-        ArrayList<Vector2>[] novaPos = new ArrayList[numPlayers];
-        ArrayList<Vector2>[] novaVel = new ArrayList[numPlayers];
-        ArrayList<Vector2>[] starPos = new ArrayList[model.level.numStars];
-        boolean[][] pressed = new boolean[numPlayers][3];
-        float[] ammo = new float[numPlayers];
 
-        public State() {
-            for (Player p: players) {
-                orbPos[p.number] = new ArrayList<Vector2>();
-                orbVel[p.number] = new ArrayList<Vector2>();
-                voidPos[p.number] = new ArrayList<Vector2>();
-                voidVel[p.number] = new ArrayList<Vector2>();
-                novaPos[p.number] = new ArrayList<Vector2>();
-                novaVel[p.number] = new ArrayList<Vector2>();
-            }
-        }
-
-        void updateState() {
-            for (Player p: players) {
-
-                ammo[p.number] = p.ammo;
-
-                for (int i=0; i < 3; i++) {
-                    pressed[p.number][i] = p.launchPad.orbButton.pressedDown;
-                }
-
-                for (int i=0; i < p.orbs.size(); i++) {
-
-                    orbPos[p.number].add(i, p.orbs.get(i).position);
-                    orbVel[p.number].add(i, p.orbs.get(i).body.getLinearVelocity());
-
-                }
-
-                for (int i=0; i < p.voids.size(); i++) {
-                    voidPos[p.number].add(i, p.voids.get(i).position);
-                    voidVel[p.number].add(i, p.voids.get(i).body.getLinearVelocity());
-                }
-                for (int i=0; i < p.novas.size(); i++) {
-                    novaPos[p.number].add(i, p.novas.get(i).position);
-                    novaVel[p.number].add(i, p.novas.get(i).body.getLinearVelocity());
-                }
-            }
-        }
-    }
 
 	
 	void renderSprites(float delta) {
