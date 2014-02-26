@@ -1,14 +1,11 @@
 package com.autonomousgames.starcycle.core.screens;
 
-import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Colors;
-import com.autonomousgames.starcycle.core.UserSettings;
 import com.autonomousgames.starcycle.core.model.*;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
 import com.autonomousgames.starcycle.core.model.Orb.OrbType;
-import com.autonomousgames.starcycle.core.model.Void;
 import com.autonomousgames.starcycle.core.ui.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -69,7 +66,7 @@ public abstract class ModelScreen extends GameScreen{
 
         switch (this.screentype) {
             case MULTIPLAYER:
-                backScreen = ScreenType.MULTIPLAYERSELECT;
+                backScreen = ScreenType.MULTIPLAYERLEVELSELECT;
                 break;
             case SINGLEPLAYER:
                 backScreen = ScreenType.CAMPAIGNSELECT;
@@ -177,14 +174,12 @@ public abstract class ModelScreen extends GameScreen{
 		ui.draw();
 		
 		if (dbRender){
-			debugRenderer.render(model.world,cam.combined); // TODO remove in final version
+			debugRenderer.render(model.world,cam.combined);
+    		long start = System.currentTimeMillis();
+    		displayFPS(start);
+     		printFPS(start); // log fps to console output
 		}
-		
-		// TODO remove in final
-//		long start = System.currentTimeMillis();
-//		displayFPS(start);
-//		printFPS(start); // log fps to console output
-		
+
 		if (!debugPaused) {
 			if ((!gameOver) & (!paused)) {
 				// while the gpu renders, we update the world physics and manage collisions
