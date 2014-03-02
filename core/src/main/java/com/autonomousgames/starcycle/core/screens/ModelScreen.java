@@ -128,10 +128,23 @@ public abstract class ModelScreen extends GameScreen{
                 winner.base.baseDims.scl(1.5f), 2);
         winButton = new LayeredButton(new Vector2(StarCycle.screenWidth/2f, side*3f), iconSize.cpy().scl(4f));
         ui.addActor(winBase);
-        logState();
+        logGame();
 	}
 
-    public void logState() {
+    public void logGame() {
+        String[] gameLog = {
+                this.toString(), // screenType
+                this.numPlayers + "", // numPlayers
+                StarCycle.startTime + "", // sessionStartTime
+                gameStartTime + "", // gameStartTime
+                (System.currentTimeMillis() - gameStartTime) + "", // gameDuration
+                this.orbFactory.p1orbs + "",
+                this.orbFactory.p2orbs + "",
+                this.orbFactory.p1voids + "",
+                this.orbFactory.p2voids + "",
+                this.orbFactory.p1novas + "",
+                this.orbFactory.p2novas + "",
+        };
         HashMap<String,Object> logMap = new HashMap<String,Object>();
         logMap.put("screenType", this.toString());
         logMap.put("numPlayers",this.numPlayers);
@@ -144,7 +157,7 @@ public abstract class ModelScreen extends GameScreen{
         logMap.put("p2voids",this.orbFactory.p2voids);
         logMap.put("p1novas",this.orbFactory.p1novas);
         logMap.put("p2novas",this.orbFactory.p2novas);
-        StarCycle.logHandler.logGame(json.toJson(logMap));
+        StarCycle.logHandler.logGame(json.toJson(gameLog));
     }
 
 	

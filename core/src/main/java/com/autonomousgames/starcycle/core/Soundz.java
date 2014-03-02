@@ -1,6 +1,6 @@
 package com.autonomousgames.starcycle.core;
 
-import com.badlogic.gdx.Gdx;
+import com.autonomousgames.starcycle.core.log.UserSettings;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 

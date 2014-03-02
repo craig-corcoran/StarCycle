@@ -1,6 +1,5 @@
-package com.autonomousgames.starcycle.core;
+package com.autonomousgames.starcycle.core.log;
 
-import com.autonomousgames.starcycle.core.screens.SinglePlayerLevel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.MathUtils;
