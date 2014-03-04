@@ -1,6 +1,6 @@
 package com.autonomousgames.starcycle.core.model;
 
-import com.autonomousgames.starcycle.core.ModelSettings;
+import com.autonomousgames.starcycle.core.log.ModelSettings;
 import com.autonomousgames.starcycle.core.screens.ModelScreen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;

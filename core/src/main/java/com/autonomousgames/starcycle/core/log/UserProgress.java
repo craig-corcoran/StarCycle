@@ -1,4 +1,4 @@
-package com.autonomousgames.starcycle.core;
+package com.autonomousgames.starcycle.core.log;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;

@@ -1,7 +1,6 @@
 package com.autonomousgames.starcycle.core.screens;
 
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.ui.ScreenDoneClickListener;
 import com.autonomousgames.starcycle.core.ui.StandardButton;
 import com.autonomousgames.starcycle.core.ui.TextLayer;
@@ -15,7 +14,7 @@ public class MainMenu extends MenuScreen {
 		
 		float startButtonWidth = ui.getWidth()/3f;
 		Vector2 startButtonDims = new Vector2(startButtonWidth, startButtonWidth);
-		ScreenType startDestination = ScreenType.STARTMENU;//(ModelSettings.getSetting(SinglePlayerLevel.TUTORIAL.toString()) == 1f) ? ScreenType.STARTMENU : ScreenType.TUTORIAL_ORB;
+		ScreenType startDestination = StarCycle.virgin ? ScreenType.TUTORIAL0 : ScreenType.STARTMENU;
 		
 		StandardButton startButton = new StandardButton(new Vector2(ui.getWidth()/3f, ui.getHeight()/2f), startButtonDims, StarCycle.tex.genericLogo, padding);
 		startButton.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Start", startButtonDims));

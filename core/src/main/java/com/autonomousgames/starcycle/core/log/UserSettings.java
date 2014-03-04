@@ -1,4 +1,4 @@
-package com.autonomousgames.starcycle.core;
+package com.autonomousgames.starcycle.core.log;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -9,7 +9,6 @@ public class UserSettings {
 		userPrefs = Gdx.app.getPreferences("StarCycle-user-settings");
 		if (userPrefs.getFloat("settingsExist") == 0f) {
 			Gdx.app.log("UserSettings", "rewriting settings file");
-			userPrefs.putFloat("musicVolume", 0.5f);
 			userPrefs.putFloat("musicVolume", 0.5f);
             userPrefs.putFloat("sfxVolume", 0.5f);
 			userPrefs.putFloat("settingsExist", 1f);

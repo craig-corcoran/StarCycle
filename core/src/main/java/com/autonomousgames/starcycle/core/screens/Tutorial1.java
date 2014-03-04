@@ -2,7 +2,7 @@ package com.autonomousgames.starcycle.core.screens;
 
 
 import com.autonomousgames.starcycle.core.Colors;
-import com.autonomousgames.starcycle.core.ModelSettings;
+import com.autonomousgames.starcycle.core.log.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.controllers.GameController;
 import com.autonomousgames.starcycle.core.model.*;
@@ -309,6 +309,7 @@ public class Tutorial1 extends Tutorial {
         outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Now you are ready to play StarCycle!", new Vector2(bw*1.5f, 0f), swipeSize).rotateText(90f));
         outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Jump into the solo campaign,", new Vector2(bw*4f, 0f), swipeSize).rotateText(90f));
         outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "or challenge a friend in multiplayer!", new Vector2(bw*5.5f, 0f), swipeSize).rotateText(90f));
+        StarCycle.virgin = false;
         add(outroText);
 
         // Sixth Page
