@@ -13,7 +13,7 @@ public class MultiPlayer extends ModelScreen {
 	public MultiPlayer(LevelType lvl, BaseType[] skins, Color[][] colors) { 
 		super(lvl, ScreenType.MULTIPLAYER, skins, colors);
 		Gdx.input.setInputProcessor(new GameController(this, numPlayers));
-		nextScreen = ScreenType.MULTIPLAYERSELECT;
+		nextScreen = ScreenType.MULTIPLAYERLEVELSELECT;
 	}
 
 	@Override

@@ -1,9 +1,7 @@
 package com.autonomousgames.starcycle.core.screens;
 
-import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Colors;
-import com.autonomousgames.starcycle.core.UserSettings;
 import com.autonomousgames.starcycle.core.model.*;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
@@ -19,10 +17,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class ModelScreen extends GameScreen{
 	public Model model;
+    public final GameState state;
 	public Player[] players;
 	public int numPlayers;
 	OrbFactory orbFactory;
@@ -65,7 +66,7 @@ public abstract class ModelScreen extends GameScreen{
 
         switch (this.screentype) {
             case MULTIPLAYER:
-                backScreen = ScreenType.MULTIPLAYERSELECT;
+                backScreen = ScreenType.MULTIPLAYERLEVELSELECT;
                 break;
             case SINGLEPLAYER:
                 backScreen = ScreenType.CAMPAIGNSELECT;
@@ -112,6 +113,8 @@ public abstract class ModelScreen extends GameScreen{
         backButton.setColor(Colors.red);
 		
 		ui.addActor(pauseButton);
+
+        state = new GameState(players.length, model.level.numStars);
 	}
 	
 	abstract void setPlayers();
@@ -130,11 +133,11 @@ public abstract class ModelScreen extends GameScreen{
 
     public void logState() {
         HashMap<String,Object> logMap = new HashMap<String,Object>();
-        logMap.put("screenType",this.toString());
+        logMap.put("screenType", this.toString());
         logMap.put("numPlayers",this.numPlayers);
         logMap.put("sessionTime",StarCycle.startTime);
         logMap.put("gameStartTime", gameStartTime);
-        logMap.put("currentTime",System.currentTimeMillis());
+        logMap.put("currentTime", System.currentTimeMillis());
         logMap.put("p1orbs",this.orbFactory.p1orbs);
         logMap.put("p2orbs",this.orbFactory.p2orbs);
         logMap.put("p1voids",this.orbFactory.p1voids);
@@ -171,14 +174,12 @@ public abstract class ModelScreen extends GameScreen{
 		ui.draw();
 		
 		if (dbRender){
-			debugRenderer.render(model.world,cam.combined); // TODO remove in final version
+			debugRenderer.render(model.world,cam.combined);
+    		long start = System.currentTimeMillis();
+    		displayFPS(start);
+     		printFPS(start); // log fps to console output
 		}
-		
-		// TODO remove in final
-//		long start = System.currentTimeMillis();
-//		displayFPS(start);
-//		printFPS(start); // log fps to console output
-		
+
 		if (!debugPaused) {
 			if ((!gameOver) & (!paused)) {
 				// while the gpu renders, we update the world physics and manage collisions
@@ -208,7 +209,12 @@ public abstract class ModelScreen extends GameScreen{
                 player.setWinner();
             }
         }
-	}
+
+        state.updateState(players, model);
+    }
+
+
+
 	
 	void renderSprites(float delta) {
 		batch.begin();

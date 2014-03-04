@@ -1,19 +1,16 @@
 package com.autonomousgames.starcycle.core.screens;
 
-import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.Texturez;
-import com.autonomousgames.starcycle.core.controllers.MenuController;
-import com.autonomousgames.starcycle.core.model.FakeOrb;
-import com.autonomousgames.starcycle.core.model.ImageOrb;
+import java.util.ArrayList;
+import java.util.ListIterator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.math.Vector2;
-
-import java.util.ArrayList;
-import java.util.ListIterator;
+import com.autonomousgames.starcycle.core.StarCycle;
+import com.autonomousgames.starcycle.core.controllers.MenuController;
+import com.autonomousgames.starcycle.core.model.FakeOrb;
+import com.autonomousgames.starcycle.core.model.ImageOrb;
 
 public class MenuScreen extends GameScreen {
-
 	public ArrayList<ImageOrb> fakeOrbs = new ArrayList<ImageOrb>();
     boolean drawFakeOrbs = true;
 	
@@ -24,7 +21,6 @@ public class MenuScreen extends GameScreen {
 
     @Override
 	public void render(float delta) {
-		
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		batch.begin();
         background.update();
@@ -35,7 +31,6 @@ public class MenuScreen extends GameScreen {
             o.update(delta);
         }
 		batch.end();
-		
 		ui.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f)); // TODO correct time?
 		ui.draw();
 	}
@@ -55,6 +50,7 @@ public class MenuScreen extends GameScreen {
                     StarCycle.screenWidth, StarCycle.screenHeight, left));
         }
 	}
+
 	public String toString(){
 		return "MenuScreen";
 	}
