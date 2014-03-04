@@ -17,7 +17,8 @@ import java.util.zip.GZIPOutputStream;
 
 public class LogHandler extends Thread{
 	//String baseURL = "http://autonomousgam.es/api";
-	String baseURL = "http://127.0.0.1:5000/api";
+    //String baseURL = "http://127.0.0.1:5000/api";
+	String baseURL = "http://webcycle.herokuapp.com/api";
 	private FileHandle screenLog;
 	private FileHandle gameLog;
 
