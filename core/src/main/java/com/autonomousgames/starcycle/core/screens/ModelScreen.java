@@ -16,10 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public abstract class ModelScreen extends GameScreen{
 	public Model model;
@@ -128,12 +126,14 @@ public abstract class ModelScreen extends GameScreen{
                 winner.base.baseDims.scl(1.5f), 2);
         winButton = new LayeredButton(new Vector2(StarCycle.screenWidth/2f, side*3f), iconSize.cpy().scl(4f));
         ui.addActor(winBase);
-        logGame();
+        logGame(winner.number);
 	}
 
-    public void logGame() {
+    public void logGame(int whoWon) {
         String[] gameLog = {
+                whoWon + "", // winning player number
                 this.toString(), // screenType
+                this.nextLvlConfig.toString(), // screenType
                 this.numPlayers + "", // numPlayers
                 StarCycle.startTime + "", // sessionStartTime
                 gameStartTime + "", // gameStartTime
@@ -145,18 +145,6 @@ public abstract class ModelScreen extends GameScreen{
                 this.orbFactory.p1novas + "",
                 this.orbFactory.p2novas + "",
         };
-        HashMap<String,Object> logMap = new HashMap<String,Object>();
-        logMap.put("screenType", this.toString());
-        logMap.put("numPlayers",this.numPlayers);
-        logMap.put("sessionTime",StarCycle.startTime);
-        logMap.put("gameStartTime", gameStartTime);
-        logMap.put("currentTime", System.currentTimeMillis());
-        logMap.put("p1orbs",this.orbFactory.p1orbs);
-        logMap.put("p2orbs",this.orbFactory.p2orbs);
-        logMap.put("p1voids",this.orbFactory.p1voids);
-        logMap.put("p2voids",this.orbFactory.p2voids);
-        logMap.put("p1novas",this.orbFactory.p1novas);
-        logMap.put("p2novas",this.orbFactory.p2novas);
         StarCycle.logHandler.logGame(json.toJson(gameLog));
     }
 

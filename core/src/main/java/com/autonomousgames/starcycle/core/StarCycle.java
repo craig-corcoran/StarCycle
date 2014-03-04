@@ -21,21 +21,24 @@ public class StarCycle implements ApplicationListener {
 	public static Vector2 meterScreenCenter;
 	public static Vector2 pixelScreenCenter;
     public static StarCycleAssetManager assetManager;
-    private static BackgroundManager background;
-    private GameScreen screen;
 	public static LogHandler logHandler;
 	public static long startTime;
 	public static float padding;
     public static Soundz audio;
     public static Texturez tex;
     public static Json json = new Json();
-    boolean startAtEnd;
     public static UserId uidHandler;
     public static UserProgress progressHandler;
     public static boolean virgin = false;
+    public static String version = "00.00.03";
+    private static BackgroundManager background;
+    private GameScreen screen;
+    boolean startAtEnd;
+    private long lastChange;
 
     @Override
 	public void create() {
+        lastChange = System.currentTimeMillis();
 		json.setOutputType(JsonWriter.OutputType.json);
 		pixelsPerMeter = Gdx.graphics.getHeight()/10f;
 		padding = pixelsPerMeter * ModelSettings.getFloatSetting("paddingMeters"); // relative padding size for UI buttons
@@ -73,7 +76,12 @@ public class StarCycle implements ApplicationListener {
         assetManager.update();
 		if (screen.isDone) {
 			logHandler.writeLogs();
-            String[] screenLogEntry = {screen.toString(), StarCycle.startTime + "", System.currentTimeMillis() + ""};
+            String[] screenLogEntry = {
+                    screen.toString(), // screen type
+                    StarCycle.startTime + "", // session start time
+                    (System.currentTimeMillis() - lastChange) + "" // duration on screen
+            };
+            lastChange = System.currentTimeMillis();
             logHandler.logScreen(json.toJson(screenLogEntry));
             if (!screen.silentSwitch) {
 			    audio.screenswitchSound.play(audio.sfxVolume);

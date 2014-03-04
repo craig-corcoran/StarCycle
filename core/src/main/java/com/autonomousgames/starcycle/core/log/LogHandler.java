@@ -13,12 +13,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.zip.GZIPOutputStream;
 
 public class LogHandler extends Thread{
-	String baseURL = "http://autonomousgam.es/api";
-	//String baseURL = "http://127.0.0.1:5000/api";
+	//String baseURL = "http://autonomousgam.es/api";
+	String baseURL = "http://127.0.0.1:5000/api";
 	private FileHandle screenLog;
 	private FileHandle gameLog;
 
@@ -34,7 +33,6 @@ public class LogHandler extends Thread{
 	}
 
 	public void pushLog (String istring) throws Exception {
-        Gdx.app.log("LogHandler", istring);
 		if (!istring.isEmpty()) {
 			HttpRequest httpRequest = new HttpRequest(HttpMethods.POST);
 			String requestURL = baseURL;
@@ -81,13 +79,12 @@ public class LogHandler extends Thread{
 			gameLog.delete();
 		}
         LogPackage logPackage = new LogPackage(StarCycle.uidHandler.getId(),
-                StarCycle.startTime,
-                Gdx.app.getType().toString(),
-                games,
-                screen_changes);
+                                               StarCycle.startTime,
+                                               Gdx.app.getType().toString(),
+                                               screen_changes,
+                                               games);
 
 		try {
-            Gdx.app.log("LogHandler", StarCycle.json.toJson(logPackage));
 			pushLog(StarCycle.json.toJson(logPackage));
 		}
         catch (Exception e) {
