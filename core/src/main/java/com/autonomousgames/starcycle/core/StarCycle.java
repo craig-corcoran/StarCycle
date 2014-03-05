@@ -86,13 +86,7 @@ public class StarCycle implements ApplicationListener {
             if (!screen.silentSwitch) {
 			    audio.screenswitchSound.play(audio.sfxVolume);
             }
-			if (screen instanceof Tutorial) {
-                startAtEnd = ((Tutorial) screen).startAtEnd;
-            }
-            else
-            {
-                startAtEnd = false;
-            }
+            startAtEnd = (screen instanceof Tutorial) && ((Tutorial) screen).startAtEnd;
 			screen.dispose();
 
 			switch (screen.nextScreen) {
