@@ -1,5 +1,9 @@
 package com.autonomousgames.starcycle.core;
 
+import com.autonomousgames.starcycle.core.log.LogHandler;
+import com.autonomousgames.starcycle.core.log.ModelSettings;
+import com.autonomousgames.starcycle.core.log.UserId;
+import com.autonomousgames.starcycle.core.log.UserProgress;
 import com.autonomousgames.starcycle.core.model.BackgroundManager;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -7,8 +11,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.autonomousgames.starcycle.core.screens.*;
-
-import java.util.HashMap;
 
 public class StarCycle implements ApplicationListener {
 	public static float pixelsPerMeter;  
@@ -19,20 +21,24 @@ public class StarCycle implements ApplicationListener {
 	public static Vector2 meterScreenCenter;
 	public static Vector2 pixelScreenCenter;
     public static StarCycleAssetManager assetManager;
-    private static BackgroundManager background;
-    private GameScreen screen;
 	public static LogHandler logHandler;
 	public static long startTime;
 	public static float padding;
     public static Soundz audio;
     public static Texturez tex;
     public static Json json = new Json();
-    boolean startAtEnd;
     public static UserId uidHandler;
     public static UserProgress progressHandler;
+    public static boolean virgin = false;
+    public static String version = "00.00.03";
+    private static BackgroundManager background;
+    private GameScreen screen;
+    boolean startAtEnd;
+    private long lastChange;
 
     @Override
 	public void create() {
+        lastChange = System.currentTimeMillis();
 		json.setOutputType(JsonWriter.OutputType.json);
 		pixelsPerMeter = Gdx.graphics.getHeight()/10f;
 		padding = pixelsPerMeter * ModelSettings.getFloatSetting("paddingMeters"); // relative padding size for UI buttons
@@ -50,12 +56,6 @@ public class StarCycle implements ApplicationListener {
         progressHandler = new UserProgress();
 		logHandler = new LogHandler();
 		startTime = System.currentTimeMillis();
-		HashMap<String,Object> logMap = new HashMap<String,Object>();
-		logMap.put("currentScreen", screen.toString());
-		logMap.put("sessionTime", StarCycle.startTime);
-		logMap.put("currentTime", System.currentTimeMillis());
-		logHandler.logScreen(json.toJson(logMap));
-		Gdx.app.log("msg",logHandler.toString());
 		logHandler.run();
 	}
 
@@ -76,22 +76,17 @@ public class StarCycle implements ApplicationListener {
         assetManager.update();
 		if (screen.isDone) {
 			logHandler.writeLogs();
-			HashMap<String,Object> logMap = new HashMap<String,Object>();
-			logMap.put("currentScreen", screen.toString());
-			logMap.put("sessionTime", StarCycle.startTime);
-			logMap.put("currentTime", System.currentTimeMillis());
-			logHandler.logScreen(json.toJson(logMap));
-			// dispose the current screen
+            String[] screenLogEntry = {
+                    screen.toString(), // screen type
+                    StarCycle.startTime + "", // session start time
+                    (System.currentTimeMillis() - lastChange) + "" // duration on screen
+            };
+            lastChange = System.currentTimeMillis();
+            logHandler.logScreen(json.toJson(screenLogEntry));
             if (!screen.silentSwitch) {
 			    audio.screenswitchSound.play(audio.sfxVolume);
             }
-			if (screen instanceof Tutorial) {
-                startAtEnd = ((Tutorial) screen).startAtEnd;
-            }
-            else
-            {
-                startAtEnd = false;
-            }
+            startAtEnd = (screen instanceof Tutorial) && ((Tutorial) screen).startAtEnd;
 			screen.dispose();
 
 			switch (screen.nextScreen) {
@@ -140,8 +135,8 @@ public class StarCycle implements ApplicationListener {
 	}
 	@Override
 	public void resize(int width, int height) {
-
 	}
+
 	@Override
 	public void resume() {
         tex.resetFonts();
@@ -154,5 +149,4 @@ public class StarCycle implements ApplicationListener {
     public static BackgroundManager getBackground() {
         return background;
     }
-
 }

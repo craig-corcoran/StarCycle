@@ -20,7 +20,7 @@ public class AboutScreen extends MenuScreen {
 		
 		Vector2 versionVector = new Vector2((ui.getWidth()*1f)/8f, ui.getHeight()*1f/2f);
 		LayeredButton versionText = new LayeredButton(versionVector);
-		versionText.addLayer(new TextLayer(StarCycle.tex.latoLightLarge,"StarCycle V0.0.03", versionVector).rotateText(90f));
+		versionText.addLayer(new TextLayer(StarCycle.tex.latoLightLarge,"StarCycle V" + StarCycle.version, versionVector).rotateText(90f));
 		
 		Vector2 copyrightVector = new Vector2((ui.getWidth()*2f)/8f, ui.getHeight()*1f/2f);
 		LayeredButton copyrightText = new LayeredButton(copyrightVector);
