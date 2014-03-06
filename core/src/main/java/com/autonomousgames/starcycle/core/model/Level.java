@@ -15,7 +15,7 @@ public class Level {
 
 	public float totalEnergy;
 	private final World world;
-	public ArrayList<Star> stars = new ArrayList<Star>();
+	public Star[] stars;
 	//private Player[] players;
 
 	public static enum LevelType {

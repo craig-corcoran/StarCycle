@@ -20,6 +20,17 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 public class Star extends Orbitable implements Collidable {
+
+    public class StarState {
+        int num = -1;
+        float x = 0f;
+        float y = 0f;
+        float[] possession = new float[numPlayers];
+        int[] numActiveOrbs = new int[numPlayers];
+    }
+
+    public static final StarState state;
+
 	public static float captureRatio;
 	public final float radius;
 	public float mass;

@@ -9,104 +9,98 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.LinkedList;
+import java.util.Vector;
 
 public class ChargeOrb extends Orb implements Collidable {
 
-	public static float orbitScal;
+    public class ChargeOrbState extends OrbState {
+        float dAngle = 0f;
+        int star = -1;
+        boolean lockedOn = false;
+    }
 
-	public LinkedList<Star> activeStars = new LinkedList<Star>();
-    public Star chargeStar = null;
-	public boolean orbiting = false;
-    public boolean lockedOn = false;
-    boolean setForRemoval = false;
-
-    private float dTheta = 0f; // Measured difference in radians.
-    private float rotDeg = 0f; // Vector rotation in degrees, used after lockOn.
-    private float angleSum = 0f;
-
-	LayeredButton chargeButton;
+    public final ChargeOrbState state = new ChargeOrbState();
+	static final LayeredButton[] chargeButtons = new LayeredButton[Model.numPlayers];
 
     private static final float angleThresh = ModelSettings.getFloatSetting("angleThresh");
+    private static final float chargeRadius = ModelSettings.getFloatSetting("chargeRadius")*StarCycle.pixelsPerMeter;
+    private static final float orbitScal = ModelSettings.getFloatSetting("orbitScal");
 	private static final float beamWidth = 0.1f*StarCycle.pixelsPerMeter;
-	private static final float chargeRadius = ModelSettings.getFloatSetting("chargeRadius")*StarCycle.pixelsPerMeter;
 
-	public ChargeOrb(Player player, Vector2 position,
-			Vector2 velocity, Model model, OrbType type) {
-		super(player, position, velocity, model, type);
+    private float measAngle = 0f;
+    private float measAngOld = 0f;
+    private float angleSum = 0f;
+    private float beamAngle;
+    private LinkedList<Star> activeStars = new LinkedList<Star>();
 
-		orbitScal = ModelSettings.getFloatSetting("orbitScal");
-
-		chargeButton = new LayeredButton(orbButton.getCenter(),orbButton.getDims());
-		chargeButton.addLayer(new SpriteLayer(StarCycle.tex.chargeBeam, new Vector2(chargeRadius/2f, 0f), new Vector2(chargeRadius,beamWidth)).setSpriteColor(player.colors[1]),LayerType.ACTIVE);
-		chargeButton.deactivate();
+	public ChargeOrb(Player player, World world) {
+		super(player, world);
+		chargeButtons[playerNum] = new LayeredButton(orbButtons[playerNum].getCenter(),orbButtons[playerNum].getDims());
+		chargeButtons[playerNum].addLayer(new SpriteLayer(StarCycle.tex.chargeBeam, new Vector2(chargeRadius/2f, 0f), new Vector2(chargeRadius,beamWidth)).setSpriteColor(player.colors[1]),LayerType.ACTIVE);
+		chargeButtons[playerNum].deactivate();
 	}
 
-    private Vector2 diffVec = new Vector2();
-	private Vector2 oldVel = new Vector2();
-    private Vector2 dir = new Vector2();
+
 	@Override
-	public Vector2 getGravForce(Vector2[] starPositions) {
-		if (!orbiting) {
-			return super.getGravForce(starPositions);
+	public Vector2 getGravForce(Star[] stars) {
+		if (state.star == -1) { // if not orbiting any star
+			return super.getGravForce(stars);
 		}
 
 		// only consider the current charge star
 		else {
-			force.x = 0;
-			force.y = 0;
-			oldVel.set(body.getLinearVelocity());
+		    Vector2 force = new Vector2();
 
 			// add component from regular gravity for the active star, ignoring others
 			// because we assume the orbs dont affect stars, we can treat all objects as having mass 1.
-            float dist = position.dst(chargeStar.position);
-            float scal = chargeStar.mass * gravScalar / (dist * dist * dist);
-			force.add(scal * (chargeStar.position.x - position.x), scal * (chargeStar.position.y - position.y));
+            Star chargeStar = stars[state.star];
+            Vector2 starPos = chargeStar.position;
 
+            float dist = (float) Math.sqrt(Math.pow(starPos.x-state.x,2) + Math.pow(starPos.y-state.y,2));
+            float scal = stars[state.star].mass * gravScalar / (dist * dist * dist);
+			force.add(scal * (starPos.x - state.x), scal * (starPos.y - state.y));
+
+            // TODO more efficient to not create vector 2's here?
 			// adjust orbit toward stable velocity
-			diffVec.set(chargeStar.position.x - position.x, chargeStar.position.y - position.y).nor(); // unit vector from star to orb
-            Vector2 comp = diffVec.scl(oldVel.dot(diffVec));
-			dir.set(oldVel.x - comp.x, oldVel.y - comp.y); // direction orth to star
+			Vector2 diffVec = new Vector2(starPos.x - state.x, starPos.y - state.y).nor(); // unit vector from star to orb
+            diffVec.scl(diffVec.x * state.v + diffVec.y * state.w); // dot(diffVec, state.vel)
+            Vector2 dir = new Vector2(state.v - diffVec.x, state.w - diffVec.y); // direction orth to star
 			dir.nor().scl((float) Math.sqrt(chargeStar.mass * gravScalar) / (dist)); // target velocity
-			force.add(dir.sub(oldVel).scl(orbitScal)); // adjust velocity toward target
+			force.add(dir.sub(state.x, state.y).scl(orbitScal)); // adjust velocity toward target
 
 			return force;
 		}
 	}
 
-    void setPosition(float x, float y) {                           // TODO move to orb?
-        //Gdx.app.log("setting charge orb position",  x + ", " + y);
-        position.set(x, y);
-        body.setTransform(x, y, 0f);
-        orbButton.setPosition(x * StarCycle.pixelsPerMeter, y * StarCycle.pixelsPerMeter);
-    }
-
     private Vector2 vec = new Vector2();
-    private float measAngle = 0f;
-    private float measAngOld = 0f;
+    private float dTheta;
 	@Override
-	public void update(float delta, Vector2[] starPositions) {
+	public void update(Star[] stars) {
 
-        if (lockedOn) {
+        if (state.lockedOn) {
 
             // when locked on, just age and rotate at constant rate around star
-            age += delta;
-            if ((age > lifeSpan) & (lifeSpan != -1f)) { // remove expired orbs
-                removeSelf();
+            state.age++;
+            if ((state.age > lifeSpan) & (lifeSpan != -1f)) { // remove expired orbs
+                Model.toRemove.add(this);
+                return;
             }
 
-            angle += rotVel;
-            vec.rotate(rotDeg);
-            setPosition(chargeStar.position.x + vec.x, chargeStar.position.y + vec.y);
-
+            Vector2 starPos = stars[state.star].position;
+            vec.set(state.x - starPos.x, state.y - starPos.y);
+            vec.rotate(state.v); // v is used as rot vel when locked on
+            state.x = starPos.x + vec.x;
+            state.y = starPos.y + vec.y;
         }
         else {
 
-            super.update(delta,starPositions); // delegates physics difference bt orbiting to getGravForce
+            super.update(stars); // delegates physics difference bt orbiting to getGravForce
 
-            if (orbiting) { // if not locked on, but orbiting: check for lock-on conditions
-                measAngle = measureAngle(chargeStar.position); // change in angle this frame
+            if (!(state.star == -1)) { // if not locked on, but orbiting: check for lock-on conditions
+                measAngle = measureAngle(stars[state.star].position); // change in angle this frame
                 dTheta = measAngOld - measAngle;
                 if (Math.abs(dTheta) > MathUtils.PI) {
                     dTheta += -1 * Math.signum(dTheta) * MathUtils.PI2;
@@ -115,99 +109,92 @@ public class ChargeOrb extends Orb implements Collidable {
                 measAngOld = measAngle;
 
                 if (Math.abs(angleSum) > angleThresh) {
-                    lockOn(chargeStar, (float)(dTheta * 180f/Math.PI));
+                    lockOn(stars[state.star], (float)(dTheta * 180f/Math.PI));
                 }
             }
         }
+        beamAngle = stars[state.star].getButtonCenter().sub(orbButtons[playerNum].getCenter()).angle();
 	}
 
 	@Override
 	public void draw(SpriteBatch batch) {
-		if (orbiting) {
-			// Updating the beam angle can't occur in the update method, because it must occur after super.update.
-			float beamAngle = activeStars.getFirst().getButtonCenter().sub(orbButton.getCenter()).angle();
+		if (!(state.star == -1)) {
+
 			// Move to the orb's current position and point toward the star.
-			chargeButton.setCenter(orbButton.getCenter());
-			chargeButton.setRotation(beamAngle);
-			chargeButton.draw(batch, 1f);
+			chargeButtons[playerNum].setCenter(orbButtons[playerNum].getCenter());
+			chargeButtons[playerNum].setRotation(beamAngle);
+			chargeButtons[playerNum].draw(batch, 1f);
 		}
 		super.draw(batch);
 	}
 
     private float measureAngle(Vector2 position) {
-        return MathUtils.atan2(position.x - this.position.x, position.y - this.position.y) + MathUtils.PI;
+        return MathUtils.atan2(position.x - state.x, position.y - state.y) + MathUtils.PI;
+    }
+
+    private void resetLockCounter(Star star) {
+        angleSum = 0f;
+        measAngOld = measureAngle(star.position);
     }
 
 	@Override
 	public void beginSensorContact(Collidable obj) {
 		if (obj instanceof Star) {
-
-            // activate charge beam and orb
-            if (!orbiting) {
-                chargeStar = (Star)obj;
-                orbiting = true;
-                chargeButton.activate();
-                resetLockCounter();
+            activeStars.addLast((Star)obj);
+            // activate charge beam and set star
+            if (state.star == -1) {
+                state.star = ((Star) obj).index;
+                chargeButtons[playerNum].activate();
+                resetLockCounter((Star)obj);
             }
-            // add the star to the orb's active set
-            assert !activeStars.contains(obj); // TODO remove
-            activeStars.add((Star)obj);
 		}
-    }
-
-    private void resetLockCounter() {
-        angleSum = 0f;
-        //dAngle = 0f;
-        measAngOld = measureAngle(chargeStar.position);
     }
 
 	@Override
 	public void endSensorContact(Collidable obj) {
 
         if (obj instanceof Star) {
+
+            int idx = ((Star) obj).index;
             activeStars.remove(obj); // remove from the active set
 
-            if (obj.equals(chargeStar)) {
-                // I don't think this should ever happen:
-                if (lockedOn) { // losing lock on
-                    chargeStar.removeOrb(this);
-                    lockedOn = false;
-                    orbButton.deactivate();
-                }
-
-                if (activeStars.size() == 0) { // if no more active stars, stop charge beam
-                    chargeStar = null;
-                    orbiting = false;
-                    chargeButton.deactivate();
+            // if we just left range of the current charge star
+            if (idx == state.star) {
+                if (!activeStars.isEmpty()) {
+                    Star star = activeStars.getFirst();
+                    state.star = star.index;
+                    resetLockCounter(star);
                 }
                 else {
-                    chargeStar = activeStars.getFirst(); // set to next in priority
-                    resetLockCounter();
+                    state.star = -1;
+                    chargeButtons[playerNum].deactivate();
                 }
             }
         }
 	}
 
-	@Override
-	public void removeSelf() {
-        if (setForRemoval) {
-            Gdx.app.log("ChargeOrb","Already set for removal!");
-        }
-		if (lockedOn) {
-            lockedOn = false;
-			chargeStar.removeOrb(this);
-		}
-        setForRemoval = true;
-		super.removeSelf();
-	}
-
     public void lockOn(Star star, float angle) {
-        lockedOn = true;
-        orbButton.activate();
-        star.addOrb(this);
-        // set vector to be rotated by angle
-        vec.set(position.x - star.position.x, position.y - star.position.y);
-        rotDeg = angle;
+        state.lockedOn = true;
+        orbButtons[playerNum].activate();
+        state.v = dTheta;
+        // TODO change star state here?
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        this.state.lockedOn = false;
+        this.state.star = -1;
+        this.state.dAngle = 0f;
+        this.activeStars.clear();
+    }
+
+    public void init(ChargeOrbState state) {
+        init(state.x, state.y, state.v, state.w);
+        this.state.age = state.age;
+        this.state.lockedOn = state.lockedOn;
+        this.state.star = state.star;
+        this.state.dAngle = state.dAngle;
     }
 
 }

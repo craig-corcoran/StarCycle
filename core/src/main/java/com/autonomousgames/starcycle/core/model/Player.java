@@ -11,181 +11,137 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ListIterator;
 
 public class Player {
 
-	public final int number;
-	public float ammo;
-	public boolean win;
-	public Base base;
-	public boolean frozen = false; // Prevents launching any orbs.
-	public ArrayList<Orb> orbs = new ArrayList<Orb>(); // each player has an orb list
-	public ArrayList<Void> voids = new ArrayList<Void>(); // each player has a void list
-	public ArrayList<Nova> novas = new ArrayList<Nova>(); // each player has a nova list
-    public ArrayList<ImageOrb> incomeOrbs = new ArrayList<ImageOrb>();
-	public ArrayList<WinOrb> winOrbs = new ArrayList<WinOrb>();
-	public int starsCaptured;
-	//public final BitmapFont font;
-	public float initAmmo;
+    public class PlayerState {
+        float ammo = 0f;
+        int starsControlled = 0;
+        int numActiveOrbs = 0;
+        float pointerX = 0f;
+        float pointerY = 0f;
+        boolean[] buttonStates = new boolean[3];
+    }
+
+    //public boolean win;
+    //public boolean frozen = false; // Prevents launching any orbs.
+    //public final boolean ammoCap = false;
+    //public final float maxAmmo = 80f * 5f - 1f; // TODO how is this max ammo determined? can players max out?
+    //private float winOrbAngle = 0;
+    //private boolean winner = false;
+    //public boolean altWin = false;
+    //public boolean showIncomeOrbs = true;
+    private static final float velScale = ModelSettings.getFloatSetting("velScale");
+    private static final float ammoRate = ModelSettings.getFloatSetting("ammoRate");
+    private static final float maxAmmo = ModelSettings.getFloatSetting("maxAmmo");
+    private final HashMap<Class,Float> orbCosts = new HashMap<Class,Float>(3);
+
+    public final int number;
+    public final BaseType basetype;
+    public final Color[] colors;
+    public final Base base;
+    public final LaunchPad launchPad;
 	public final boolean baseVisible;
 	public final boolean launchpadVisible;
-	public final boolean ammoCap = false;
-	public final float maxAmmo = 80f * 5f - 1f; // TODO how is this max ammo determined? can players max out?
-	public final LaunchPad launchPad;
-	private float ammoDripRate;
-    private float winOrbAngle = 0;
-    private boolean winner = false;
-    public boolean altWin = false;
-    public boolean showIncomeOrbs = true;
-    private final float basePad = StarCycle.meterHeight * (1 / 4.2f);
-	Vector2[] baseOrigins = {
+
+    public final PlayerState state = new PlayerState();
+
+    final Model model;
+    float ammoDripRate;
+    final float basePad = StarCycle.meterHeight * (1 / 4.2f);
+	final Vector2[] baseOrigins = {
 			new Vector2(StarCycle.meterWidth - basePad, basePad),
 			new Vector2(basePad, StarCycle.meterHeight - basePad) };
 
-	public BaseType basetype;
-	public Color[] colors;
+    public Player(int num,
+                  Model model,
+                  Stage ui,
+                  BaseType basetype,
+                  Color[] colors,
+                  boolean baseVisible,
+                  boolean launchpadVisible) {
 
-	public Player(int num, BaseType basetype, Color[] colors, ModelScreen screen, 
-				Stage ui, boolean baseVisible, boolean launchpadVisible) {
-		this.number = num;
-        float baseRadius = ModelSettings.getFloatSetting("baseRadius");
-		this.initAmmo = ModelSettings.getFloatSetting("initAmmo");
-		this.ammoDripRate = ModelSettings.getFloatSetting("ammoDripRate");
-		this.ammo = initAmmo;
-		this.basetype = basetype;
+		number = num;
+		ammoDripRate = ModelSettings.getFloatSetting("ammoDripRate");
+        state.ammo = ModelSettings.getFloatSetting("initAmmo");
+        orbCosts.put(ChargeOrb.class, ModelSettings.getFloatSetting("orbCost"));
+        orbCosts.put(Void.class, ModelSettings.getFloatSetting("voidCosts"));
+        orbCosts.put(Nova.class, ModelSettings.getFloatSetting("novaCosts"));
+
+        this.model = model;
+        this.basetype = basetype;
 		this.colors = colors;
 		this.baseVisible = baseVisible;
 		this.launchpadVisible = launchpadVisible;
-		this.base = new Base(this, baseOrigins[number], baseRadius, ui, baseVisible);
-		launchPad = new LaunchPad(screen, this, launchpadVisible); // create ui buttons for player
+
+        base = new Base(this, baseOrigins[number], ui, baseVisible, false);
+		launchPad = new LaunchPad(model, ui, this, launchpadVisible, false); // create ui buttons for player
 	}
 	
-	public Player(int num, BaseType basetype, Color[] colors, ModelScreen screen, 
-			Stage ui, boolean UIVisible) {
-		this(num, basetype, colors, screen, ui, UIVisible, UIVisible);
+	public Player(int num,
+                  Model model,
+                  Stage ui,
+                  BaseType basetype,
+                  Color[] colors,
+                  boolean UIVisible) {
+		this(num, model, ui, basetype, colors,  UIVisible, UIVisible);
 	}
 
-    private float incOrbGravScale = ModelSettings.getFloatSetting("incOrbGravScale");
-    private Vector2 difference = new Vector2();
-    private float minDiff = 50f;
-    private float r = 0;
-	public void update(float delta, ArrayList<Star> stars, Vector2[] starPositions) {
+	public void update(Star[] stars) {
 
-        ammo += ammoDripRate;
-		starsCaptured = 0;
+		state.starsControlled = 0;
         for (Star star : stars) {
             if (star.populations[number] > Star.captureRatio * star.maxPop) {
-                starsCaptured += 1;
+                state.starsControlled += 1;
             }
         }
-		// check if player has conquered the star cluster
-        if (!altWin) {win = (starsCaptured == stars.size());}
-		
-		//update player orb positions and get income
-        for (Orb o: orbs) {
-            o.update(delta, starPositions);
+
+        state.ammo += ammoDripRate;
+        state.ammo += state.numActiveOrbs * ammoRate;
+
+        if (maxAmmo >= 0) {
+            state.ammo = Math.min(state.ammo, maxAmmo);
         }
 
-        for (Void v: voids) {
-            v.update(delta, starPositions);
-        }
-
-        for (Orb n: novas) {
-            n.update(delta, starPositions);
-        }
-
-        // add ammo from stars
-        for (Star star: stars) {
-            star.updateControl();
-        }
-
-		if (ammoCap) {
-			ammo = Math.min(ammo, maxAmmo);
-		}
 		if (baseVisible) {
-			base.update(delta);
+			base.update(Model.dt);
 		}
-		launchPad.update(delta);
 
-        // update income orb list to move toward base
-        for (ListIterator<ImageOrb> itr = incomeOrbs.listIterator(); itr.hasNext();) {
-            ImageOrb fakeOrb = itr.next();
-
-            difference.set((base.buttonLoc.x - fakeOrb.position.x), (base.buttonLoc.y - fakeOrb.position.y));
-            r = difference.len();
-            if ((r < minDiff) | (!fakeOrb.insideView()) | (fakeOrb.age > fakeOrb.lifespan)){
-                itr.remove();
-            }
-            else {
-                difference = difference.nor();
-                fakeOrb.acceleration.set(incOrbGravScale/(r*r) * difference.x, incOrbGravScale/(r*r) * difference.y);
-                fakeOrb.update(delta);
-            }
-        }
-
+		launchPad.update(Model.dt);
 
 	}
 
-    public void updateWinOrbs(Float delta)	{
-        // update win orblist
-        for (ListIterator<WinOrb> itr = winOrbs.listIterator(); itr.hasNext();) {
-            FakeOrb winOrb = itr.next();
-            winOrb.update(delta);
-            winOrb.age += 1;
-            if (winOrb.age > 50){
-                itr.remove();
-            }
-        }
-        if (winner){
-            winOrbAngle += .1;
-            if (winOrbAngle > 2*MathUtils.PI) {
-                winOrbAngle -= 2*MathUtils.PI;
-            }
-            Vector2 winOrbVector = new Vector2(MathUtils.cos(winOrbAngle) * MathUtils.PI/180f,
-                    MathUtils.sin(winOrbAngle) * MathUtils.PI/180f).nor().scl(10f);
-            winOrbs.add(new WinOrb(this, 8f, StarCycle.pixelScreenCenter,
-                    StarCycle.screenWidth, StarCycle.screenHeight, winOrbVector.cpy(), new Vector2(0f, 0f).cpy()));
-            winOrbs.add(new WinOrb(this, 8f, StarCycle.pixelScreenCenter,
-                    StarCycle.screenWidth, StarCycle.screenHeight, winOrbVector.scl(-1f).cpy(), new Vector2(0f, 0f).cpy()));
+    //private float incOrbGravScale = ModelSettings.getFloatSetting("incOrbGravScale");
+    public void draw(SpriteBatch batch) {
+
+        // TODO may want to draw income orbs here
+        //for (FakeOrb incomeOrb : incomeOrbs) {
+        //    incomeOrb.draw(batch);
+        //}
+
+        // TODO should the launchpad be drawn here (instead of with ui) or base drawn with ui?
+		base.draw(batch);
+	}
+
+    final Vector2 vel = new Vector2();
+    final Vector2 pos = new Vector2();
+    public void launch(Class cls) {
+        float cost = orbCosts.get(cls);
+        if (state.ammo > cost) {
+            state.ammo -= cost;
+            vel.set(base.getPointer());
+            vel.scl(velScale);
+            pos.set(vel);
+            pos.nor().scl(0.3f * base.baseDiams[base.level]);
+            pos.add(base.origin);
+            model.addOrb(number, cls, pos.x, pos.y, vel.x, vel.y);
         }
     }
 
-    public void draw(SpriteBatch batch) {
-
-        for (FakeOrb incomeOrb : incomeOrbs) {
-            incomeOrb.draw(batch);
-        }
-
-        for (Orb orb : orbs) {
-            orb.draw(batch);
-        }
-
-        for (Orb aVoid : voids) {
-            aVoid.draw(batch);
-        }
-
-        for (Orb nova : novas) {
-            nova.draw(batch);
-        }
-		
-		base.draw(batch);
-
-        for (ImageOrb incomeOrb: incomeOrbs) {
-            incomeOrb.draw(batch);
-        }
-
-        for (FakeOrb winOrb : winOrbs) {
-            winOrb.draw(batch);
-        }
-
-
-	}
-
 	public void dispose() {
-		orbs.clear();
-        winOrbs.clear();
-		// TODO need to dispose player elements?n launchpad, etc
+		// TODO need to dispose player elements? base, launchpad, incomeorbs, etc
 	}
 
 	public void stopDrip() {
@@ -193,20 +149,16 @@ public class Player {
 	}
 	
 	public void startDrip() {
-		ModelSettings.getFloatSetting("ammoDripRate");
+		ammoDripRate = ModelSettings.getFloatSetting("ammoDripRate");
 	}
-    public void setWinner() {
-        winner = true;
-    }
-	
+
 	public void disableIncome() {
 		stopDrip();
-		ammo = 0f;
-//		launchPad.drawAmmo = false;
+		state.ammo = 0f;
 	}
 
     public void setLevel(int i) {
-        base.setLvl(i);
+        base.changeLvl(i); // plays levelup sound (as opposed to base.setLevel)
         launchPad.setLvl(i);
     }
 }
