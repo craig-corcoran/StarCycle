@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class Level {
 
-	public int numStars;
+	public final int numStars;
     private ArrayList<Orbitable> pathedObjList = new ArrayList<Orbitable>();
 
 	public float totalEnergy;
@@ -26,7 +26,7 @@ public class Level {
         float orbitSpeed = ModelSettings.getFloatSetting("orbitSpeed");
         float starRadius = ModelSettings.getFloatSetting("starRadius");
 		this.world = world;
-		
+
 		Vector2 center = new Vector2((1 / 2f) * StarCycle.meterWidth,
 				(1 / 2f) * StarCycle.meterHeight);
 		Vector2 centerRight = new Vector2((1 / 2f) * StarCycle.meterWidth,
@@ -35,31 +35,30 @@ public class Level {
 				(2 / 3f) * StarCycle.meterHeight);
         Vector2 farCenter = new Vector2((1 / 3f) * StarCycle.meterWidth, (1 / 2f) * StarCycle.meterHeight);
         Vector2 nearCenter = new Vector2((2 / 3f) * StarCycle.meterWidth, (1 / 2f) * StarCycle.meterHeight);
-		
+
 		EllipticalPath ellipsePath = new EllipticalPath(3f, 4f, center);
-		
 		switch (lvl) {
 		case SINGLE:
 			numStars = 1;
-			stars = new ArrayList<Star>(numStars);
+			stars = new Star[numStars];
 			addStaticStar(players, 0, center, 1.5f * starRadius);
 			break;
 		case DOUBLE:
 			numStars = 2;
-			stars = new ArrayList<Star>(numStars);
+			stars = new Star[numStars];
 			addStaticStar(players, 0, centerRight, 1.5f * starRadius);
 			addStaticStar(players, 1, centerLeft, 1.5f * starRadius);
 			break;
 		case TRIPLE:
 			numStars = 3;
-			stars = new ArrayList<Star>(numStars);
+			stars = new Star[numStars];
 			addStaticStar(players, 0, centerRight, 1.5f * starRadius);
 			addStaticStar(players, 1, centerLeft, 1.5f * starRadius);
 			addStaticStar(players, 2, farCenter, 1.5f * starRadius);
 			break;
 		case QUAD:
 			numStars = 4;
-			stars = new ArrayList<Star>(numStars);
+			stars = new Star[numStars];
 			Vector2 lowerRight = new Vector2((1 / 2f) * StarCycle.meterWidth,
 					(2 / 3f) * StarCycle.meterHeight);
 			Vector2 upperFarRight = new Vector2((1 / 3f) * StarCycle.meterWidth, (5f / 6f) * StarCycle.meterHeight);
@@ -74,7 +73,7 @@ public class Level {
 			break;
         case QUAD2:
             numStars = 4;
-            stars = new ArrayList<Star>(numStars);
+            stars = new Star[numStars];
             addStaticStar(players, 0, centerRight, 1.5f * starRadius);
             addStaticStar(players, 1, centerLeft, 1.5f * starRadius);
             addStaticStar(players, 2, farCenter, 1.5f * starRadius);
@@ -82,7 +81,7 @@ public class Level {
             break;
 		case DOUBLEBINARY:
 			numStars = 4;
-			stars = new ArrayList<Star>(numStars);
+			stars = new Star[numStars];
 			
 			DoubleEllipticalPath binaryPath1 = new DoubleEllipticalPath(2.3f,
 					3.1f, center, 1.15f, 1.15f, 0f, -3f);
@@ -96,14 +95,14 @@ public class Level {
 			break;
 		case TREFOIL:
 			numStars = 4;
-			stars = new ArrayList<Star>(numStars);
+			stars = new Star[numStars];
 			
 			addStaticStar(players, 0, center, 1.5f * starRadius);
 			addStarGroup(players, 1, 3, center, starRadius, ellipsePath, 0f, orbitSpeed);
 			break;
 		case VENNDIAGRAM:
 			numStars = 4;
-			stars = new ArrayList<Star>(numStars);
+			stars = new Star[numStars];
 			
 			Vector2 lowCenter = new Vector2((0.55f) * StarCycle.meterWidth,
 					(0.6f) * StarCycle.meterHeight);
@@ -119,7 +118,7 @@ public class Level {
 			break;
 		case CONCENTRIC:
 			numStars = 4;
-			stars = new ArrayList<Star>(numStars);
+			stars = new Star[numStars];
 			
 			EllipticalPath innerEllipse = new EllipticalPath(1.15f, 1.25f, center);
 			EllipticalPath outerEllipse = new EllipticalPath(3.5f, 4f, center);
@@ -129,26 +128,27 @@ public class Level {
 			break;
 		case NOSTARS:
 			numStars = 0;
-			stars = new ArrayList<Star>(numStars);
+			stars = new Star[numStars];
 //			addStaticStar(players, 0, players[0].baseOrigins[0], 0f);
 			break;
+        default: numStars=0;
 		} 
 	}
 
 	private void addStaticStar(Player[] players, int starIndex, Vector2 pos, float radius) {
-		stars.add(starIndex, new Star(radius, pos, players,
-				world, starIndex, 0f));
+		stars[starIndex] = new Star(radius, pos, players,
+				world, starIndex, 0f);
 	}
 
-	private void addPathedStar(Player[] players, int starIndex, Vector2 center, float radius, 
+	private void addPathedStar(Player[] players, int starIndex, Vector2 center, float radius,
 								PathType pathMap, float startPercent, float rotSpeed) {
 		
-		stars.add(starIndex, new Star(radius, center, players,
-											world, starIndex, pathMap, startPercent, rotSpeed));
-		pathedObjList.add(stars.get(starIndex));
+		stars[starIndex] = new Star(radius, players, center,
+											world, starIndex, pathMap, startPercent, rotSpeed);
+		pathedObjList.add(stars[starIndex]);
 	}
 
-	private void addStarGroup(Player[] players, int startingIndex, int groupSize, Vector2 center, float radius, 
+	private void addStarGroup(Player[] players, int startingIndex, int groupSize, Vector2 center, float radius,
 														PathType pathMap, float startPercent, float rotSpeed) {
 		for (int i = 0; i < groupSize; i++) {
 			int indx = startingIndex + i;

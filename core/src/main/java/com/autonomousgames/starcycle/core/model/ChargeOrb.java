@@ -16,7 +16,7 @@ import java.util.Vector;
 
 public class ChargeOrb extends Orb implements Collidable {
 
-    public class ChargeOrbState extends OrbState {
+    public static class ChargeOrbState extends OrbState {
         float dAngle = 0f;
         int star = -1;
         boolean lockedOn = false;

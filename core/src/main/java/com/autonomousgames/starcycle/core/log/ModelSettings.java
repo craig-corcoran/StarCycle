@@ -42,7 +42,7 @@ public class ModelSettings {
 			userPrefs.putFloat("velScale", 0.5f);          	// Base
 
 			userPrefs.putFloat("angleDelta", 0.5f);        // Star
-			userPrefs.putFloat("captureRatio", 0.5f);      // Star
+			userPrefs.putFloat("captureFraction", 0.5f);      // Star
 
 			userPrefs.putFloat("voidRadius", 0.12f);   // OrbFactory
 			userPrefs.putFloat("voidSensorRadius", 0.6f);   // GravWell

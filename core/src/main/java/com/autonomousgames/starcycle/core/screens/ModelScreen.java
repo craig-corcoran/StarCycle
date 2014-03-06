@@ -158,10 +158,6 @@ public abstract class ModelScreen extends GameScreen{
 		}
 	}
 	
-	public void launch(OrbType orbType, Player player) {
-		orbFactory.launch(orbType, player);
-	}
-	
 	public void render (float delta) {
 		// we update the world using a constant time to get the same physics across devices (set in StarCycle.java
 		//process the user button pushes
@@ -198,25 +194,16 @@ public abstract class ModelScreen extends GameScreen{
 	
 	public void update(float delta) {
 		
-		model.update(delta); // calls level.update
-		
-		// update players
-        for (Player player : players) {
-            player.update(delta, model.stars, model.starPositions);
-            // check for win
-            if (player.win) {
-                gameOver = true;
-                addWinBanner(player);
-                player.setWinner();
-            }
+		model.update(); // here's where the magic happens
+
+        // check for win conditions
+        int winner = model.winCondition.getWinner();
+        if (winner >= 0) { // if not -1 (no winner)
+
         }
 
-        state.updateState(players, model);
     }
 
-
-
-	
 	void renderSprites(float delta) {
 		batch.begin();
 

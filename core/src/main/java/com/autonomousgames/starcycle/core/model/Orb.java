@@ -19,7 +19,7 @@ public class Orb implements Collidable, Pool.Poolable {
 
     static int uid = 0;
 
-    public class OrbState {
+    public static class OrbState {
         float x = 0f;
         float y = 0f;
         float v = 0f;

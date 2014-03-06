@@ -16,7 +16,7 @@ import java.util.ListIterator;
 
 public class Player {
 
-    public class PlayerState {
+    public static class PlayerState {
         float ammo = 0f;
         int starsControlled = 0;
         int numActiveOrbs = 0;
@@ -25,18 +25,20 @@ public class Player {
         boolean[] buttonStates = new boolean[3];
     }
 
+    //TODO safe to get rid of these?
     //public boolean win;
-    //public boolean frozen = false; // Prevents launching any orbs.
     //public final boolean ammoCap = false;
     //public final float maxAmmo = 80f * 5f - 1f; // TODO how is this max ammo determined? can players max out?
     //private float winOrbAngle = 0;
     //private boolean winner = false;
     //public boolean altWin = false;
     //public boolean showIncomeOrbs = true;
-    private static final float velScale = ModelSettings.getFloatSetting("velScale");
-    private static final float ammoRate = ModelSettings.getFloatSetting("ammoRate");
-    private static final float maxAmmo = ModelSettings.getFloatSetting("maxAmmo");
-    private final HashMap<Class,Float> orbCosts = new HashMap<Class,Float>(3);
+    static final float velScale = ModelSettings.getFloatSetting("velScale");
+    static final float ammoRate = ModelSettings.getFloatSetting("ammoRate");
+    static final float maxAmmo = ModelSettings.getFloatSetting("maxAmmo");
+    static final float captureFrac = ModelSettings.getFloatSetting("captureFraction");
+
+    final HashMap<Class,Float> orbCosts = new HashMap<Class,Float>(3);
 
     public final int number;
     public final BaseType basetype;
@@ -47,9 +49,10 @@ public class Player {
 	public final boolean launchpadVisible;
 
     public final PlayerState state = new PlayerState();
+    public boolean frozen = false; // Prevents launching any orbs.
 
     final Model model;
-    float ammoDripRate;
+    final float ammoDripRate;
     final float basePad = StarCycle.meterHeight * (1 / 4.2f);
 	final Vector2[] baseOrigins = {
 			new Vector2(StarCycle.meterWidth - basePad, basePad),
@@ -89,11 +92,12 @@ public class Player {
 		this(num, model, ui, basetype, colors,  UIVisible, UIVisible);
 	}
 
+    final Vector2 pos = new Vector2();
 	public void update(Star[] stars) {
 
 		state.starsControlled = 0;
         for (Star star : stars) {
-            if (star.populations[number] > Star.captureRatio * star.maxPop) {
+            if (star.populations[number] > captureFrac * star.maxPop) {
                 state.starsControlled += 1;
             }
         }
@@ -108,6 +112,11 @@ public class Player {
 		if (baseVisible) {
 			base.update(Model.dt);
 		}
+
+        pos.set(base.getPointer());
+        pos.scl(velScale);
+        state.pointerX = pos.x;
+        state.pointerY = pos.y;
 
 		launchPad.update(Model.dt);
 
@@ -125,18 +134,14 @@ public class Player {
 		base.draw(batch);
 	}
 
-    final Vector2 vel = new Vector2();
-    final Vector2 pos = new Vector2();
     public void launch(Class cls) {
         float cost = orbCosts.get(cls);
         if (state.ammo > cost) {
             state.ammo -= cost;
-            vel.set(base.getPointer());
-            vel.scl(velScale);
-            pos.set(vel);
+            pos.set(state.pointerX, state.pointerY);
             pos.nor().scl(0.3f * base.baseDiams[base.level]);
             pos.add(base.origin);
-            model.addOrb(number, cls, pos.x, pos.y, vel.x, vel.y);
+            model.addOrb(number, cls, pos.x, pos.y, state.pointerX, state.pointerY);
         }
     }
 
@@ -160,5 +165,14 @@ public class Player {
     public void setLevel(int i) {
         base.changeLvl(i); // plays levelup sound (as opposed to base.setLevel)
         launchPad.setLvl(i);
+    }
+
+    public void setState(PlayerState state) {
+        this.state.ammo = state.ammo;
+        this.state.starsControlled = state.starsControlled;
+        this.state.numActiveOrbs = state.numActiveOrbs;
+        this.state.pointerX = state.pointerX;
+        this.state.pointerY = state.pointerY;
+        this.state.buttonStates = state.buttonStates;
     }
 }

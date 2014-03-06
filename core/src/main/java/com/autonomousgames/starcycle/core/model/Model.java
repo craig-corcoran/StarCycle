@@ -13,7 +13,7 @@ public class Model {
 
     public class GameState {
 
-        //private Object lock;
+        // TODO mutex lock
 
         int frame = 0;
         int orbID = 0;
@@ -32,12 +32,25 @@ public class Model {
                 voidStates[i] = new LinkedHashMap<Integer,ChargeOrb.ChargeOrbState>(50);
                 novaStates[i] = new LinkedHashMap<Integer,Orb.OrbState>(50);
             }
-
-            //lock = new Object();
         }
     }
 
-    final winCondition; // XXX
+    public abstract class WinCondition {
+        public abstract int getWinner();
+    }
+
+    public final WinCondition winCondition = new WinCondition() {
+        @Override
+        public int getWinner() {
+            for (Player p : players) {
+                if (p.state.starsControlled == level.numStars) {
+                    return p.number;
+                }
+            }
+            return -1;
+        }
+    };
+
     public void checkStateConsistent(GameState state) {
         return;
     }
@@ -196,7 +209,7 @@ public class Model {
         }
 
         for (Star.StarState starSt: state.starStates) {
-            this.stars[starSt.num].setState(starSt);
+            this.stars[starSt.index].setState(starSt);
         }
 
         this.state.frame = state.frame;
@@ -225,7 +238,7 @@ public class Model {
                 novaIt.next().update(stars);
             }
 
-            p.update(); // XXX
+            p.update(stars); // XXX
         }
         level.updatePosition(dt); // XXX stars updated here?
 
