@@ -1,7 +1,7 @@
 package com.autonomousgames.starcycle.core.model;
 
 import com.autonomousgames.starcycle.core.Colors;
-import com.autonomousgames.starcycle.core.ModelSettings;
+import com.autonomousgames.starcycle.core.log.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.ui.Layer;
 import com.autonomousgames.starcycle.core.ui.LayerType;
@@ -175,6 +175,11 @@ public class Star extends Orbitable implements Collidable {
 			for (int i = quadLayer0; i < quadLayer0 + 4; i ++) {
 				starButton.getLayer(i).setColor(Colors.night);
 			}
+            for (int i = 0; i < players.length; i ++) {
+                if (captureRatio <= controlPercents[i]) {
+                    starButton.getLayer(1).setColor(players[i].colors[0]);
+                }
+            }
 		}
 		// If either player has full control, do not draw hexes:
 		if (starButton.isActive() && (0.99f <= controlPercents[0] || 0.99f <= controlPercents[1])) {

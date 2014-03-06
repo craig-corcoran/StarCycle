@@ -2,7 +2,7 @@ package com.autonomousgames.starcycle.core.screens;
 
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Colors;
-import com.autonomousgames.starcycle.core.UserSettings;
+import com.autonomousgames.starcycle.core.log.UserSettings;
 import com.autonomousgames.starcycle.core.ui.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;

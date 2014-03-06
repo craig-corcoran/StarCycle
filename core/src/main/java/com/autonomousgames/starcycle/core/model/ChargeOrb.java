@@ -1,6 +1,6 @@
 package com.autonomousgames.starcycle.core.model;
 
-import com.autonomousgames.starcycle.core.ModelSettings;
+import com.autonomousgames.starcycle.core.log.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;

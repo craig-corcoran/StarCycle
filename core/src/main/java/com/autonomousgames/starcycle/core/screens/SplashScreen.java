@@ -1,6 +1,5 @@
 package com.autonomousgames.starcycle.core.screens;
 
-import com.autonomousgames.starcycle.core.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;

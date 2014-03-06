@@ -1,6 +1,6 @@
 package com.autonomousgames.starcycle.core.model;
 
-import com.autonomousgames.starcycle.core.ModelSettings;
+import com.autonomousgames.starcycle.core.log.ModelSettings;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 

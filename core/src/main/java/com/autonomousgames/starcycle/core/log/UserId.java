@@ -1,5 +1,6 @@
-package com.autonomousgames.starcycle.core;
+package com.autonomousgames.starcycle.core.log;
 
+import com.autonomousgames.starcycle.core.StarCycle;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import java.util.UUID;
@@ -12,6 +13,7 @@ public class UserId {
 		if (!handle.exists()) {
 			Gdx.app.log("UserId", "rewriting settings file");
             handle.writeString(UUID.randomUUID().toString(), false);
+            StarCycle.virgin = true;
 		}
         else {
             uid = handle.readString();
