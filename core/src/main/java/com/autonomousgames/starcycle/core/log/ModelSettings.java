@@ -9,7 +9,7 @@ public class ModelSettings {
 	static {
 		userPrefs = Gdx.app.getPreferences("StarCycle-model-settings");
 		int clientSettingsVersion = userPrefs.getInteger("settingsVersion");
-		int currentSettingsVersion = 23;
+		int currentSettingsVersion = 24;
 		if (clientSettingsVersion != currentSettingsVersion) {
 			Gdx.app.log("ModelSettings", "rewriting settings file");
 			userPrefs.putInteger("settingsVersion", currentSettingsVersion);
@@ -63,8 +63,8 @@ public class ModelSettings {
 			userPrefs.putFloat("popRate",0.005f);          // OrbFactory
 
             userPrefs.putFloat("incAmmoThresh", 0.3f);
-            userPrefs.putFloat("initVelScale", 0.2f); // income orbs
-            userPrefs.putFloat("incOrbGravScale", 2000f);
+            userPrefs.putFloat("initVelScale", 0.4f); // income orbs
+            userPrefs.putFloat("incOrbGravScale", 8000f);
             userPrefs.putFloat("incOrbSize", 0.006f);
             userPrefs.putFloat("incOrbAlpha", 0.65f);
 
