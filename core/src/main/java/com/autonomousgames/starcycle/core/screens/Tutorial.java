@@ -162,7 +162,7 @@ public abstract class Tutorial extends ModelScreen {
         for (int i = 0; i < model.stars.length; i ++) {
             model.stars[i].moveStar(0f, moveClamped(starClamp[i][0], starClamp[i][1], y) / StarCycle.pixelsPerMeter);
         }
-        for (int i = 0; i < numPlayers; i ++) {
+        for (int i = 0; i < Model.numPlayers; i ++) {
 
             for (ChargeOrb orb: model.orbs[i].values()) {
                 orb.moveOrb(0f, moveClamped(orbClamp[0], orbClamp[1], y/StarCycle.pixelsPerMeter));
@@ -203,11 +203,11 @@ public abstract class Tutorial extends ModelScreen {
     }
 
     void moveBase(int i, float y) {
-        players[i].base.translateBase(0f ,y);
+        model.players[i].base.translateBase(0f ,y);
     }
 
     void moveLaunch(int i, float y) {
-        players[i].launchPad.movePos(0f, y);
+        model.players[i].launchPad.movePos(0f, y);
     }
 
     float moveClamped(int startPage, int endPage, float y) {

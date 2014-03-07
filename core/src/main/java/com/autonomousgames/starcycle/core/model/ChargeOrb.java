@@ -33,7 +33,7 @@ public class ChargeOrb extends Orb implements Collidable {
     private float measAngle = 0f;
     private float measAngOld = 0f;
     private float angleSum = 0f;
-    private float beamAngle;
+    private float beamAngle = 0f;
     private LinkedList<Star> activeStars = new LinkedList<Star>();
 
 	public ChargeOrb(Player player, World world) {
@@ -115,7 +115,9 @@ public class ChargeOrb extends Orb implements Collidable {
                 }
             }
         }
-        beamAngle = stars[state.star].getButtonCenter().sub(orbButtons[playerNum].getCenter()).angle();
+        if (state.star >= 0) {
+            beamAngle = stars[state.star].getButtonCenter().sub(orbButtons[playerNum].getCenter()).angle();
+        }
 	}
 
 	@Override

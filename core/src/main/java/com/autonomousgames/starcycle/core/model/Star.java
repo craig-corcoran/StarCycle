@@ -130,7 +130,7 @@ public class Star extends Orbitable implements Collidable {
 			float startPercent,
             float rotSpeed) {
 
-		this(radius, center, players, world, index, rotSpeed); // TODO why was center not getting passed through here?
+		this(radius, new Vector2(), players, world, index, rotSpeed); // TODO why was center not getting passed through here?
 		this.pathMap = pathMap;
 		this.startPercent = startPercent;
 	}

@@ -23,7 +23,6 @@ public abstract class ModelScreen extends GameScreen{
     public final Model model;
 	public boolean gameOver = false;
 	public boolean paused = false;
-	//public boolean debugPaused = false;
 	protected ScreenType screentype;
 	GL10 gl = Gdx.graphics.getGL10();
 	private Json json = new Json();
@@ -48,8 +47,8 @@ public abstract class ModelScreen extends GameScreen{
 		this.skins = skins;
 		this.colors = colors;
 		gameStartTime = System.currentTimeMillis();
-		model = new Model(lvl); // TODO construct  players in model
 
+        model = initModel(lvl, this);
 
         switch (this.screentype) {
             case MULTIPLAYER:
@@ -102,8 +101,10 @@ public abstract class ModelScreen extends GameScreen{
 		ui.addActor(pauseButton);
 	}
 
+    public abstract Model initModel(LevelType lvl, ModelScreen screen);
+
 	public void addWinBanner(Player winner){
-        for (Player player : players) {
+        for (Player player : model.players) {
             player.frozen = true;
         }
         StarCycle.audio.winSound.play(StarCycle.audio.sfxVolume);
@@ -119,7 +120,7 @@ public abstract class ModelScreen extends GameScreen{
                 whoWon + "", // winning player number
                 this.toString(), // screenType
                 this.nextLvlConfig.toString(), // screenType
-                this.numPlayers + "", // numPlayers
+                Model.numPlayers + "", // numPlayers
                 StarCycle.startTime + "", // sessionStartTime
                 gameStartTime + "", // gameStartTime
                 (System.currentTimeMillis() - gameStartTime) + "", // gameDuration
@@ -162,19 +163,17 @@ public abstract class ModelScreen extends GameScreen{
      		printFPS(start); // log fps to console output
 		}
 
-		if (!debugPaused) {
-			if ((!gameOver) & (!paused)) {
-				// while the gpu renders, we update the world physics and manage collisions
-				update(delta);
-			}
-            if (gameOver){
-                for (Player player : players) {
-                    //player.updateWinOrbs(delta);
-                }
+        if ((!gameOver) & (!paused)) {
+            // while the gpu renders, we update the world physics and manage collisions
+            update(delta);
+        }
+        if (gameOver){
+            for (Player player : model.players) {
+                //player.updateWinOrbs(delta);
             }
+        }
 
-			background.update(); // Moves while paused.
-		}
+        background.update(); // Moves while paused.
 	}
 	
 	public void update(float delta) {
@@ -197,8 +196,17 @@ public abstract class ModelScreen extends GameScreen{
             winBase.draw(batch, 1f);
         }
 
-        for (Player player : players) {
+        for (Player player : model.players) {
             player.draw(batch);
+            for (Orb o: model.orbs[player.number].values()) {
+                o.draw(batch);
+            }
+            for (Orb o: model.voids[player.number].values()) {
+                o.draw(batch);
+            }
+            for (Orb o: model.novas[player.number].values()) {
+                o.draw(batch);
+            }
         }
 		for (int i = 0; i < model.stars.length; i++) {
 			model.stars[i].draw(batch);
@@ -211,7 +219,7 @@ public abstract class ModelScreen extends GameScreen{
 //		batch.getProjectionMatrix().setToOrtho2D(0,0, StarCycle.meterWidth*StarCycle.pixelsPerMeter, StarCycle.meterHeight*StarCycle.pixelsPerMeter);
 		batch.begin();
 		Integer numOrbs = 0;
-        for (Player player : players) {
+        for (Player player : model.players) {
             numOrbs += player.state.numActiveOrbs;
         }
 		StarCycle.tex.font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond() + " update time: " +
@@ -228,7 +236,7 @@ public abstract class ModelScreen extends GameScreen{
 	public void dispose() {
 		super.dispose();
 		model.dispose();
-        for (Player player : players) {
+        for (Player player : model.players) {
             player.dispose();
         }
 	}

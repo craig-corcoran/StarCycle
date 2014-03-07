@@ -88,22 +88,22 @@ public class Tutorial1 extends Tutorial {
         add(transStar0);
         add(transStar1);
 
-        fakeLaunch = players[0].launchPad.getOrbButton(new Vector2(sw,sh + offset), 180f, players[0].colors, false);
+        fakeLaunch = model.players[0].launchPad.getOrbButton(new Vector2(sw,sh + offset), 180f, model.players[0].colors, false);
         add(fakeLaunch);
 
         Vector2 malumaPos = new Vector2(sw-sh/4.2f, sh/4.2f + offset);
-        fakeMaluma = new BaseButton(Base.BaseType.MALUMA, players[0].colors, malumaPos, new Vector2(1f,1f).scl(ModelSettings.getFloatSetting("baseRadius")*StarCycle.pixelsPerMeter));
+        fakeMaluma = new BaseButton(Base.BaseType.MALUMA, model.players[0].colors, malumaPos, new Vector2(1f,1f).scl(ModelSettings.getFloatSetting("baseRadius")*StarCycle.pixelsPerMeter));
         add(fakeMaluma);
 
-        fakeAim0 = players[0].base.getAimer(malumaPos, new Vector2(), players[0].colors);
+        fakeAim0 = model.players[0].base.getAimer(malumaPos, new Vector2(), model.players[0].colors);
         fakeAim0.rotate(90f);
         add(fakeAim0);
 
         Vector2 taketePos = new Vector2(sw/2f-StarCycle.pixelsPerMeter, sh*2f/3f+StarCycle.pixelsPerMeter + offset);
-        fakeTakete = new BaseButton(Base.BaseType.TAKETE, players[1].colors, taketePos, new Vector2(1f,1f).scl(ModelSettings.getFloatSetting("baseRadius")*StarCycle.pixelsPerMeter));
+        fakeTakete = new BaseButton(Base.BaseType.TAKETE, model.players[1].colors, taketePos, new Vector2(1f,1f).scl(ModelSettings.getFloatSetting("baseRadius")*StarCycle.pixelsPerMeter));
         add(fakeTakete);
 
-        fakeAim1 = players[1].base.getAimer(taketePos, new Vector2(), players[1].colors);
+        fakeAim1 = model.players[1].base.getAimer(taketePos, new Vector2(), model.players[1].colors);
         fakeAim1.rotate(-45f);
         for (int i = 0; i < fakeAim0.getLayerNum(); i ++) {
             fakeAim1.getLayer(i).setRelPosLen(Base.maxPointerLength * StarCycle.pixelsPerMeter);
@@ -193,26 +193,26 @@ public class Tutorial1 extends Tutorial {
         orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Novas", new Vector2(row2 - row0, 0f), numberSize).rotateText(90f));
         add(orbNames);
 
-        launch0 = players[0].launchPad.getOrbButton(new Vector2(row0+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        launch0 = model.players[0].launchPad.getOrbButton(new Vector2(row0+StarCycle.pixelsPerMeter, lph), 180f, model.players[0].colors, false);
         launch0.getLayer(1).toggleSpecial();
         add(launch0);
 
-        launch1 = players[0].launchPad.getOrbButton(new Vector2(row1+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        launch1 = model.players[0].launchPad.getOrbButton(new Vector2(row1+StarCycle.pixelsPerMeter, lph), 180f, model.players[0].colors, false);
         add(launch1);
 
-        launch1b = players[0].launchPad.getPw1Button(new Vector2(row1+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        launch1b = model.players[0].launchPad.getPw1Button(new Vector2(row1+StarCycle.pixelsPerMeter, lph), 180f, model.players[0].colors, false);
         launch1b.activate();
         launch1b.getLayer(1).toggleSpecial();
         add(launch1b);
 
-        launch2 = players[0].launchPad.getOrbButton(new Vector2(row2+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        launch2 = model.players[0].launchPad.getOrbButton(new Vector2(row2+StarCycle.pixelsPerMeter, lph), 180f, model.players[0].colors, false);
         add(launch2);
 
-        launch2b = players[0].launchPad.getPw1Button(new Vector2(row2+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        launch2b = model.players[0].launchPad.getPw1Button(new Vector2(row2+StarCycle.pixelsPerMeter, lph), 180f, model.players[0].colors, false);
         launch2b.activate();
         add(launch2b);
 
-        launch2c = players[0].launchPad.getPw2Button(new Vector2(row2+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        launch2c = model.players[0].launchPad.getPw2Button(new Vector2(row2+StarCycle.pixelsPerMeter, lph), 180f, model.players[0].colors, false);
         launch2c.activate();
         launch2c.getLayer(1).toggleSpecial();
         add(launch2c);
@@ -226,8 +226,8 @@ public class Tutorial1 extends Tutorial {
         voidText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Voids can destroy enemy orbs", new Vector2(swipeSize.x/8f, 0f), swipeSize).rotateText(90f));
         add(voidText);
 
-        players[0].base.translateBase(0f, offset);
-        players[0].launchPad.movePos(0f, offset);
+        model.players[0].base.translateBase(0f, offset);
+        model.players[0].launchPad.movePos(0f, offset);
         basePages = new int[]{2, pages-2};
         launchPages = new int[]{2, pages-2};
 
@@ -240,13 +240,13 @@ public class Tutorial1 extends Tutorial {
         }
         Vector2 orbDist = new Vector2(ModelSettings.getFloatSetting("chargeRadius"), 0f).scl(2f);
         Vector2 starPos = new Vector2(model.stars[0].state.x, model.stars[0].state.y);
-        for (int i = 0; i < numPlayers; i ++) {
+        for (int i = 0; i < Model.numPlayers; i ++) {
             model.stars[0].setControlPercent(i, 0.2f + i * 0.6f);
             for (int j = 0; j < 5; j ++) {
                 orbDist.rotate(30f);
 
                 // create locked orb
-                ChargeOrb orb = (ChargeOrb) model.addOrb(players[i].number,
+                ChargeOrb orb = (ChargeOrb) model.addOrb(model.players[i].number,
                         ChargeOrb.class,
                         starPos.x+orbDist.x,
                         starPos.y+orbDist.y,
@@ -259,10 +259,10 @@ public class Tutorial1 extends Tutorial {
         model.stars[1].setControlPercent(0, 0.49f);
         orbClamp[0] = 2;
         orbClamp[1] = 3;
-        Vector2 toStar = model.stars[1].getPosition().sub(players[0].base.origin);
+        Vector2 toStar = model.stars[1].getPosition().sub(model.players[0].base.origin);
         Vector2 aimVec = toStar.cpy().rotate(-90f).nor().scl(model.stars[0].radius+ ModelSettings.getFloatSetting("chargeRadius")*0.95f);
         aimVec.add(toStar);
-        players[0].base.setPointer(aimVec);
+        model.players[0].base.setPointer(aimVec);
 
         voidHint = new LayeredButton(new Vector2(sw-sh/12f, sh*7f/12f + offset));
         voidHint.addLayer(new SpriteLayer(StarCycle.tex.fingerRight, new Vector2(swipeSize.x/6f, swipeSize.x/4.5f)), LayerType.ACTIVE);
@@ -371,11 +371,11 @@ public class Tutorial1 extends Tutorial {
 
         if (currentBorder == 2 && !moving && !page2orbLaunched) {
             Model.setCosts(0f,0f,0f);
-            Vector2 vel = players[0].base.getPointer().scl(ModelSettings.getFloatSetting("velScaleOrbFact"));
+            Vector2 vel = model.players[0].base.getPointer().scl(ModelSettings.getFloatSetting("velScaleOrbFact"));
             orb = (ChargeOrb) model.addOrb(0, // TODO create locked orb method in Model?
                     ChargeOrb.class,
-                    players[0].base.origin.x,
-                    players[0].base.origin.y,
+                    model.players[0].base.origin.x,
+                    model.players[0].base.origin.y,
                     vel.x, vel.y);
             page2orbLaunched = true;
         }
@@ -389,12 +389,12 @@ public class Tutorial1 extends Tutorial {
                 orb.lockOn(model.stars[1]); // XXX removed angle here..
             }
         }
-        if (page2orbLaunched && players[0].base.level == 0) {
+        if (page2orbLaunched && model.players[0].base.level == 0) {
             if (model.stars[1].state.possession[0] >= 0.5f) {
-                players[0].setLevel(1);
-                players[0].base.setPointerPolar(2f, 150f);
-                players[0].base.manualLvl = false;
-                players[0].launchPad.manualLvl = false;
+                model.players[0].setLevel(1);
+                model.players[0].base.setPointerPolar(2f, 150f);
+                model.players[0].base.manualLvl = false;
+                model.players[0].launchPad.manualLvl = false;
                 voidHint.activate();
 
             }
@@ -411,14 +411,14 @@ public class Tutorial1 extends Tutorial {
                 pageDone.set(3, true);
             }
         }
-        if (players[0].base.level == 2 && !novaHint.isActive()) {
+        if (model.players[0].base.level == 2 && !novaHint.isActive()) {
             novaHint.activate();
         }
 
-        if (currentBorder == 4 && !moving && !players[0].showIncomeOrbs) {
+        if (currentBorder == 4 && !moving && !model.players[0].showIncomeOrbs) {
 
             Model.setCosts();
-            for (int i = 0; i < numPlayers; i ++) {
+            for (int i = 0; i < Model.numPlayers; i ++) {
                 for (Orb orb: model.orbs[i].values()) {
                     orb.removeIfOff();
                 }
@@ -430,15 +430,15 @@ public class Tutorial1 extends Tutorial {
                 }
 
             }
-            players[0].state.ammo = ModelSettings.getFloatSetting("nukeCost");
-            players[0].showIncomeOrbs = true;
-            players[0].launchPad.showMeter(true);
+            model.players[0].state.ammo = ModelSettings.getFloatSetting("nukeCost");
+            model.players[0].showIncomeOrbs = true;
+            model.players[0].launchPad.showMeter(true);
             Vector2 starPos = new Vector2(model.stars[3].state.x, model.stars[3].state.y);
             Vector2 orbDist = new Vector2(ModelSettings.getFloatSetting("chargeRadius"), 0f).scl(2f);
             for (int i = 0; i < 3; i ++) {
                 orbDist.rotate(120f);
 
-                ChargeOrb orb = (ChargeOrb) model.addOrb(players[i].number, // TODO create locked orb method in Model?
+                ChargeOrb orb = (ChargeOrb) model.addOrb(model.players[i].number, // TODO create locked orb method in Model?
                                                         ChargeOrb.class,
                                                         starPos.x+orbDist.x,
                                                         starPos.y+orbDist.y,
@@ -466,17 +466,26 @@ public class Tutorial1 extends Tutorial {
     }
 
     @Override
-    void setPlayers() {
-        numPlayers = 2;
-        players = new Player[numPlayers];
-        for (int i = 0; i < numPlayers; i ++) {
-            players[i] = new Player(i, model, ui, skins[i], colors[i], true, i == 0);
-            players[i].altWin = true;
-            players[i].launchPad.showMeter(false);
-            players[i].showIncomeOrbs = false;
-            players[i].launchPad.manualLvl = true;
-            players[i].base.manualLvl = true;
-        }
+    public Model initModel(Level.LevelType lvl, ModelScreen screen) {
+        // anonymous Model class implementing abstract initPlayers method
+        return new Model(lvl, screen) {
+
+            @Override
+            public Player[] initPlayers(ModelScreen screen) {
+                Player[] players = new Player[numPlayers];
+                for (int i=0; i < numPlayers; i++){
+
+                    model.players[i] = new Player(i, model, ui, skins[i], colors[i], true, i == 0);
+                    model.players[i].altWin = true;
+                    model.players[i].launchPad.showMeter(false);
+                    model.players[i].showIncomeOrbs = false;
+                    model.players[i].launchPad.manualLvl = true;
+                    model.players[i].base.manualLvl = true;
+
+                }
+                return players;
+            }
+        };
     }
 
     @Override

@@ -54,7 +54,7 @@ public class Orb implements Collidable, Pool.Poolable {
 
         orbButtons[player.number] = new LayeredButton(new Vector2().scl(StarCycle.pixelsPerMeter));
         orbButtons[player.number].addLayer(new SpriteLayer(StarCycle.tex.gradientRound, imageDims.cpy().scl(3f)).setSpriteColor(player.colors[0]), LayerType.ACTIVE);
-        orbButtons[player.number].deactivate();
+        //orbButtons[player.number].deactivate();
 
         for (int i = 0; i < 2; i ++) {
             orbButtons[player.number].addLayer(new SpriteLayer(textures[i], imageDims).setSpriteColor(player.colors[i]));

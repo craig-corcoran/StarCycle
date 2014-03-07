@@ -6,6 +6,7 @@ import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Bot;
 import com.autonomousgames.starcycle.core.model.BotType;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
+import com.autonomousgames.starcycle.core.model.Model;
 import com.autonomousgames.starcycle.core.model.Player;
 import com.autonomousgames.starcycle.core.ui.ScreenDoneClickListener;
 import com.badlogic.gdx.Gdx;
@@ -20,23 +21,29 @@ public class SinglePlayer extends ModelScreen {
 		Gdx.input.setInputProcessor(new GameController(this, 1)); // only one active touch interface
 		nextScreen = ScreenType.CAMPAIGNSELECT;
 		this.leveltype = leveltype;
-		((Bot)this.players[1]).setBotType(botType);
-	}
-	
-	@Override
-	void setPlayers() {
-		numPlayers = 2;
-		players = new Player[numPlayers];
-		for (int i=0; i < numPlayers; i++){
-			if (i==0){
-				players[i] = new Player(i, model, ui, skins[i],colors[i], true, true);
-			}
-			else{
-				players[i] = new Bot(i, skins[i], colors[i], this, ui, true, true);
-			}
-		}
+		((Bot)model.players[1]).setBotType(botType);
 	}
 
+    @Override
+    public Model initModel(LevelType lvl, ModelScreen screen) {
+
+        return new Model(lvl, screen) {
+            @Override
+            public Player[] initPlayers(ModelScreen screen) {
+                Player[] players = new Player[numPlayers];
+                for (int i=0; i < numPlayers; i++){
+                    if (i==0){
+                        players[i] = new Player(i, model, ui, skins[i],colors[i], true, true);
+                    }
+                    else{
+                        players[i] = new Bot(i, skins[i], colors[i], screen, ui, true, true);
+                    }
+                }
+                return players;
+            }
+        };
+    }
+	
 	void pushLevelCompletion(){
 		StarCycle.progressHandler.setLevelComplete(this.leveltype.toString(), "true");
 	}

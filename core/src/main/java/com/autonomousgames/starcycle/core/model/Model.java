@@ -2,15 +2,17 @@ package com.autonomousgames.starcycle.core.model;
 
 import com.autonomousgames.starcycle.core.log.ModelSettings;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
+import com.autonomousgames.starcycle.core.screens.ModelScreen;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Pool;
 
 import java.io.Serializable;
 import java.util.*;
 
-public class Model {
+public abstract class Model {
 
     public class GameState implements Serializable {
 
@@ -100,7 +102,7 @@ public class Model {
 	public final World world;
 	public final Level level;
 
-	public Model(LevelType lvl) {
+	public Model(LevelType lvl, ModelScreen screen) {
 
 		world = new World(new Vector2(0, 0), true); // no absolute gravity,
 													// sleep if able to
@@ -108,19 +110,20 @@ public class Model {
 		world.setContactListener(contactListener);
 
 
+        players = initPlayers(screen);
 		level = new Level(world, lvl, players);
         state = new GameState(level.numStars);
         stars = level.stars;
-        this.players = players;
+        //this.players = players;
 
 
         for (int i=0; i < Model.numPlayers; i++) {
             if (players[i] instanceof Bot) {
-                ((Bot) players[i]).initializeModel(model);
+                ((Bot) players[i]).initializeModel(this);
             }
         }
 
-        initStates();
+        initState();
         setCosts();
 
         for (Player p: players){
@@ -134,7 +137,9 @@ public class Model {
         }
 	}
 
-    void initStates() {
+    public abstract Player[] initPlayers(ModelScreen screen);
+
+    void initState() {
         for (Star star: stars) {
             this.state.starStates[star.state.index] = star.state;
         }
