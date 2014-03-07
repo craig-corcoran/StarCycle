@@ -22,12 +22,13 @@ import java.util.LinkedList;
 public class Star extends Orbitable implements Collidable {
 
     public static class StarState {
-        int index = -1;
-        float x = 0f;
-        float y = 0f;
-        final float[] possession = new float[Model.numPlayers];
-        final int[] numActiveOrbs = new int[Model.numPlayers];
+        public int index = -1;
+        public float x = 0f;
+        public float y = 0f;
+        public final float[] possession = new float[Model.numPlayers];
+        public final int[] numActiveOrbs = new int[Model.numPlayers];
     }
+    // TODO need index as part of state?
 
     public static final StarState state = new StarState();
 
@@ -36,21 +37,25 @@ public class Star extends Orbitable implements Collidable {
     static final float scaleRange = (432f - 143f) / 143f; // Scale percent, for maximum side length, over 100% of original size.
 
     public final float maxPop;
-	public final float mass;
+    public final float radius;
+    public final LinkedList<ChargeOrb> activeOrbs = new LinkedList<ChargeOrb>();
 
     final Body body;
-    final float radius;
     final float maxOrbs;
     final float orbitSpeed;
     final float[] populations;
     final float rotateSpeed = MathUtils.random(0.2f, 0.4f)*(1-2*MathUtils.random(1)); // This is purely visual.
     final LayeredButton starButton;
     final Color[][] playerColors = new Color[Model.numPlayers][];
-    final LinkedList<ChargeOrb> activeOrbs = new LinkedList<ChargeOrb>();
+
+    public float mass;
+    public boolean hitByNova = false;
 
     float startPercent;
     PathType pathMap;
     ArrayList<LayeredButton> controlButtons = new ArrayList<LayeredButton>();
+
+    // XXX change all position arguments to state.x and state.y
     //public boolean targetted = false;
 
 	// Drawing stuff
@@ -84,7 +89,7 @@ public class Star extends Orbitable implements Collidable {
 		// create the box2d star body
         BodyDef starBodyDef = new BodyDef();
 		starBodyDef.type = BodyType.StaticBody;
-		starBodyDef.position.set(this.position);
+		starBodyDef.position.set(state.x, state.y);
 		body = world.createBody(starBodyDef);
 
 		CircleShape starShape = new CircleShape();
@@ -139,6 +144,10 @@ public class Star extends Orbitable implements Collidable {
             this.state.possession[i] = state.possession[i];
             this.state.numActiveOrbs[i] = state.numActiveOrbs[i];
         }
+    }
+
+    public Vector2 getPosition() {
+        return new Vector2(this.state.x, this.state.y);
     }
 
 	public void draw(SpriteBatch batch) {
@@ -199,7 +208,7 @@ public class Star extends Orbitable implements Collidable {
 		}
 
 		// Update the button position and angle, then draw:
-		starButton.setCenter(position.cpy().scl(StarCycle.pixelsPerMeter));
+		starButton.setCenter(state.x * StarCycle.pixelsPerMeter, state.y * StarCycle.pixelsPerMeter);
 		starButton.rotate(rotateSpeed);
 		starButton.draw(batch, 1f);
 		// Update the control hexagons:
@@ -270,18 +279,16 @@ public class Star extends Orbitable implements Collidable {
 
 
     // TODO move more of this to level?
+
 	void updatePosition(float delta) {
 
 		if (pathMap != null) {
-			position = pathMap.getPosition(t, startPercent);
-			body.setTransform(position, 0f);
-
+		    Vector2 pos = pathMap.getPosition(t, startPercent);
+            state.x = pos.x;
+            state.y = pos.y;
+			body.setTransform(pos, 0f);
 			t += orbitSpeed * delta;
 		}
-		else {
-			position = body.getPosition();
-			body.setTransform(position.x, position.y, 0f);
-        }
 	}
 
 	// stars unaffected by contact
@@ -317,9 +324,9 @@ public class Star extends Orbitable implements Collidable {
 	}
 
     public void moveStar(float x, float y) {
-        position = body.getPosition();
-        body.setTransform(position.x + x, position.y + y, 0f);
-        position = body.getPosition();
+        state.x += x;
+        state.y += y;
+        body.setTransform(state.x, state.y, 0f);
     }
 
     public static LayeredButton getButton(Vector2 position, float radius) {
@@ -367,5 +374,13 @@ public class Star extends Orbitable implements Collidable {
 
     public void setControlPercent(int player, float percent) {
         populations[player] = maxPop*percent;
+    }
+
+    public void gravityOff() {
+        mass = 0f;
+    }
+
+    public void gravityOn() {
+        mass = radius * radius;
     }
 }

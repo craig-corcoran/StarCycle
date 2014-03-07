@@ -14,27 +14,29 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class Base {
 
-    static final float maxPointerLength = 2f;
-    static final float minPointerLength = 1.2f;
+    public static final float maxPointerLength = 2f;
+    public static final float minPointerLength = 1.2f;
+    public final Vector2 origin;
+    public int level;
+    public final BaseButton baseButton;
+
     static final Vector2 handleImDims = new Vector2(1f, 1f).scl(0.54f * StarCycle.pixelsPerMeter);
     static final Vector2 chevronImDims = new Vector2(1f, 1f).scl(0.45f * StarCycle.pixelsPerMeter);
     static final float baseRotationSpeed = ModelSettings.getFloatSetting("baseRotationSpeed");
-    static final Vector2 baseDims = new Vector2(1f, 1f).scl(StarCycle.pixelsPerMeter *
+    public static final Vector2 baseDims = new Vector2(1f, 1f).scl(StarCycle.pixelsPerMeter *
                                                             ModelSettings.getFloatSetting("baseRadius"));
 
     static final float[] baseDiams = new float[] { 2f, 2.4f, 2.8f };
     final Player player;
-	final Vector2 origin;
     final LayeredButton aimer;
 	final Vector2 pointer = new Vector2(); // vector pointing from origin to the tip of the rings
 
     final boolean UIVisible;
     final float UIScaleFactor;
-	final BaseButton baseButton;
 	final Vector2 buttonLoc;
-    final boolean manualLvl;
 
-    int level;
+    public boolean manualLvl; // TODO consolidate with manualLvl in Launchpad
+
     float pointerScale;
 	float angle;
 	float angleOfBaseRotation = 0;

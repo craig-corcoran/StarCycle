@@ -21,7 +21,8 @@ public class MultiPlayer extends ModelScreen {
 		numPlayers = 2;
 		players = new Player[numPlayers];
 		for (int i=0; i < numPlayers; i++){
-				players[i] = new Player(i, skins[i], colors[i], this, ui, true);
+				players[i] = new Player(i, model,ui, skins[i], colors[i], true, true);
+
 		}
 	}
 

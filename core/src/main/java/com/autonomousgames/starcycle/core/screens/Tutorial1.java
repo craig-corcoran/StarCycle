@@ -106,7 +106,7 @@ public class Tutorial1 extends Tutorial {
         fakeAim1 = players[1].base.getAimer(taketePos, new Vector2(), players[1].colors);
         fakeAim1.rotate(-45f);
         for (int i = 0; i < fakeAim0.getLayerNum(); i ++) {
-            fakeAim1.getLayer(i).setRelPosLen(Base.maxAimerLength);
+            fakeAim1.getLayer(i).setRelPosLen(Base.maxPointerLength * StarCycle.pixelsPerMeter);
         }
         add(fakeAim1);
 
@@ -232,27 +232,35 @@ public class Tutorial1 extends Tutorial {
         launchPages = new int[]{2, pages-2};
 
         for (int i = 0; i < 2; i ++) {
-            Star star = model.stars.get(i);
+            Star star = model.stars[i];
             star.moveStar(2f, -1f + i * 2f + offset / StarCycle.pixelsPerMeter);
             star.gravityOff();
             starClamp[i][0] = 2;
             starClamp[i][1] = 3;
         }
         Vector2 orbDist = new Vector2(ModelSettings.getFloatSetting("chargeRadius"), 0f).scl(2f);
-        Vector2 starPos = new Vector2(model.stars.get(0).position);
+        Vector2 starPos = new Vector2(model.stars[0].state.x, model.stars[0].state.y);
         for (int i = 0; i < numPlayers; i ++) {
-            model.stars.get(0).setControlPercent(i, 0.2f + i*0.6f);
+            model.stars[0].setControlPercent(i, 0.2f + i * 0.6f);
             for (int j = 0; j < 5; j ++) {
                 orbDist.rotate(30f);
-                orbFactory.createLockedOrb(players[i], new Vector2(starPos.x + orbDist.x, starPos.y + orbDist.y), -1f, model.stars.get(0), -120f);
+
+                // create locked orb
+                ChargeOrb orb = (ChargeOrb) model.addOrb(players[i].number,
+                        ChargeOrb.class,
+                        starPos.x+orbDist.x,
+                        starPos.y+orbDist.y,
+                        -120/60f, 0f);
+                orb.state.star = 0; // set orbiting the 0th star
+                orb.state.lockedOn = true;
             }
             orbDist.rotate(30f);
         }
-        model.stars.get(1).setControlPercent(0, 0.49f);
+        model.stars[1].setControlPercent(0, 0.49f);
         orbClamp[0] = 2;
         orbClamp[1] = 3;
-        Vector2 toStar = model.stars.get(1).position.cpy().sub(players[0].base.origin);
-        Vector2 aimVec = toStar.cpy().rotate(-90f).nor().scl(model.stars.get(0).radius+ ModelSettings.getFloatSetting("chargeRadius")*0.95f);
+        Vector2 toStar = model.stars[1].getPosition().sub(players[0].base.origin);
+        Vector2 aimVec = toStar.cpy().rotate(-90f).nor().scl(model.stars[0].radius+ ModelSettings.getFloatSetting("chargeRadius")*0.95f);
         aimVec.add(toStar);
         players[0].base.setPointer(aimVec);
 
@@ -271,8 +279,8 @@ public class Tutorial1 extends Tutorial {
         novaText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Novas can instantly capture a star", new Vector2(swipeSize.x/8f, 0f), swipeSize).rotateText(90f));
         add(novaText);
 
-        model.stars.get(2).moveStar(1f, offset / StarCycle.pixelsPerMeter);
-        model.stars.get(2).gravityOff();
+        model.stars[2].moveStar(1f, offset / StarCycle.pixelsPerMeter);
+        model.stars[2].gravityOff();
         starClamp[2][0] = 3;
         starClamp[2][1] = 3;
 
@@ -293,8 +301,8 @@ public class Tutorial1 extends Tutorial {
         ammoText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Novas use lots of energy, so aim carefully!", new Vector2(swipeSize.x*3f/16f, 0f), swipeSize).rotateText(90f));
         add(ammoText);
 
-        model.stars.get(3).moveStar(-2f, offset / StarCycle.pixelsPerMeter);
-        model.stars.get(3).gravityOff();
+        model.stars[3].moveStar(-2f, offset / StarCycle.pixelsPerMeter);
+        model.stars[3].gravityOff();
 
         // Fifth Page
         // Win condition and outro:
@@ -362,22 +370,27 @@ public class Tutorial1 extends Tutorial {
         };
 
         if (currentBorder == 2 && !moving && !page2orbLaunched) {
-            orbFactory.setCosts(0f, 0f, 0f);
-            orb = orbFactory.createChargeOrb(players[0], players[0].base.origin, players[0].base.getPointer().scl(ModelSettings.getFloatSetting("velScaleOrbFact")), -1f);
+            Model.setCosts(0f,0f,0f);
+            Vector2 vel = players[0].base.getPointer().scl(ModelSettings.getFloatSetting("velScaleOrbFact"));
+            orb = (ChargeOrb) model.addOrb(0, // TODO create locked orb method in Model?
+                    ChargeOrb.class,
+                    players[0].base.origin.x,
+                    players[0].base.origin.y,
+                    vel.x, vel.y);
             page2orbLaunched = true;
         }
         if (page2orbLaunched && !gravityOn) {
-            if (orb.orbiting) {
+            if (orb.state.star >= 0) { // if orbiting
                 for (int i = 0; i < 3; i ++) {
-                    Star star = model.stars.get(i);
+                    Star star = model.stars[i];
                     star.gravityOn();
                 }
                 gravityOn = true;
-                orb.lockOn(model.stars.get(1), 180f/60f);
+                orb.lockOn(model.stars[1]); // XXX removed angle here..
             }
         }
         if (page2orbLaunched && players[0].base.level == 0) {
-            if (model.stars.get(1).controlPercents[0] >= 0.5f) {
+            if (model.stars[1].state.possession[0] >= 0.5f) {
                 players[0].setLevel(1);
                 players[0].base.setPointerPolar(2f, 150f);
                 players[0].base.manualLvl = false;
@@ -388,13 +401,13 @@ public class Tutorial1 extends Tutorial {
         }
 
         if (currentBorder == 2 && !pageDone.get(2)) {
-            if (model.stars.get(0).getPlayerOrbs(1) == 0) {
+            if (model.stars[0].state.numActiveOrbs[1] == 0) {
                 pageDone.set(2, true);
 
             }
         }
         if (currentBorder == 3 && !pageDone.get(3)) {
-            if (model.stars.get(2).hitByNova) {
+            if (model.stars[2].hitByNova) {
                 pageDone.set(3, true);
             }
         }
@@ -403,42 +416,51 @@ public class Tutorial1 extends Tutorial {
         }
 
         if (currentBorder == 4 && !moving && !players[0].showIncomeOrbs) {
-            orbFactory.resetCosts();
+
+            Model.setCosts();
             for (int i = 0; i < numPlayers; i ++) {
-                for (int j = 0; j < players[i].orbs.size(); j ++) {
-                    players[i].orbs.get(j).removeIfOff();
+                for (Orb orb: model.orbs[i].values()) {
+                    orb.removeIfOff();
                 }
-                for (int j = 0; j < players[i].voids.size(); j ++) {
-                    players[i].voids.get(j).removeIfOff();
+                for (Orb orb: model.voids[i].values()) {
+                    orb.removeIfOff();
                 }
-                for (int j = 0; j < players[i].novas.size(); j ++) {
-                    players[i].novas.get(j).removeIfOff();
+                for (Orb orb: model.novas[i].values()) {
+                    orb.removeIfOff();
                 }
+
             }
-            players[0].ammo = ModelSettings.getFloatSetting("nukeCost");
+            players[0].state.ammo = ModelSettings.getFloatSetting("nukeCost");
             players[0].showIncomeOrbs = true;
             players[0].launchPad.showMeter(true);
-            Vector2 starPos = new Vector2(model.stars.get(3).position);
+            Vector2 starPos = new Vector2(model.stars[3].state.x, model.stars[3].state.y);
             Vector2 orbDist = new Vector2(ModelSettings.getFloatSetting("chargeRadius"), 0f).scl(2f);
             for (int i = 0; i < 3; i ++) {
                 orbDist.rotate(120f);
-                orbFactory.createLockedOrb(players[0], new Vector2(starPos.x + orbDist.x, starPos.y + orbDist.y), -1f, model.stars.get(3), -180f);
+
+                ChargeOrb orb = (ChargeOrb) model.addOrb(players[i].number, // TODO create locked orb method in Model?
+                                                        ChargeOrb.class,
+                                                        starPos.x+orbDist.x,
+                                                        starPos.y+orbDist.y,
+                                                        -180/60f, 0f);
+                orb.state.star = 3; // set orbiting the 3rd star
+                orb.state.lockedOn = true;
             }
             pageDone.set(4, true);
         }
 
         if (currentBorder == 4 && !moving && !ammoStarOnly) {
             for (int i = 0; i < 3; i ++) {
-                model.stars.get(i).gravityOff();
+                model.stars[i].gravityOff();
             }
-            model.stars.get(3).gravityOn();
+            model.stars[3].gravityOn();
             ammoStarOnly = true;
         }
         else if (currentBorder != 4 && ammoStarOnly) {
             for (int i = 0; i < 3; i ++) {
-                model.stars.get(i).gravityOn();
+                model.stars[i].gravityOn();
             }
-            model.stars.get(3).gravityOff();
+            model.stars[3].gravityOff();
             ammoStarOnly = false;
         }
     }
@@ -448,7 +470,7 @@ public class Tutorial1 extends Tutorial {
         numPlayers = 2;
         players = new Player[numPlayers];
         for (int i = 0; i < numPlayers; i ++) {
-            players[i] = new Player(i, skins[i], colors[i], this, ui, i ==0);
+            players[i] = new Player(i, model, ui, skins[i], colors[i], true, i == 0);
             players[i].altWin = true;
             players[i].launchPad.showMeter(false);
             players[i].showIncomeOrbs = false;

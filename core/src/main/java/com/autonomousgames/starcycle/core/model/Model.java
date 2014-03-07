@@ -7,11 +7,12 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
 
+import java.io.Serializable;
 import java.util.*;
 
 public class Model {
 
-    public class GameState {
+    public class GameState implements Serializable {
 
         // TODO mutex lock
 
@@ -52,11 +53,15 @@ public class Model {
     };
 
     public void checkStateConsistent(GameState state) {
-        return;
+
     }
 
+    public int[] totalOrbs = new int[numPlayers];
+    public int[] totalVoids = new int[numPlayers];
+    public int[] totalNovas = new int[numPlayers];
+
     static final float dt = 1/30f;
-	static final float gravityScalar = ModelSettings.getFloatSetting("gravScalar");
+	//static final float gravityScalar = ModelSettings.getFloatSetting("gravScalar");
 	static final short starCat = 0x0001;   		// 0000000000000001
 	static final short p1orbCat = 0x0004;  		// 0000000000000100
 	static final short p2orbCat = 0x0008;  		// 0000000000001000
@@ -75,14 +80,16 @@ public class Model {
 	static final short[] orbMaskBits = new short[] { p1orbMask, p2orbMask };
 	static final short[] voidMaskBits = new short[] { p1voidSensorMask, p2voidSensorMask };
 
-    static final LinkedHashSet<Orb> toRemove = new LinkedHashSet<Orb>();
-    static final int numPlayers = 2;
+    static final HashMap<Class,Float> orbCosts = new HashMap<Class,Float>(3);
 
-    final LinkedHashMap<Integer,ChargeOrb>[] orbs = new LinkedHashMap[numPlayers];
-    final LinkedHashMap<Integer,Void>[] voids = new LinkedHashMap[numPlayers];
-    final LinkedHashMap<Integer,Nova>[] novas = new LinkedHashMap[numPlayers];
-	final Player[] players;
-    final Star[] stars;
+    public static final LinkedHashSet<Orb> toRemove = new LinkedHashSet<Orb>(); // add orbs to this to remove them
+    public static final int numPlayers = 2;
+
+    public final LinkedHashMap<Integer,ChargeOrb>[] orbs = new LinkedHashMap[numPlayers];
+    public final LinkedHashMap<Integer,Void>[] voids = new LinkedHashMap[numPlayers];
+    public final LinkedHashMap<Integer,Nova>[] novas = new LinkedHashMap[numPlayers];
+	public final Player[] players;
+    public final Star[] stars;
 
     final Pool<ChargeOrb>[] orbPools = new OrbPool[numPlayers];
     final Pool<Void>[] voidPools = new VoidPool[numPlayers];
@@ -93,18 +100,28 @@ public class Model {
 	public final World world;
 	public final Level level;
 
-	public Model(LevelType lvl, Player[] players) {
+	public Model(LevelType lvl) {
 
 		world = new World(new Vector2(0, 0), true); // no absolute gravity,
 													// sleep if able to
 		ContactListener contactListener = new OrbContactListener();
 		world.setContactListener(contactListener);
 
+
 		level = new Level(world, lvl, players);
         state = new GameState(level.numStars);
         stars = level.stars;
         this.players = players;
 
+
+        for (int i=0; i < Model.numPlayers; i++) {
+            if (players[i] instanceof Bot) {
+                ((Bot) players[i]).initializeModel(model);
+            }
+        }
+
+        initStates();
+        setCosts();
 
         for (Player p: players){
             orbPools[p.number] = new OrbPool(p);
@@ -116,6 +133,27 @@ public class Model {
             novas[p.number] = new LinkedHashMap<Integer,Nova>(50);
         }
 	}
+
+    void initStates() {
+        for (Star star: stars) {
+            this.state.starStates[star.state.index] = star.state;
+        }
+        for (Player player: players) {
+            this.state.playerStates[player.number] = player.state;
+        }
+    }
+
+    public static void setCosts() {
+        orbCosts.put(ChargeOrb.class, ModelSettings.getFloatSetting("orbCost"));
+        orbCosts.put(Void.class, ModelSettings.getFloatSetting("voidCosts"));
+        orbCosts.put(Nova.class, ModelSettings.getFloatSetting("novaCosts"));
+    }
+
+    public static void setCosts(float o, float v, float n) {
+        orbCosts.put(ChargeOrb.class, o);
+        orbCosts.put(Void.class, v);
+        orbCosts.put(Nova.class, n);
+    }
 
     public class OrbPool extends Pool {
 
@@ -246,6 +284,19 @@ public class Model {
         state.frame++;
 	}
 
+
+    void incrementCounters(int playerNum, Class cls) {
+        if (cls == ChargeOrb.class) {
+            totalOrbs[playerNum]++;
+        }
+        if (cls == Void.class) {
+            totalVoids[playerNum]++;
+        }
+        if (cls == Nova.class) {
+            totalNovas[playerNum]++;
+        }
+    }
+
     /**
      * Adds an orb of the given class type with the given uid to appropriate player's lists. Does
      * not initialize the state of the orb.
@@ -272,6 +323,7 @@ public class Model {
             novas[playerNum].put(uid, nova);
             state.novaStates[playerNum].put(uid, nova.state);
         }
+        incrementCounters(playerNum, cls);
     }
 
     /**
@@ -283,24 +335,28 @@ public class Model {
      * @param v vel.x
      * @param w vel.y
      */
-    public void addOrb(int playerNum, Class cls, float x, float y, float v, float w) {
+    public Orb addOrb(int playerNum, Class cls, float x, float y, float v, float w) {
+        incrementCounters(playerNum, cls);
         if (cls == ChargeOrb.class) {
             ChargeOrb orb = orbPools[playerNum].obtain();
             orb.init(x,y,v,w); // make sure its calling init w ChargeOrbState not OrbState
             orbs[playerNum].put(orb.uid, orb);
             this.state.orbStates[playerNum].put(orb.uid, orb.state);
+            return orb;
         }
         else if (cls == Void.class) {
             Void vd = voidPools[playerNum].obtain();
             vd.init(x,y,v,w);
             voids[playerNum].put(vd.uid, vd);
             this.state.voidStates[playerNum].put(vd.uid, vd.state);
+            return vd;
         }
         else {
             Nova nova = novaPools[playerNum].obtain();
             nova.init(x,y,v,w);
             novas[playerNum].put(nova.uid, nova);
             this.state.novaStates[playerNum].put(nova.uid, nova.state);
+            return nova;
         }
     }
 
@@ -330,10 +386,16 @@ public class Model {
             novas[playerNum].put(nova.uid, nova);
             this.state.novaStates[playerNum].put(nova.uid, nova.state);
         }
+        incrementCounters(playerNum, cls);
     }
 
     void removeOrb(Orb o) {
         if (o.getClass() == ChargeOrb.class) {
+
+            if (((ChargeOrb)o).state.lockedOn) {
+                stars[((ChargeOrb)o).state.star].removeOrb((ChargeOrb) o);
+            }
+
             state.orbStates[o.playerNum].remove(o.state.uid);
             orbs[o.playerNum].remove(o.uid);
             orbPools[o.playerNum].free((ChargeOrb)o);

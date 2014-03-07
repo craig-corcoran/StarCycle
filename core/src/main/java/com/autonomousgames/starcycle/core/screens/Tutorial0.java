@@ -5,6 +5,7 @@ import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.log.ModelSettings;
 import com.autonomousgames.starcycle.core.controllers.GameController;
 import com.autonomousgames.starcycle.core.model.*;
+import com.autonomousgames.starcycle.core.model.Void;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
@@ -138,7 +139,7 @@ public class Tutorial0 extends Tutorial {
 
         Vector2 targetDims = new Vector2(0.5f,0.5f).scl(StarCycle.pixelsPerMeter);
         Vector2 bo = players[0].base.baseButton.getCenter();
-        Vector2 targetVec = new Vector2(-Base.maxAimerLength, 0f).scl(1.75f).rotate(-25f);
+        Vector2 targetVec = new Vector2(-Base.maxPointerLength * StarCycle.pixelsPerMeter, 0f).scl(1.75f).rotate(-25f);
         target0 = new LayeredButton(new Vector2(bo.x + targetVec.x, bo.y + targetVec.y));
         target0.addLayer(new SpriteLayer(StarCycle.tex.circle, targetDims).setSpriteColor(Colors.red).setSpriteAlpha(0.5f), LayerType.INACTIVE);
         target0.addLayer(new SpriteLayer(StarCycle.tex.circle, targetDims).setSpriteColor(Colors.spinach).setSpriteAlpha(0.5f), LayerType.ACTIVE);
@@ -181,8 +182,8 @@ public class Tutorial0 extends Tutorial {
         players[1].base.translateBase(0f, offset);
         players[1].base.setPointer(2f, 2f);
 
-        for (int i = 0; i < model.stars.size(); i ++) {
-            Star star = model.stars.get(i);
+        for (int i = 0; i < model.stars.length; i ++) {
+            Star star = model.stars[i];
             star.gravityOff();
             star.moveStar(2f, -1f + i*2f + offset / StarCycle.pixelsPerMeter);
         }
@@ -299,8 +300,8 @@ public class Tutorial0 extends Tutorial {
 
         ui.addActor(swiper);
 
-        orbFactory.setCosts(0f, 0f, 0f);
-        orbFactory.setLife(-1f, -1f);
+        Model.setCosts(0f, 0f, 0f);
+        Orb.setLifeSpan(-1);
 
         if (startAtEnd) {
             for (int i = 0; i < pages-1; i ++) {
@@ -338,47 +339,56 @@ public class Tutorial0 extends Tutorial {
             players[0].launchPad.streamOrbs = !(players[0].launchPad.streamOrbs);
         }
 
-        if (((moving || dragging || model.stars.get(1).getOrbCount(Orb.OrbType.ORB) >= 10) && players[1].launchPad.streamOrbs) || (currentBorder == 4 && !moving && !dragging && model.stars.get(1).getOrbCount(Orb.OrbType.ORB) < 10 && players[1].launchPad.streamOrbs == false)) {
+        if (((moving || dragging || model.stars[1].activeOrbs.size() >= 10)
+                && players[1].launchPad.streamOrbs) || (currentBorder == 4
+                && !moving
+                && !dragging
+                && model.stars[1].activeOrbs.size() < 10
+                && players[1].launchPad.streamOrbs == false)) {
             players[1].launchPad.streamOrbs = !(players[1].launchPad.streamOrbs);
         }
 
         if (currentBorder >= orbKillPage && (dragging || moving)) {
             for (int i = 0; i < numPlayers; i ++) {
-                for (int j = 0; j < players[i].orbs.size(); j ++) {
-                    players[i].orbs.get(j).removeSelf();
+
+                for (ChargeOrb orb: model.orbs[i].values()) {
+                    model.toRemove.add(orb);
                 }
-                for (int j = 0; j < players[i].voids.size(); j ++) {
-                    players[i].voids.get(j).removeSelf();
+                for (Void orb: model.voids[i].values()) {
+                    model.toRemove.add(orb);
                 }
-                for (int j = 0; j < players[i].novas.size(); j ++) {
-                    players[i].novas.get(j).removeSelf();
+                for (Nova orb: model.novas[i].values()) {
+                    model.toRemove.add(orb);
                 }
             }
         }
 
         if (currentBorder >= 4 && !gravityOn) {
-            for (int i = 0; i < model.stars.size(); i ++) {
-                Star star = model.stars.get(i);
+            for (int i = 0; i < model.stars.length; i ++) {
+                Star star = model.stars[i];
                 star.gravityOn();
             }
             gravityOn = true;
         }
+
         if (currentBorder < 4 && !moving && gravityOn) {
-            for (int i = 0; i < model.stars.size(); i ++) {
-                model.stars.get(i).gravityOff();
+            for (int i = 0; i < model.stars.length; i ++) {
+                model.stars[i].gravityOff();
             }
             gravityOn = false;
         }
 
+
         for (int i = 0; i < numPlayers; i ++) {
-            for (int j = 0; j < players[i].orbs.size(); j ++) {
-                players[i].orbs.get(j).removeIfOff();
+
+            for (ChargeOrb orb: model.orbs[i].values()) {
+                orb.removeIfOff();
             }
-            for (int j = 0; j < players[i].voids.size(); j ++) {
-                players[i].voids.get(j).removeIfOff();
+            for (Void orb: model.voids[i].values()) {
+                orb.removeIfOff();
             }
-            for (int j = 0; j < players[i].novas.size(); j ++) {
-                players[i].novas.get(j).removeIfOff();
+            for (Nova orb: model.novas[i].values()) {
+                orb.removeIfOff();
             }
         }
 
@@ -405,7 +415,7 @@ public class Tutorial0 extends Tutorial {
         }
 
         if (currentBorder == 4 && !pageDone.get(4)) {
-            if (model.stars.get(0).getOrbCount(Orb.OrbType.ORB) >= 5) {
+            if (model.stars[0].state.numActiveOrbs[0] >= 5) { // getOrbCount(Orb.OrbType.ORB) >= 5) {
                 pageDone.set(4, true);
             }
         }
@@ -417,7 +427,7 @@ public class Tutorial0 extends Tutorial {
         numPlayers = 2;
         players = new Player[numPlayers];
         for (int i = 0; i < numPlayers; i ++) {
-            players[i] = new Player(i, skins[i], colors[i], this, ui, true, i == 0);
+            players[i] = new Player(i, model, ui, skins[i], colors[i], true, i == 0);
             players[i].altWin = true;
             players[i].launchPad.showMeter(false);
             players[i].showIncomeOrbs = false;

@@ -13,19 +13,17 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Pool;
 
-import java.util.ArrayList;
-
 public class Orb implements Collidable, Pool.Poolable {
 
     static int uid = 0;
 
     public static class OrbState {
-        float x = 0f;
-        float y = 0f;
-        float v = 0f;
-        float w = 0f;
-        int age = 0;
-        int uid = Orb.uid++;
+        public float x = 0f;
+        public float y = 0f;
+        public float v = 0f;
+        public float w = 0f;
+        public int age = 0;
+        public int uid = Orb.uid++;
     }
 
     @Override
@@ -38,7 +36,7 @@ public class Orb implements Collidable, Pool.Poolable {
         return false;
     }
 
-    static final int lifeSpan = (int) ModelSettings.getFloatSetting("orbLifeSpan");
+    static int lifeSpan = (int) ModelSettings.getFloatSetting("orbLifeSpan");
     static final LayeredButton[] orbButtons = new LayeredButton[Model.numPlayers]; // XXX is it overkill to use LayeredButton to draw orbs?
     static final float radius = ModelSettings.getFloatSetting("OrbRadius");
     static final float gravScalar = ModelSettings.getFloatSetting("gravScalar");
@@ -81,12 +79,11 @@ public class Orb implements Collidable, Pool.Poolable {
         body.createFixture(orbFixtureDef);
         body.setUserData(this); // add a pointer back to this object in the Body
         orbShape.dispose();
-
-        //case VOID:
-        //	break;
-        //case NOVA:
-        //	break;
 	}
+
+    public static void setLifeSpan(int lifespan) {
+        lifeSpan = lifespan;
+    }
 
     static AtlasRegion[] getTextures(Player player) {
         return new AtlasRegion[]{
@@ -177,6 +174,18 @@ public class Orb implements Collidable, Pool.Poolable {
     public void init(OrbState state) {
         init(state.x, state.y, state.v, state.w);
         this.state.age = state.age;
+    }
+
+    public void moveOrb(float x, float y) {
+        this.state.x += x;
+        this.state.y += y;
+        body.setTransform(this.state.x, this.state.y, 0f);
+    }
+
+    public void removeIfOff() {
+        if (state.x < -radius*1.5f || state.x > StarCycle.meterWidth + radius*1.5f || state.y < -radius*1.5f || state.y > StarCycle.meterHeight + radius*1.5f) {
+            Model.toRemove.add(this);
+        }
     }
 
 }

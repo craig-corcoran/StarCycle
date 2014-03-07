@@ -3,10 +3,8 @@ package com.autonomousgames.starcycle.core.screens;
 import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.log.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
+import com.autonomousgames.starcycle.core.model.*;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
-import com.autonomousgames.starcycle.core.model.FakeOrb;
-import com.autonomousgames.starcycle.core.model.ImageOrb;
-import com.autonomousgames.starcycle.core.model.Level;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
@@ -63,8 +61,8 @@ public abstract class Tutorial extends ModelScreen {
         mainMenuButton.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Main Menu", new Vector2(pauseButton.getDims().x*3f/8f, 0f), resumeButton.getDims()).rotateText(90f));
         backButton.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Quit Tutorial", new Vector2(pauseButton.getDims().x*3f/8f, 0f), resumeButton.getDims()).rotateText(90f));
 
-        starClamp = new int[model.stars.size()][2];
-        for (int i = 0; i < model.stars.size(); i ++) {
+        starClamp = new int[model.stars.length][2];
+        for (int i = 0; i < model.stars.length; i ++) {
             starClamp[i][0] = 0;
             starClamp[i][1] = 0;
         }
@@ -161,18 +159,19 @@ public abstract class Tutorial extends ModelScreen {
         for (ListIterator<ImageOrb> itr = fakeOrbs.listIterator(); itr.hasNext();) {
             itr.next().move(0f, y);
         }
-        for (int i = 0; i < model.stars.size(); i ++) {
-            model.stars.get(i).moveStar(0f, moveClamped(starClamp[i][0], starClamp[i][1], y) / StarCycle.pixelsPerMeter);
+        for (int i = 0; i < model.stars.length; i ++) {
+            model.stars[i].moveStar(0f, moveClamped(starClamp[i][0], starClamp[i][1], y) / StarCycle.pixelsPerMeter);
         }
         for (int i = 0; i < numPlayers; i ++) {
-            for (int j = 0; j < players[i].orbs.size(); j ++) {
-                players[i].orbs.get(j).moveOrb(0f, moveClamped(orbClamp[0], orbClamp[1], y/StarCycle.pixelsPerMeter));
+
+            for (ChargeOrb orb: model.orbs[i].values()) {
+                orb.moveOrb(0f, moveClamped(orbClamp[0], orbClamp[1], y/StarCycle.pixelsPerMeter));
             }
-            for (int j = 0; j < players[i].voids.size(); j ++) {
-                players[i].voids.get(j).moveOrb(0f, moveClamped(orbClamp[0], orbClamp[1], y/StarCycle.pixelsPerMeter));
+            for (com.autonomousgames.starcycle.core.model.Void orb: model.voids[i].values()) {
+                orb.moveOrb(0f, moveClamped(orbClamp[0], orbClamp[1], y/StarCycle.pixelsPerMeter));
             }
-            for (int j = 0; j < players[i].novas.size(); j ++) {
-                players[i].novas.get(j).moveOrb(0f, moveClamped(orbClamp[0], orbClamp[1], y/StarCycle.pixelsPerMeter));
+            for (Nova orb: model.novas[i].values()) {
+                orb.moveOrb(0f, moveClamped(orbClamp[0], orbClamp[1], y/StarCycle.pixelsPerMeter));
             }
         }
     }

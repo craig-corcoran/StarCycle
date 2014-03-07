@@ -17,28 +17,29 @@ import java.util.ListIterator;
 public class Player {
 
     public static class PlayerState {
-        float ammo = 0f;
-        int starsControlled = 0;
-        int numActiveOrbs = 0;
-        float pointerX = 0f;
-        float pointerY = 0f;
-        boolean[] buttonStates = new boolean[3];
+        public float ammo = 0f;
+        public int starsControlled = 0;
+        public int numActiveOrbs = 0;
+        public float pointerX = 0f;
+        public float pointerY = 0f;
+        public boolean[] buttonStates = new boolean[3];
     }
 
     //TODO safe to get rid of these?
     //public boolean win;
     //public final boolean ammoCap = false;
-    //public final float maxAmmo = 80f * 5f - 1f; // TODO how is this max ammo determined? can players max out?
+    //public final float maxAmmo = 80f * 5f - 1f; //
     //private float winOrbAngle = 0;
     //private boolean winner = false;
     //public boolean altWin = false;
-    //public boolean showIncomeOrbs = true;
+    public boolean showIncomeOrbs = true; // TODO can these be final?
+    public boolean altWin = false;
+
     static final float velScale = ModelSettings.getFloatSetting("velScale");
     static final float ammoRate = ModelSettings.getFloatSetting("ammoRate");
     static final float maxAmmo = ModelSettings.getFloatSetting("maxAmmo");
     static final float captureFrac = ModelSettings.getFloatSetting("captureFraction");
 
-    final HashMap<Class,Float> orbCosts = new HashMap<Class,Float>(3);
 
     public final int number;
     public final BaseType basetype;
@@ -50,9 +51,9 @@ public class Player {
 
     public final PlayerState state = new PlayerState();
     public boolean frozen = false; // Prevents launching any orbs.
+    float ammoDripRate;
 
     final Model model;
-    final float ammoDripRate;
     final float basePad = StarCycle.meterHeight * (1 / 4.2f);
 	final Vector2[] baseOrigins = {
 			new Vector2(StarCycle.meterWidth - basePad, basePad),
@@ -69,9 +70,7 @@ public class Player {
 		number = num;
 		ammoDripRate = ModelSettings.getFloatSetting("ammoDripRate");
         state.ammo = ModelSettings.getFloatSetting("initAmmo");
-        orbCosts.put(ChargeOrb.class, ModelSettings.getFloatSetting("orbCost"));
-        orbCosts.put(Void.class, ModelSettings.getFloatSetting("voidCosts"));
-        orbCosts.put(Nova.class, ModelSettings.getFloatSetting("novaCosts"));
+
 
         this.model = model;
         this.basetype = basetype;
@@ -135,7 +134,7 @@ public class Player {
 	}
 
     public void launch(Class cls) {
-        float cost = orbCosts.get(cls);
+        float cost = Model.orbCosts.get(cls);
         if (state.ammo > cost) {
             state.ammo -= cost;
             pos.set(state.pointerX, state.pointerY);

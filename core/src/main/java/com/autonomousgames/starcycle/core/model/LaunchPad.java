@@ -62,12 +62,13 @@ public class LaunchPad {
     final ArcButton pw2Button;
     final Vector2 position;
     final boolean visible;
-    final boolean manualLvl;
     final AtlasRegion[] orbTxt;
     final AtlasRegion[] pw1Txt;
     final AtlasRegion[] pw2Txt;
 
-    boolean streamOrbs = false;
+    public boolean manualLvl; // TODO remove?
+
+    public boolean streamOrbs = false;
     float sinceLastShot = 0f;
     float angle;
     float meterAngle;

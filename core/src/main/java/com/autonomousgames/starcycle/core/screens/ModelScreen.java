@@ -5,7 +5,6 @@ import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.model.*;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
-import com.autonomousgames.starcycle.core.model.Orb.OrbType;
 import com.autonomousgames.starcycle.core.ui.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -20,14 +19,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public abstract class ModelScreen extends GameScreen{
-	public Model model;
-    public final GameState state;
-	public Player[] players;
-	public int numPlayers;
-	OrbFactory orbFactory;
+
+    public final Model model;
 	public boolean gameOver = false;
 	public boolean paused = false;
-	public boolean debugPaused = false;
+	//public boolean debugPaused = false;
 	protected ScreenType screentype;
 	GL10 gl = Gdx.graphics.getGL10();
 	private Json json = new Json();
@@ -51,16 +47,9 @@ public abstract class ModelScreen extends GameScreen{
 		this.screentype = screentype;
 		this.skins = skins;
 		this.colors = colors;
-		setPlayers();
 		gameStartTime = System.currentTimeMillis();
-		model = new Model(lvl, players);
-		orbFactory = new OrbFactory(model);
-		
-		for (int i=0; i < numPlayers; i++) {
-			if (players[i] instanceof Bot) {
-				((Bot) players[i]).initializeModel(model);
-			}
-		}
+		model = new Model(lvl); // TODO construct  players in model
+
 
         switch (this.screentype) {
             case MULTIPLAYER:
@@ -111,11 +100,7 @@ public abstract class ModelScreen extends GameScreen{
         backButton.setColor(Colors.red);
 		
 		ui.addActor(pauseButton);
-
-        state = new GameState(players.length, model.level.numStars);
 	}
-	
-	abstract void setPlayers();
 
 	public void addWinBanner(Player winner){
         for (Player player : players) {
@@ -138,12 +123,12 @@ public abstract class ModelScreen extends GameScreen{
                 StarCycle.startTime + "", // sessionStartTime
                 gameStartTime + "", // gameStartTime
                 (System.currentTimeMillis() - gameStartTime) + "", // gameDuration
-                this.orbFactory.p1orbs + "",
-                this.orbFactory.p2orbs + "",
-                this.orbFactory.p1voids + "",
-                this.orbFactory.p2voids + "",
-                this.orbFactory.p1novas + "",
-                this.orbFactory.p2novas + "",
+                model.totalOrbs[0] + "",
+                model.totalOrbs[1] + "",
+                model.totalVoids[0] + "",
+                model.totalVoids[1] + "",
+                model.totalNovas[0] + "",
+                model.totalNovas[1] + "",
         };
         StarCycle.logHandler.logGame(json.toJson(gameLog));
     }
@@ -184,7 +169,7 @@ public abstract class ModelScreen extends GameScreen{
 			}
             if (gameOver){
                 for (Player player : players) {
-                    player.updateWinOrbs(delta);
+                    //player.updateWinOrbs(delta);
                 }
             }
 
@@ -215,8 +200,8 @@ public abstract class ModelScreen extends GameScreen{
         for (Player player : players) {
             player.draw(batch);
         }
-		for (int i = 0; i < model.stars.size(); i++) {
-			model.stars.get(i).draw(batch);
+		for (int i = 0; i < model.stars.length; i++) {
+			model.stars[i].draw(batch);
 		}
 		batch.end();
 	}
@@ -227,7 +212,7 @@ public abstract class ModelScreen extends GameScreen{
 		batch.begin();
 		Integer numOrbs = 0;
         for (Player player : players) {
-            numOrbs += player.orbs.size();
+            numOrbs += player.state.numActiveOrbs;
         }
 		StarCycle.tex.font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond() + " update time: " +
 				updateTime + " orbs: " + numOrbs + "", 0, 20);

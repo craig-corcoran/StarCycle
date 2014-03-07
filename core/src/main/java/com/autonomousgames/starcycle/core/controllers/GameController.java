@@ -2,6 +2,7 @@ package com.autonomousgames.starcycle.core.controllers;
 
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.model.Base;
+import com.autonomousgames.starcycle.core.model.Nova;
 import com.autonomousgames.starcycle.core.model.Orb;
 import com.autonomousgames.starcycle.core.screens.ModelScreen;
 import com.autonomousgames.starcycle.core.screens.MultiPlayer;
@@ -68,10 +69,10 @@ public class GameController extends LogController{
         	screen.players[0].launchPad.streamOrbs = true;
         }
         if (keycode == Keys.W) {
-        	screen.players[0].launchPad.launch(Orb.OrbType.VOID);
+            screen.players[0].launch(Void.class);
         }
         if (keycode == Keys.E) {
-        	screen.players[0].launchPad.launch(Orb.OrbType.NOVA);
+            screen.players[0].launch(Nova.class);
         }
         if (keycode == Keys.BACK){
         	screen.addPauseBanner();

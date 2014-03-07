@@ -29,13 +29,14 @@ public class SinglePlayer extends ModelScreen {
 		players = new Player[numPlayers];
 		for (int i=0; i < numPlayers; i++){
 			if (i==0){
-				players[i] = new Player(i, skins[i], colors[i], this, ui, true);
+				players[i] = new Player(i, model, ui, skins[i],colors[i], true, true);
 			}
 			else{
 				players[i] = new Bot(i, skins[i], colors[i], this, ui, true, true);
 			}
 		}
 	}
+
 	void pushLevelCompletion(){
 		StarCycle.progressHandler.setLevelComplete(this.leveltype.toString(), "true");
 	}

@@ -17,9 +17,9 @@ import java.util.Vector;
 public class ChargeOrb extends Orb implements Collidable {
 
     public static class ChargeOrbState extends OrbState {
-        float dAngle = 0f;
-        int star = -1;
-        boolean lockedOn = false;
+        public float dAngle = 0f;
+        public int star = -1;
+        public boolean lockedOn = false;
     }
 
     public final ChargeOrbState state = new ChargeOrbState();
@@ -44,6 +44,7 @@ public class ChargeOrb extends Orb implements Collidable {
 	}
 
 
+    // TODO move local vars to final class members for optimization
 	@Override
 	public Vector2 getGravForce(Star[] stars) {
 		if (state.star == -1) { // if not orbiting any star
@@ -57,7 +58,7 @@ public class ChargeOrb extends Orb implements Collidable {
 			// add component from regular gravity for the active star, ignoring others
 			// because we assume the orbs dont affect stars, we can treat all objects as having mass 1.
             Star chargeStar = stars[state.star];
-            Vector2 starPos = chargeStar.position;
+            Vector2 starPos = new Vector2(chargeStar.state.x, chargeStar.state.y);
 
             float dist = (float) Math.sqrt(Math.pow(starPos.x-state.x,2) + Math.pow(starPos.y-state.y,2));
             float scal = stars[state.star].mass * gravScalar / (dist * dist * dist);
@@ -75,6 +76,7 @@ public class ChargeOrb extends Orb implements Collidable {
 		}
 	}
 
+    // TODO optimize starPos and local vars
     private Vector2 vec = new Vector2();
     private float dTheta;
 	@Override
@@ -89,7 +91,7 @@ public class ChargeOrb extends Orb implements Collidable {
                 return;
             }
 
-            Vector2 starPos = stars[state.star].position;
+            Vector2 starPos = new Vector2(stars[state.star].state.x, stars[state.star].state.y);
             vec.set(state.x - starPos.x, state.y - starPos.y);
             vec.rotate(state.v); // v is used as rot vel when locked on
             state.x = starPos.x + vec.x;
@@ -100,7 +102,7 @@ public class ChargeOrb extends Orb implements Collidable {
             super.update(stars); // delegates physics difference bt orbiting to getGravForce
 
             if (!(state.star == -1)) { // if not locked on, but orbiting: check for lock-on conditions
-                measAngle = measureAngle(stars[state.star].position); // change in angle this frame
+                measAngle = measureAngle(stars[state.star].state.x, stars[state.star].state.y); // change in angle this frame
                 dTheta = measAngOld - measAngle;
                 if (Math.abs(dTheta) > MathUtils.PI) {
                     dTheta += -1 * Math.signum(dTheta) * MathUtils.PI2;
@@ -109,7 +111,7 @@ public class ChargeOrb extends Orb implements Collidable {
                 measAngOld = measAngle;
 
                 if (Math.abs(angleSum) > angleThresh) {
-                    lockOn(stars[state.star], (float)(dTheta * 180f/Math.PI));
+                    lockOn(stars[state.star]);
                 }
             }
         }
@@ -128,13 +130,13 @@ public class ChargeOrb extends Orb implements Collidable {
 		super.draw(batch);
 	}
 
-    private float measureAngle(Vector2 position) {
-        return MathUtils.atan2(position.x - state.x, position.y - state.y) + MathUtils.PI;
+    private float measureAngle(float x, float y) {
+        return MathUtils.atan2(x - state.x, y - state.y) + MathUtils.PI;
     }
 
     private void resetLockCounter(Star star) {
         angleSum = 0f;
-        measAngOld = measureAngle(star.position);
+        measAngOld = measureAngle(star.state.x, star.state.y);
     }
 
 	@Override
@@ -143,7 +145,7 @@ public class ChargeOrb extends Orb implements Collidable {
             activeStars.addLast((Star)obj);
             // activate charge beam and set star
             if (state.star == -1) {
-                state.star = ((Star) obj).index;
+                state.star = ((Star) obj).state.index;
                 chargeButtons[playerNum].activate();
                 resetLockCounter((Star)obj);
             }
@@ -155,14 +157,14 @@ public class ChargeOrb extends Orb implements Collidable {
 
         if (obj instanceof Star) {
 
-            int idx = ((Star) obj).index;
+            int idx = ((Star) obj).state.index;
             activeStars.remove(obj); // remove from the active set
 
             // if we just left range of the current charge star
             if (idx == state.star) {
                 if (!activeStars.isEmpty()) {
                     Star star = activeStars.getFirst();
-                    state.star = star.index;
+                    state.star = star.state.index;
                     resetLockCounter(star);
                 }
                 else {
@@ -173,20 +175,22 @@ public class ChargeOrb extends Orb implements Collidable {
         }
 	}
 
-    public void lockOn(Star star, float angle) {
+    public void lockOn(Star star) {
         state.lockedOn = true;
         orbButtons[playerNum].activate();
         state.v = dTheta;
-        // TODO change star state here?
+        star.addOrb(this);
     }
 
     @Override
     public void reset() {
+
+        // TODO remove orb from star lists here?
         super.reset();
-        this.state.lockedOn = false;
-        this.state.star = -1;
-        this.state.dAngle = 0f;
-        this.activeStars.clear();
+        state.lockedOn = false;
+        state.star = -1;
+        state.dAngle = 0f;
+        activeStars.clear();
     }
 
     public void init(ChargeOrbState state) {

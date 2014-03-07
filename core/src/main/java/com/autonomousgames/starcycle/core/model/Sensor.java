@@ -18,8 +18,8 @@ public class Sensor {
 		fixtureDef.shape = shape;
 
 		if (obj instanceof Void) {
-			fixtureDef.filter.categoryBits = Model.voidCategoryBits[((Orb)obj).player.number];
-			fixtureDef.filter.maskBits = Model.voidMaskBits[((Orb)obj).player.number];
+			fixtureDef.filter.categoryBits = Model.voidCategoryBits[((Orb)obj).playerNum];
+			fixtureDef.filter.maskBits = Model.voidMaskBits[((Orb)obj).playerNum];
 		} 
 		else if(obj instanceof Star) {
 			fixtureDef.filter.categoryBits = Model.starCat;
