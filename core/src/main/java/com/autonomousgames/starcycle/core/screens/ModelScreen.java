@@ -50,6 +50,13 @@ public abstract class ModelScreen extends GameScreen{
 
         model = initModel(lvl, this);
 
+        // if there is a bot, it needs additional initialization
+        for (int i=0; i < Model.numPlayers; i++) {
+            if (model.players[i] instanceof Bot) {
+                ((Bot) model.players[i]).initializeModel(model);
+            }
+        }
+
         switch (this.screentype) {
             case MULTIPLAYER:
                 backScreen = ScreenType.MULTIPLAYERLEVELSELECT;

@@ -13,7 +13,7 @@ public class Bot extends Player {
 	
 	private ModelScreen screen;
 	private int other;
-	public Star.StarState[] starStates;
+	public Star[] stars;
 	private ArrayList<Float> starDistances = new ArrayList<Float>();
 	private Star targetStar;
 	private Vector2 aimPos = new Vector2();
@@ -70,10 +70,10 @@ public class Bot extends Player {
 	}
 
 	public void initializeModel(Model model) { // This can't happen in the constructor, as the model has not been constructed.
-		starStates = model.state.starStates;
+		stars = model.stars;
 		targetStar = model.stars[0];
-        for (Star.StarState stSt : starStates) {
-            this.starDistances.add(baseOrigins[number].dst(stSt.x, stSt.y));
+        for (Star st : stars) {
+            this.starDistances.add(baseOrigins[number].dst(st.state.x, st.state.y));
         }
 	}
 	

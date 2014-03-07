@@ -115,14 +115,6 @@ public abstract class Model {
         state = new GameState(level.numStars);
         stars = level.stars;
         //this.players = players;
-
-
-        for (int i=0; i < Model.numPlayers; i++) {
-            if (players[i] instanceof Bot) {
-                ((Bot) players[i]).initializeModel(this);
-            }
-        }
-
         initState();
         setCosts();
 

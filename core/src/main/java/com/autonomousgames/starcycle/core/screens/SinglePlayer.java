@@ -24,24 +24,30 @@ public class SinglePlayer extends ModelScreen {
 		((Bot)model.players[1]).setBotType(botType);
 	}
 
+    class SinglePlayerModel extends Model {
+
+        public SinglePlayerModel(LevelType lvl, ModelScreen screen) {
+            super(lvl, screen);
+        }
+
+        @Override
+        public Player[] initPlayers(ModelScreen screen) {
+            Player[] players = new Player[numPlayers];
+            for (int i=0; i < numPlayers; i++){
+                if (i==0){
+                    players[i] = new Player(i, model, ui, skins[i],colors[i], true, true);
+                }
+                else{
+                    players[i] = new Bot(i, skins[i], colors[i], screen, ui, true, true);
+                }
+            }
+            return players;
+        }
+    }
+
     @Override
     public Model initModel(LevelType lvl, ModelScreen screen) {
-
-        return new Model(lvl, screen) {
-            @Override
-            public Player[] initPlayers(ModelScreen screen) {
-                Player[] players = new Player[numPlayers];
-                for (int i=0; i < numPlayers; i++){
-                    if (i==0){
-                        players[i] = new Player(i, model, ui, skins[i],colors[i], true, true);
-                    }
-                    else{
-                        players[i] = new Bot(i, skins[i], colors[i], screen, ui, true, true);
-                    }
-                }
-                return players;
-            }
-        };
+        return new SinglePlayerModel(lvl, screen);
     }
 	
 	void pushLevelCompletion(){

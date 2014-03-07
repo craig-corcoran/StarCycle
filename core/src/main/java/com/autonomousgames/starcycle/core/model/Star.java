@@ -30,7 +30,7 @@ public class Star extends Orbitable implements Collidable {
     }
     // TODO need index as part of state?
 
-    public static final StarState state = new StarState();
+    public final StarState state = new StarState();
 
     static final float popRate = ModelSettings.getFloatSetting("popRate");
     static final float sideScale = 2f * 0.57735f; // The second value is tand(30deg), but MathUtils doesn't have tangent.
