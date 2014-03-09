@@ -56,11 +56,11 @@ public class ModelSettings {
 			userPrefs.putFloat("voidStars", 1f);        // LaunchPad
 			userPrefs.putFloat("novaStars", 2f);			   // LaunchPad
 
-			userPrefs.putFloat("coolDown",0.7f);           // OrbFactory
-			userPrefs.putFloat("orbLifeSpan", 100f);       // OrbFactory
-			userPrefs.putFloat("powerupLifeSpan",30f);     // OrbFactory
+			userPrefs.putFloat("coolDown",0.7f);
+			userPrefs.putFloat("orbLifeSpan", 100f);
+			userPrefs.putFloat("powerupLifeSpan",30f);
 
-			userPrefs.putFloat("popRate",0.005f);          // OrbFactory
+			userPrefs.putFloat("popRate",0.005f);
 
             userPrefs.putFloat("incAmmoThresh", 0.3f);
             userPrefs.putFloat("initVelScale", 0.4f); // income orbs

@@ -35,7 +35,7 @@ public class SinglePlayer extends ModelScreen {
             Player[] players = new Player[numPlayers];
             for (int i=0; i < numPlayers; i++){
                 if (i==0){
-                    players[i] = new Player(i, model, ui, skins[i],colors[i], true, true);
+                    players[i] = new Player(i, ui, skins[i],colors[i], true, true);
                 }
                 else{
                     players[i] = new Bot(i, skins[i], colors[i], screen, ui, true, true);

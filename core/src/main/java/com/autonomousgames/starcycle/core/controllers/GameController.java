@@ -64,13 +64,13 @@ public class GameController extends LogController{
 	public boolean keyDown(int keycode) {
 		super.keyDown(keycode);
         if (keycode == Keys.Q) {
-        	screen.model.players[0].launchPad.streamOrbs = true;
+        	screen.model.players[0].state.buttonStates[0] = true;
         }
         if (keycode == Keys.W) {
-            screen.model.players[0].launch(com.autonomousgames.starcycle.core.model.Void.class);
+            screen.model.launch(screen.model.players[0], com.autonomousgames.starcycle.core.model.Void.class);
         }
         if (keycode == Keys.E) {
-            screen.model.players[0].launch(Nova.class);
+            screen.model.launch(screen.model.players[0], Nova.class);
         }
         if (keycode == Keys.BACK){
         	screen.addPauseBanner();
@@ -82,7 +82,7 @@ public class GameController extends LogController{
 	@Override
 	public boolean keyUp(int keycode) {
 		if (keycode == Keys.Q) {
-        	screen.model.players[0].launchPad.streamOrbs = false;
+        	screen.model.players[0].state.buttonStates[0] = false;
         }
 		        return false;
 	}

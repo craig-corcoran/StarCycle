@@ -59,7 +59,6 @@ public class Player {
 			new Vector2(basePad, StarCycle.meterHeight - basePad) };
 
     public Player(int num,
-                  Model model,
                   Stage ui,
                   BaseType basetype,
                   Color[] colors,
@@ -80,12 +79,11 @@ public class Player {
 	}
 	
 	public Player(int num,
-                  Model model,
                   Stage ui,
                   BaseType basetype,
                   Color[] colors,
                   boolean UIVisible) {
-		this(num, model, ui, basetype, colors,  UIVisible, UIVisible);
+		this(num, ui, basetype, colors,  UIVisible, UIVisible);
 	}
 
     final Vector2 pos = new Vector2();

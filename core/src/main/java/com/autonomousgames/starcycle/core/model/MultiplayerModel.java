@@ -16,7 +16,7 @@ public class MultiplayerModel extends Model {
 
         Player[] players = new Player[numPlayers];
         for (int i=0; i < numPlayers; i++){
-            players[i] = new Player(i, this, screen.ui, screen.skins[i], screen.colors[i], true, true);
+            players[i] = new Player(i, screen.ui, screen.skins[i], screen.colors[i], true, true);
         }
 
         return players;

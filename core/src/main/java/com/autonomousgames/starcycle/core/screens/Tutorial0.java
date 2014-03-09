@@ -301,7 +301,7 @@ public class Tutorial0 extends Tutorial {
         ui.addActor(swiper);
 
         Model.setCosts(0f, 0f, 0f);
-        Orb.setLifeSpan(-1);
+        Orb.useLifeSpan = false;
 
         if (startAtEnd) {
             for (int i = 0; i < pages-1; i ++) {
@@ -335,17 +335,17 @@ public class Tutorial0 extends Tutorial {
             sinceLastShot = 0f;
         }
 
-        if (((moving || dragging) && model.players[0].launchPad.streamOrbs) || (currentBorder == 2 && !moving && !dragging && model.players[0].launchPad.streamOrbs == false)) {
-            model.players[0].launchPad.streamOrbs = !(model.players[0].launchPad.streamOrbs);
+        if (((moving || dragging) && model.players[0].state.buttonStates[0]) || (currentBorder == 2 && !moving && !dragging && model.players[0].state.buttonStates[0] == false)) {
+            model.players[0].state.buttonStates[0] = !(model.players[0].state.buttonStates[0]);
         }
 
         if (((moving || dragging || model.stars[1].activeOrbs.size() >= 10)
-                && model.players[1].launchPad.streamOrbs) || (currentBorder == 4
+                && model.players[1].state.buttonStates[0]) || (currentBorder == 4
                 && !moving
                 && !dragging
                 && model.stars[1].activeOrbs.size() < 10
-                && model.players[1].launchPad.streamOrbs == false)) {
-            model.players[1].launchPad.streamOrbs = !(model.players[1].launchPad.streamOrbs);
+                && model.players[1].state.buttonStates[0] == false)) {
+            model.players[1].state.buttonStates[0] = !(model.players[1].state.buttonStates[0]);
         }
 
         if (currentBorder >= orbKillPage && (dragging || moving)) {
@@ -409,7 +409,7 @@ public class Tutorial0 extends Tutorial {
         }
 
         if (currentBorder == 3 && !pageDone.get(3)) {
-            if (model.players[0].launchPad.streamOrbs) {
+            if (model.players[0].state.buttonStates[0]) {
                 pageDone.set(3, true);
             }
         }
@@ -431,7 +431,7 @@ public class Tutorial0 extends Tutorial {
                 Player[] players = new Player[numPlayers];
                 for (int i=0; i < numPlayers; i++){
 
-                    players[i] = new Player(i, model, ui, skins[i], colors[i], true, i == 0);
+                    players[i] = new Player(i, ui, skins[i], colors[i], true, i == 0);
                     players[i].altWin = true;
                     players[i].launchPad.showMeter(false);
                     players[i].showIncomeOrbs = false;

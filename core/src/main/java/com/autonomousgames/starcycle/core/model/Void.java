@@ -13,8 +13,9 @@ import com.autonomousgames.starcycle.core.Texturez.TextureType;
 
 public class Void extends ChargeOrb implements Collidable {
 
+
     public Void(Player player, World world) {
-        super(player, world);
+        super(player, world, Void.class);
         float voidRadius = ModelSettings.getFloatSetting("voidSensorRadius");
         Sensor.addSensor(this, body, voidRadius);
 

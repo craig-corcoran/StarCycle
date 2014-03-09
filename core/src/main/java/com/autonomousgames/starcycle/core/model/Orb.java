@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Pool;
 public class Orb implements Collidable, Pool.Poolable {
 
     static int uid = 0;
+    public static boolean useLifeSpan = true;
 
     public static class OrbState {
         public float x = 0f;
@@ -36,7 +37,7 @@ public class Orb implements Collidable, Pool.Poolable {
         return false;
     }
 
-    static int lifeSpan = (int) ModelSettings.getFloatSetting("orbLifeSpan");
+    final int lifeSpan;
     static final LayeredButton[] orbButtons = new LayeredButton[Model.numPlayers]; // XXX is it overkill to use LayeredButton to draw orbs?
     static final float radius = ModelSettings.getFloatSetting("OrbRadius");
     static final float gravScalar = ModelSettings.getFloatSetting("gravScalar");
@@ -46,9 +47,10 @@ public class Orb implements Collidable, Pool.Poolable {
     final float rotVel;
     final int playerNum;
 
-	public Orb(Player player, World world) {
+	public Orb(Player player, World world, int lifeSpan) {
 
         playerNum = player.number;
+        this.lifeSpan = lifeSpan;
 		Vector2 imageDims = new Vector2(radius, radius).scl(StarCycle.pixelsPerMeter);
         AtlasRegion[] textures = getTextures(player);
 
@@ -81,10 +83,6 @@ public class Orb implements Collidable, Pool.Poolable {
         orbShape.dispose();
 	}
 
-    public static void setLifeSpan(int lifespan) {
-        lifeSpan = lifespan;
-    }
-
     static AtlasRegion[] getTextures(Player player) {
         return new AtlasRegion[]{
                         StarCycle.tex.skinMap.get(player.basetype).get(TextureType.ORB0),
@@ -106,7 +104,7 @@ public class Orb implements Collidable, Pool.Poolable {
 
     public void update(Star[] stars) {
         state.age++;
-        if ((state.age > lifeSpan) & (lifeSpan != -1f)) { // remove expired orbs
+        if ((state.age > this.lifeSpan) & (this.lifeSpan != -1f) & useLifeSpan) { // remove expired orbs // TODO need -1 w/ bool?
             Model.toRemove.add(this);
         }
         else {

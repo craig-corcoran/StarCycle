@@ -2,6 +2,7 @@ package com.autonomousgames.starcycle.core.model;
 
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez;
+import com.autonomousgames.starcycle.core.log.ModelSettings;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -9,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Nova extends Orb implements Collidable {
 
     public Nova(Player player, World world) {
-        super(player, world);
+        super(player, world, (int) ModelSettings.getFloatSetting("powerupLifeSpan"));
         StarCycle.audio.launchnukeSound.play(StarCycle.audio.sfxVolume);
     }
 

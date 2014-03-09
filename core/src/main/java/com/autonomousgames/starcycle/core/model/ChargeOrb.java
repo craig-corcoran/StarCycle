@@ -36,12 +36,18 @@ public class ChargeOrb extends Orb implements Collidable {
     private float beamAngle = 0f;
     private LinkedList<Star> activeStars = new LinkedList<Star>();
 
-	public ChargeOrb(Player player, World world) {
-		super(player, world);
+	public ChargeOrb(Player player, World world, Class cls) {
+		super(player, world, (cls == Void.class) ?
+                        (int) ModelSettings.getFloatSetting("powerupLifeSpan") :
+                        (int) ModelSettings.getFloatSetting("orbLifeSpan"));
 		chargeButtons[playerNum] = new LayeredButton(orbButtons[playerNum].getCenter(),orbButtons[playerNum].getDims());
 		chargeButtons[playerNum].addLayer(new SpriteLayer(StarCycle.tex.chargeBeam, new Vector2(chargeRadius/2f, 0f), new Vector2(chargeRadius,beamWidth)).setSpriteColor(player.colors[1]),LayerType.ACTIVE);
 		chargeButtons[playerNum].deactivate();
 	}
+
+    public ChargeOrb(Player player, World world) {
+        this(player, world, ChargeOrb.class);
+    }
 
 
     // TODO move local vars to final class members for optimization

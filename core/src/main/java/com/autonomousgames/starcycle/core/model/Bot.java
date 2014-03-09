@@ -32,20 +32,20 @@ public class Bot extends Player {
 	
 	public Bot(int num, Base.BaseType basetype, Color[] colors, ModelScreen screen, Stage ui, boolean drawBase, boolean drawLaunchPad) {
 
-        super(num, screen.model, ui, basetype, colors, true, drawLaunchPad);
+        super(num, ui, basetype, colors, true, drawLaunchPad);
 		this.screen = screen;
 		other = (num == 0) ? 1 : 0;
 		
 //		maxOrbSpeed = Base.maxPointerLength*ModelSettings.getSetting("velScaleOrbFact");
 		chargeRadius = ModelSettings.getFloatSetting("chargeRadius");
-		launchPad.streamOrbs = true;
+		state.buttonStates[0] = true;
 	}
 	
 	public void setBotType(BotType botType) {
 		switch (botType) {
 		case DEAD:
 			active = false;
-			launchPad.streamOrbs = false; 
+			state.buttonStates[0] = false;
 			break;
 		case EZ:
 			voidThreshold = 30f;
@@ -102,7 +102,7 @@ public class Bot extends Player {
 				if (MathUtils.random() < .3f ){
 					base.setPointer(new Vector2(MathUtils.random()*Base.maxPointerLength,(MathUtils.random()-0.5f)*Base.maxPointerLength*2));
 				}
-				launch(Void.class);
+                state.buttonStates[1] = true;
 				voidCounter = 0f;
 			}
 			
@@ -110,7 +110,7 @@ public class Bot extends Player {
 			if ((novaCounter >= novaPeriod) & (targetStar.state.numActiveOrbs[other] >= novaThreshold) &
 					(this.state.starsControlled >= ModelSettings.getFloatSetting("nukeStars"))) {
 				base.setPointer(new Vector2(MathUtils.random()*Base.maxPointerLength,(MathUtils.random()-0.5f)*Base.maxPointerLength*2));
-				launch(Nova.class);
+                state.buttonStates[2] = true;
 				novaCounter = 0f;
 			}
 		}

@@ -475,7 +475,7 @@ public class Tutorial1 extends Tutorial {
                 Player[] players = new Player[numPlayers];
                 for (int i=0; i < numPlayers; i++){
 
-                    model.players[i] = new Player(i, model, ui, skins[i], colors[i], true, i == 0);
+                    model.players[i] = new Player(i, ui, skins[i], colors[i], true, i == 0);
                     model.players[i].altWin = true;
                     model.players[i].launchPad.showMeter(false);
                     model.players[i].showIncomeOrbs = false;

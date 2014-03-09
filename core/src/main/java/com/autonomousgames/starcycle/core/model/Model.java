@@ -63,7 +63,7 @@ public abstract class Model {
     public int[] totalNovas = new int[numPlayers];
 
     static final float dt = 1/30f;
-	//static final float gravityScalar = ModelSettings.getFloatSetting("gravScalar");
+    static final float coolDown = ModelSettings.getFloatSetting("coolDown");
 	static final short starCat = 0x0001;   		// 0000000000000001
 	static final short p1orbCat = 0x0004;  		// 0000000000000100
 	static final short p2orbCat = 0x0008;  		// 0000000000001000
@@ -253,7 +253,17 @@ public abstract class Model {
 
     }
 
-
+    Vector2 _pos = new Vector2();
+    public void launch(Player player, Class cls) {
+        float cost = orbCosts.get(cls);
+        if (player.state.ammo > cost) {
+            player.state.ammo -= cost;
+            _pos.set(player.state.pointerX, player.state.pointerY);
+            _pos.nor().scl(0.3f * player.base.baseDiams[player.base.level]);
+            _pos.add(player.base.origin);
+            addOrb(player.number, cls, _pos.x, _pos.y, player.state.pointerX, player.state.pointerY);
+        }
+    }
 
 	public void update() {
 		world.step(dt, 6, 2); // check for collisions
@@ -277,11 +287,21 @@ public abstract class Model {
             }
 
             p.update(stars); // XXX
+
+            if ((p.state.buttonStates[0] == true) & (p.launchPad.sinceLastShot >= coolDown)) {
+                launch(p, ChargeOrb.class);
+                p.launchPad.sinceLastShot=0f;
+            }
+            if (p.state.buttonStates[1] == true) {
+                launch(p, Void.class);
+                p.state.buttonStates[1] = false;
+            }
+            if (p.state.buttonStates[2] == true) {
+                launch(p, Nova.class);
+                p.state.buttonStates[2] = false;
+            }
         }
         level.updatePosition(dt); // XXX stars updated here?
-
-
-
         state.orbID = Orb.uid;
         state.frame++;
 	}
