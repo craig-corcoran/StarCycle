@@ -53,7 +53,6 @@ public class LaunchPad {
     static final Vector2 pw2TxtPos = pw1TxtPos.cpy().rotate(-45f);
     static final float trs = 60f; // Texture rotation spe    
 
-    final Model model;
     final Player player;
     final LayeredButton bgButton;
     final SpriteLayer meter;
@@ -68,16 +67,15 @@ public class LaunchPad {
 
     public boolean manualLvl; // TODO remove?
 
-    public boolean streamOrbs = false;
+    // public boolean streamOrbs = false;
     float sinceLastShot = 0f;
     float angle;
     float meterAngle;
     ArrayList<LayeredButton> buttons = new ArrayList<LayeredButton>();
 
-    public LaunchPad(Model model, Stage ui, Player player, boolean visible, boolean manualLvl){
+    public LaunchPad(Stage ui, Player plyr, boolean visible, boolean manualLvl){
 
-        this.model = model;
-        this.player = player;
+        this.player = plyr;
         this.visible = visible;
         this.manualLvl = manualLvl;
         orbTxt = new AtlasRegion[]{StarCycle.tex.skinMap.get(player.basetype).get(Texturez.TextureType.ORB0), StarCycle.tex.skinMap.get(player.basetype).get(Texturez.TextureType.ORB1)};
@@ -105,13 +103,13 @@ public class LaunchPad {
             orbButton.addListener(new InputListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                    streamOrbs = true;
+                    player.state.buttonStates[0]  = true;
                     return true;
                 }
 
                 @Override
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                    streamOrbs = false;
+                    player.state.buttonStates[0] = false;
                 }
             });
         }
@@ -120,7 +118,7 @@ public class LaunchPad {
         if (!(player instanceof Bot)) {
             pw1Button.addListener(new ClickListener() {
                 public void clicked(InputEvent event, float x, float  y) {
-                    launch(Void.class);
+                    player.state.buttonStates[1] = true;
                 }
             });
         }
@@ -129,7 +127,7 @@ public class LaunchPad {
         if (!(player instanceof Bot)) {
             pw2Button.addListener(new ClickListener() {
                 public void clicked(InputEvent event, float x, float y) {
-                    launch(Nova.class);
+                    player.state.buttonStates[2] = true;
                 }
             });
         }
@@ -149,19 +147,8 @@ public class LaunchPad {
 
     }
 
-    void launch(Class cls) {
-        player.launch(cls);
-    }
-
-
     public void update(float delta) {
         sinceLastShot = Math.min(sinceLastShot + delta, coolDown);
-        if (streamOrbs) {
-            if (sinceLastShot >= coolDown) {
-                player.launch(ChargeOrb.class);
-                sinceLastShot = 0f;
-            }
-        }
 
         if (!manualLvl) {
             if (player.state.starsControlled >= voidStars && !(pw1Button.isActive())) {

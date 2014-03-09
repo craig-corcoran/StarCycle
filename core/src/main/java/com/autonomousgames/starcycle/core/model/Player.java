@@ -52,8 +52,7 @@ public class Player {
     public final PlayerState state = new PlayerState();
     public boolean frozen = false; // Prevents launching any orbs.
     float ammoDripRate;
-
-    final Model model;
+    //Model model;
     final float basePad = StarCycle.meterHeight * (1 / 4.2f);
 	final Vector2[] baseOrigins = {
 			new Vector2(StarCycle.meterWidth - basePad, basePad),
@@ -71,15 +70,13 @@ public class Player {
 		ammoDripRate = ModelSettings.getFloatSetting("ammoDripRate");
         state.ammo = ModelSettings.getFloatSetting("initAmmo");
 
-
-        this.model = model;
         this.basetype = basetype;
 		this.colors = colors;
 		this.baseVisible = baseVisible;
 		this.launchpadVisible = launchpadVisible;
 
         base = new Base(this, baseOrigins[number], ui, baseVisible, false);
-		launchPad = new LaunchPad(model, ui, this, launchpadVisible, false); // create ui buttons for player
+		launchPad = new LaunchPad(ui, this, launchpadVisible, false); // create ui buttons for player
 	}
 	
 	public Player(int num,
@@ -133,16 +130,6 @@ public class Player {
 		base.draw(batch);
 	}
 
-    public void launch(Class cls) {
-        float cost = Model.orbCosts.get(cls);
-        if (state.ammo > cost) {
-            state.ammo -= cost;
-            pos.set(state.pointerX, state.pointerY);
-            pos.nor().scl(0.3f * base.baseDiams[base.level]);
-            pos.add(base.origin);
-            model.addOrb(number, cls, pos.x, pos.y, state.pointerX, state.pointerY);
-        }
-    }
 
 	public void dispose() {
 		// TODO need to dispose player elements? base, launchpad, incomeorbs, etc

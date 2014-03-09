@@ -253,10 +253,13 @@ public abstract class Model {
 
     }
 
+
+
 	public void update() {
 		world.step(dt, 6, 2); // check for collisions
         removeOrbs(); // remove collided orbs
 
+        // update orbs and player state
         for (Player p: players) {
             Iterator<ChargeOrb> orbIt = orbs[p.number].values().iterator();
             while (orbIt.hasNext()){
@@ -276,6 +279,8 @@ public abstract class Model {
             p.update(stars); // XXX
         }
         level.updatePosition(dt); // XXX stars updated here?
+
+
 
         state.orbID = Orb.uid;
         state.frame++;
