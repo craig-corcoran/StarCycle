@@ -38,23 +38,30 @@ public class Orb implements Collidable, Pool.Poolable {
     }
 
     final int lifeSpan;
-    static final LayeredButton[] orbButtons = new LayeredButton[Model.numPlayers]; // XXX is it overkill to use LayeredButton to draw orbs?
+    LayeredButton[] orbButtons = new LayeredButton[Model.numPlayers]; // XXX is it overkill to use LayeredButton to draw orbs?
     static final float radius = ModelSettings.getFloatSetting("OrbRadius");
     static final float gravScalar = ModelSettings.getFloatSetting("gravScalar");
 
-    public final OrbState state = new OrbState();
+    public OrbState state;
     public final Body body; // Physics Box2D body
     final float rotVel;
     final int playerNum;
 
-	public Orb(Player player, World world, int lifeSpan) {
+	public Orb(Player player, World world, OrbState state, int lifeSpan) {
 
         playerNum = player.number;
+        this.state = state;
         this.lifeSpan = lifeSpan;
 		Vector2 imageDims = new Vector2(radius, radius).scl(StarCycle.pixelsPerMeter);
         AtlasRegion[] textures = getTextures(player);
 
-        orbButtons[player.number] = new LayeredButton(new Vector2().scl(StarCycle.pixelsPerMeter));
+        orbButtons[player.number] = new LayeredButton(new Vector2());
+
+        // if building a void, the first layer must be the void ring
+        if (getClass() == Void.class) {
+            orbButtons[playerNum].addLayer(new SpriteLayer(StarCycle.tex.voidRing, ((Void) this).voidRingDims.cpy().scl(StarCycle.pixelsPerMeter)).setSpriteColor(player.colors[0]));
+        }
+
         orbButtons[player.number].addLayer(new SpriteLayer(StarCycle.tex.gradientRound, imageDims.cpy().scl(3f)).setSpriteColor(player.colors[0]), LayerType.ACTIVE);
         //orbButtons[player.number].deactivate();
 
@@ -95,9 +102,8 @@ public class Orb implements Collidable, Pool.Poolable {
 				& (state.x < StarCycle.meterWidth + radius)
 				& (state.y < StarCycle.meterHeight + radius)) {
 
-            LayeredButton button = orbButtons[playerNum];
-			button.setCenter(state.x, state.y);
-            button.setRotation(rotVel * state.age); // XXX ok to move before each draw (is this part. expensive?)
+			orbButtons[playerNum].setCenter(state.x * StarCycle.pixelsPerMeter, state.y * StarCycle.pixelsPerMeter);
+            orbButtons[playerNum].setRotation(rotVel * state.age); // XXX ok to move before each draw (is this part. expensive?)
             orbButtons[playerNum].draw(batch, 1f);
 		}
 	}
@@ -163,7 +169,6 @@ public class Orb implements Collidable, Pool.Poolable {
         state.y = y;
         state.v = v;
         state.w = w;
-        body.setActive(true);
         body.setActive(true);
         body.setTransform(this.state.x, this.state.y, 0f);
         body.setLinearVelocity(this.state.v, this.state.w);

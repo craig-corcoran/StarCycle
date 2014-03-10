@@ -163,7 +163,7 @@ public abstract class Model {
         protected ChargeOrb newObject() {
             ChargeOrb orb = new ChargeOrb(player, world);
             //orbs[player.number].put(orb.uid, orb);
-            //state.orbStates[player.number].add(orb.state);
+            //state.orbStates[player.number].put(orb.uid, orb.state);
             return orb;
         }
     }
@@ -177,8 +177,8 @@ public abstract class Model {
         @Override
         protected Void newObject() {
             Void vd = new Void(player, world);
-            voids[player.number].put(vd.uid, vd);
-            state.voidStates[player.number].put(vd.uid, vd.state);
+            //voids[player.number].put(vd.uid, vd);
+            //state.voidStates[player.number].put(vd.uid, vd.state);
             return vd;
         }
     }
@@ -256,7 +256,7 @@ public abstract class Model {
     Vector2 _pos = new Vector2();
     public void launch(Player player, Class cls) {
         float cost = orbCosts.get(cls);
-        if (player.state.ammo > cost) {
+        if (player.state.ammo >= cost) {
             player.state.ammo -= cost;
             _pos.set(player.state.pointerX, player.state.pointerY);
             _pos.nor().scl(0.3f * player.base.baseDiams[player.base.level]);
@@ -271,22 +271,18 @@ public abstract class Model {
 
         // update orbs and player state
         for (Player p: players) {
-            Iterator<ChargeOrb> orbIt = orbs[p.number].values().iterator();
-            while (orbIt.hasNext()){
-                orbIt.next().update(stars);
+
+            for (Orb o: orbs[p.number].values()) {
+                o.update(stars);
+            }
+            for (Orb o: voids[p.number].values()) {
+                o.update(stars);
+            }
+            for (Orb o: novas[p.number].values()) {
+                o.update(stars);
             }
 
-            Iterator<Void> voidIt = voids[p.number].values().iterator();
-            while (voidIt.hasNext()) {
-                voidIt.next().update(stars);
-            }
-
-            Iterator<Nova> novaIt = novas[p.number].values().iterator();
-            while (novaIt.hasNext()) {
-                novaIt.next().update(stars);
-            }
-
-            p.update(stars); // XXX
+            p.update(stars);
 
             if ((p.state.buttonStates[0] == true) & (p.launchPad.sinceLastShot >= coolDown)) {
                 launch(p, ChargeOrb.class);
@@ -331,13 +327,13 @@ public abstract class Model {
             ChargeOrb orb = orbPools[playerNum].obtain();
             orb.uid = uid;
             orbs[playerNum].put(uid, orb);
-            state.orbStates[playerNum].put(uid, orb.state);
+            state.orbStates[playerNum].put(uid, (ChargeOrb.ChargeOrbState) orb.state);
         }
         else if (cls == Void.class) {
             Void vd = voidPools[playerNum].obtain();
             vd.uid = uid;
             voids[playerNum].put(uid, vd);
-            state.voidStates[playerNum].put(uid, vd.state);
+            state.voidStates[playerNum].put(uid, (ChargeOrb.ChargeOrbState) vd.state);
         }
         else {
             Nova nova = novaPools[playerNum].obtain();
@@ -363,14 +359,14 @@ public abstract class Model {
             ChargeOrb orb = orbPools[playerNum].obtain();
             orb.init(x,y,v,w); // make sure its calling init w ChargeOrbState not OrbState
             orbs[playerNum].put(orb.uid, orb);
-            this.state.orbStates[playerNum].put(orb.uid, orb.state);
+            this.state.orbStates[playerNum].put(orb.uid, (ChargeOrb.ChargeOrbState) orb.state);
             return orb;
         }
         else if (cls == Void.class) {
             Void vd = voidPools[playerNum].obtain();
             vd.init(x,y,v,w);
             voids[playerNum].put(vd.uid, vd);
-            this.state.voidStates[playerNum].put(vd.uid, vd.state);
+            this.state.voidStates[playerNum].put(vd.uid, (ChargeOrb.ChargeOrbState) vd.state);
             return vd;
         }
         else {
@@ -384,7 +380,7 @@ public abstract class Model {
 
     /**
      * Adds an orb for the given player of the given class and copies the OrbState onto the state of the new orb object,
-     * including uid, which is used as the key.
+     * not including uid.
      * @param playerNum 0-base integer uniquely identifying the player
      * @param cls class of created orb (ChargeOrb, Nova, Void)
      * @param state state of the new orb
@@ -394,13 +390,13 @@ public abstract class Model {
             ChargeOrb orb = orbPools[playerNum].obtain();
             orb.init((ChargeOrb.ChargeOrbState)state); // make sure its calling init w ChargeOrbState not OrbState
             orbs[playerNum].put(orb.uid, orb);
-            this.state.orbStates[playerNum].put(orb.uid, orb.state);
+            this.state.orbStates[playerNum].put(orb.uid, (ChargeOrb.ChargeOrbState) orb.state);
         }
         else if (cls == Void.class) {
             Void vd = voidPools[playerNum].obtain();
             vd.init(state);
             voids[playerNum].put(vd.uid, vd);
-            this.state.voidStates[playerNum].put(vd.uid, vd.state);
+            this.state.voidStates[playerNum].put(vd.uid, (ChargeOrb.ChargeOrbState) vd.state);
         }
         else {
             Nova nova = novaPools[playerNum].obtain();
@@ -414,12 +410,16 @@ public abstract class Model {
     void removeOrb(Orb o) {
         if (o.getClass() == ChargeOrb.class) {
 
-            if (((ChargeOrb)o).state.lockedOn) {
-                stars[((ChargeOrb)o).state.star].removeOrb((ChargeOrb) o);
+            if (((ChargeOrb.ChargeOrbState) o.state).lockedOn) {
+                stars[((ChargeOrb.ChargeOrbState) o.state).star].removeOrb((ChargeOrb) o);
             }
 
             state.orbStates[o.playerNum].remove(o.state.uid);
             orbs[o.playerNum].remove(o.uid);
+
+            assert (!orbs[o.playerNum].containsValue(o));
+            assert (!orbs[o.playerNum].containsKey(o.uid));
+
             orbPools[o.playerNum].free((ChargeOrb)o);
         }
         else if (o.getClass() == Nova.class) {

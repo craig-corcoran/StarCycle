@@ -28,7 +28,7 @@ public abstract class ModelScreen extends GameScreen{
 	private Json json = new Json();
 	private BaseButton winBase;
 	private final Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
-	public final boolean dbRender = false;
+	public final boolean dbRender = true;
 	
 	ScreenType backScreen;
 	LayeredButton pauseButton;
@@ -150,11 +150,15 @@ public abstract class ModelScreen extends GameScreen{
 			ui.addActor(mainMenuButton);
 		}
 	}
-	
+
+    final long delay = 40;
+    long startTime;
 	public void render (float delta) {
 		// we update the world using a constant time to get the same physics across devices (set in StarCycle.java
 		//process the user button pushes
-		ui.act(delta);
+		startTime = System.nanoTime();
+
+        ui.act(delta);
 		
 		// clear the color buffer and set the camera matrices
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -181,6 +185,11 @@ public abstract class ModelScreen extends GameScreen{
         }
 
         background.update(); // Moves while paused.
+
+        try {
+            Thread.sleep(delay-(System.nanoTime()-startTime)/1000000L);
+        }
+        catch(InterruptedException e) {}
 	}
 	
 	public void update(float delta) {

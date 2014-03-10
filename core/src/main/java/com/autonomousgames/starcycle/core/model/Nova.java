@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Nova extends Orb implements Collidable {
 
     public Nova(Player player, World world) {
-        super(player, world, (int) ModelSettings.getFloatSetting("powerupLifeSpan"));
+        super(player, world, new OrbState(), (int) ModelSettings.getFloatSetting("powerupLifeSpan"));
         StarCycle.audio.launchnukeSound.play(StarCycle.audio.sfxVolume);
     }
 

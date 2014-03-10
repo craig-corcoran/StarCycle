@@ -251,8 +251,8 @@ public class Tutorial1 extends Tutorial {
                         starPos.x+orbDist.x,
                         starPos.y+orbDist.y,
                         -120/60f, 0f);
-                orb.state.star = 0; // set orbiting the 0th star
-                orb.state.lockedOn = true;
+                ((ChargeOrb.ChargeOrbState)orb.state).star = 0; // set orbiting the 0th star
+                ((ChargeOrb.ChargeOrbState)orb.state).lockedOn = true;
             }
             orbDist.rotate(30f);
         }
@@ -380,7 +380,7 @@ public class Tutorial1 extends Tutorial {
             page2orbLaunched = true;
         }
         if (page2orbLaunched && !gravityOn) {
-            if (orb.state.star >= 0) { // if orbiting
+            if (((ChargeOrb.ChargeOrbState)orb.state).star >= 0) { // if orbiting
                 for (int i = 0; i < 3; i ++) {
                     Star star = model.stars[i];
                     star.gravityOn();
@@ -443,8 +443,8 @@ public class Tutorial1 extends Tutorial {
                                                         starPos.x+orbDist.x,
                                                         starPos.y+orbDist.y,
                                                         -180/60f, 0f);
-                orb.state.star = 3; // set orbiting the 3rd star
-                orb.state.lockedOn = true;
+                ((ChargeOrb.ChargeOrbState)orb.state).star = 3; // set orbiting the 3rd star
+                ((ChargeOrb.ChargeOrbState)orb.state).lockedOn = true;
             }
             pageDone.set(4, true);
         }

@@ -14,13 +14,12 @@ import com.autonomousgames.starcycle.core.Texturez.TextureType;
 public class Void extends ChargeOrb implements Collidable {
 
 
+    static final Vector2 voidRingDims = new Vector2(ModelSettings.getFloatSetting("voidSensorRadius"), ModelSettings.getFloatSetting("voidSensorRadius")).scl(2f);
     public Void(Player player, World world) {
         super(player, world, Void.class);
         float voidRadius = ModelSettings.getFloatSetting("voidSensorRadius");
         Sensor.addSensor(this, body, voidRadius);
 
-        Vector2 voidRingDims = new Vector2(ModelSettings.getFloatSetting("voidSensorRadius"), ModelSettings.getFloatSetting("voidSensorRadius")).scl(2f);
-        orbButtons[playerNum].addLayer(new SpriteLayer(StarCycle.tex.voidRing, voidRingDims.cpy().scl(StarCycle.pixelsPerMeter)).setSpriteColor(player.colors[0]));
     }
 
     static AtlasRegion[] getTextures(Player player) {
