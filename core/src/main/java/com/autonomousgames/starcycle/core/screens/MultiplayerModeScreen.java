@@ -33,19 +33,9 @@ public class MultiplayerModeScreen extends MenuScreen {
         local.setRotation(90f);
         local.addListener(new ScreenDoneClickListener(this, ScreenType.MULTIPLAYERLEVELSELECT));
 
-		StandardButton localMultiplayerButton = new StandardButton(new Vector2(ui.getWidth()/4f, ui.getHeight()/2f), iconSize, StarCycle.tex.soloIcon, padding);
-		localMultiplayerButton.setRotation(90f);
-		localMultiplayerButton.addListener(new ScreenDoneClickListener(this, ScreenType.NETWORKEDPREGAME));
-		
-		StandardButton networkedMultiplayerButton = new StandardButton(new Vector2(ui.getWidth()/2f, ui.getHeight()/2f), new Vector2(iconSize.x*4f/3f, iconSize.y), StarCycle.tex.multiplayerIcon, padding);
-		networkedMultiplayerButton.setRotation(90f);
-		networkedMultiplayerButton.addListener(new ScreenDoneClickListener(this, ScreenType.MULTIPLAYERLEVELSELECT));
-
 		ui.addActor(backButton);
         ui.addActor(network);
         ui.addActor(local);
-//		ui.addActor(networkedMultiplayerButton);
-//		ui.addActor(localMultiplayerButton);
 	}
 
 	public String toString(){
