@@ -6,6 +6,7 @@ import com.autonomousgames.starcycle.core.Texturez.TextureType;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -15,7 +16,7 @@ import com.badlogic.gdx.utils.Pool;
 
 public class Orb implements Collidable, Pool.Poolable {
 
-    static int uid = 0;
+    static int uidCounter = 0;
     public static boolean useLifeSpan = true;
 
     public static class OrbState {
@@ -24,7 +25,7 @@ public class Orb implements Collidable, Pool.Poolable {
         public float v = 0f;
         public float w = 0f;
         public int age = 0;
-        public int uid = Orb.uid++;
+        public int uid = Orb.uidCounter++;
     }
 
     @Override
@@ -122,6 +123,8 @@ public class Orb implements Collidable, Pool.Poolable {
             state.v += force.x;
             state.w += force.y;
             body.setLinearVelocity(state.v, state.w);
+
+            Gdx.app.log("Orb", "body position: " + body.getPosition());
         }
     }
 
@@ -171,6 +174,7 @@ public class Orb implements Collidable, Pool.Poolable {
         state.w = w;
         body.setActive(true);
         body.setTransform(this.state.x, this.state.y, 0f);
+        Vector2 after = body.getPosition();
         body.setLinearVelocity(this.state.v, this.state.w);
     }
 

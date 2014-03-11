@@ -26,7 +26,7 @@ public class Sensor {
 			fixtureDef.filter.maskBits = Model.starMask;
 		}
 		Fixture sensor = body.createFixture(fixtureDef);
-		sensor.setUserData(obj);
+		sensor.setUserData(obj); // XXX use class instead of object?
 		sensor.setSensor(true);
 		shape.dispose();
 	}

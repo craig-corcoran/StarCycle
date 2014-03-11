@@ -120,7 +120,7 @@ public class ChargeOrb extends Orb implements Collidable {
                 }
             }
         }
-        if (((ChargeOrbState)state).star >= 0) {
+        if (((ChargeOrbState)state).star >= 0) { // if locked on
             beamAngle = stars[((ChargeOrbState)state).star].getButtonCenter().sub(orbButtons[playerNum].getCenter()).angle();
         }
 	}

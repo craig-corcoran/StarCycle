@@ -136,15 +136,13 @@ public class Level {
 	}
 
 	private void addStaticStar(Player[] players, int starIndex, Vector2 pos, float radius) {
-		stars[starIndex] = new Star(radius, pos, players,
-				world, starIndex, 0f);
+		stars[starIndex] = new Star(radius, pos, players, world, starIndex, 0f);
 	}
 
 	private void addPathedStar(Player[] players, int starIndex, Vector2 center, float radius,
 								PathType pathMap, float startPercent, float rotSpeed) {
 		
-		stars[starIndex] = new Star(radius, players, center,
-											world, starIndex, pathMap, startPercent, rotSpeed);
+		stars[starIndex] = new Star(radius, players, center, world, starIndex, pathMap, startPercent, rotSpeed);
 		pathedObjList.add(stars[starIndex]);
 	}
 

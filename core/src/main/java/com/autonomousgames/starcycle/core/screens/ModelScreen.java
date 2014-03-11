@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 public abstract class ModelScreen extends GameScreen{
 
+    final long delay = 30;
     public final Model model;
 	public boolean gameOver = false;
 	public boolean paused = false;
@@ -151,8 +152,8 @@ public abstract class ModelScreen extends GameScreen{
 		}
 	}
 
-    final long delay = 40;
     long startTime;
+    long sleepTime;
 	public void render (float delta) {
 		// we update the world using a constant time to get the same physics across devices (set in StarCycle.java
 		//process the user button pushes
@@ -170,8 +171,8 @@ public abstract class ModelScreen extends GameScreen{
 		if (dbRender){
 			debugRenderer.render(model.world,cam.combined);
     		long start = System.currentTimeMillis();
-    		displayFPS(start);
-     		printFPS(start); // log fps to console output
+    		//displayFPS(start);
+     		//printFPS(start); // log fps to console output
 		}
 
         if ((!gameOver) & (!paused)) {
@@ -186,10 +187,15 @@ public abstract class ModelScreen extends GameScreen{
 
         background.update(); // Moves while paused.
 
-        try {
-            Thread.sleep(delay-(System.nanoTime()-startTime)/1000000L);
+        sleepTime = Math.max(0,delay-(System.nanoTime()-startTime)/1000000L);
+        if (sleepTime > 0) {
+            try {
+                Thread.sleep(sleepTime);
+            }
+            catch(InterruptedException e) {
+                Gdx.app.log("ModelScreen", "Interrupted Exception while sleeping: " + e);
+            }
         }
-        catch(InterruptedException e) {}
 	}
 	
 	public void update(float delta) {

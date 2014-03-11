@@ -100,12 +100,12 @@ public class Star extends Orbitable implements Collidable {
 		starFixtureDef.filter.categoryBits = Model.starCat;
 		starFixtureDef.filter.maskBits = Model.starMask;
 		body.createFixture(starFixtureDef);
-		body.setUserData(this); // add a pointer back to this object in the Body
 		starShape.dispose();
 
         // add charge sensor
 		float chargeRadius = ModelSettings.getFloatSetting("chargeRadius") + this.radius;
 		Sensor.addSensor(this, body, chargeRadius);
+        body.setUserData(this); // add a pointer back to this object in the Body
 
 		// Create star visual
 		imageDims = new Vector2(radius, radius).scl(StarCycle.pixelsPerMeter);
@@ -286,7 +286,7 @@ public class Star extends Orbitable implements Collidable {
 		    Vector2 pos = pathMap.getPosition(t, startPercent);
             state.x = pos.x;
             state.y = pos.y;
-			body.setTransform(pos, 0f);
+			body.setTransform(pos.x, pos.y, 0f);
 			t += orbitSpeed * delta;
 		}
 	}

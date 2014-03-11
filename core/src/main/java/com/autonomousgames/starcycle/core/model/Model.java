@@ -6,7 +6,6 @@ import com.autonomousgames.starcycle.core.screens.ModelScreen;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Pool;
 
 import java.io.Serializable;
@@ -162,8 +161,8 @@ public abstract class Model {
         @Override
         protected ChargeOrb newObject() {
             ChargeOrb orb = new ChargeOrb(player, world);
-            //orbs[player.number].put(orb.uid, orb);
-            //state.orbStates[player.number].put(orb.uid, orb.state);
+            //orbs[player.number].put(orb.uidCounter, orb);
+            //state.orbStates[player.number].put(orb.uidCounter, orb.state);
             return orb;
         }
     }
@@ -177,8 +176,8 @@ public abstract class Model {
         @Override
         protected Void newObject() {
             Void vd = new Void(player, world);
-            //voids[player.number].put(vd.uid, vd);
-            //state.voidStates[player.number].put(vd.uid, vd.state);
+            //voids[player.number].put(vd.uidCounter, vd);
+            //state.voidStates[player.number].put(vd.uidCounter, vd.state);
             return vd;
         }
     }
@@ -191,8 +190,8 @@ public abstract class Model {
         @Override
         protected Nova newObject() {
             Nova nova = new Nova(player, world);
-            novas[player.number].put(nova.uid, nova);
-            state.novaStates[player.number].put(nova.uid, nova.state);
+            novas[player.number].put(nova.uidCounter, nova);
+            state.novaStates[player.number].put(nova.uidCounter, nova.state);
             return nova;
         }
     }
@@ -215,7 +214,7 @@ public abstract class Model {
         Iterator<Integer> itNew = newOrbs.iterator();
         while (itNew.hasNext()) {
             Integer uid = itNew.next();
-            addOrb(playerNum, orbMap.values().getClass(), uid); // does not intialize other state vars than uid
+            addOrb(playerNum, orbMap.values().getClass(), uid); // does not intialize other state vars than uidCounter
         }
 
         // make sure orbs are active and overwrite their state (init)
@@ -249,7 +248,7 @@ public abstract class Model {
 
         this.state.frame = state.frame;
         this.state.orbID = state.orbID;
-        Orb.uid = this.state.orbID;
+        Orb.uidCounter = this.state.orbID;
 
     }
 
@@ -298,7 +297,7 @@ public abstract class Model {
             }
         }
         level.updatePosition(dt); // XXX stars updated here?
-        state.orbID = Orb.uid;
+        state.orbID = Orb.uidCounter;
         state.frame++;
 	}
 
@@ -316,7 +315,7 @@ public abstract class Model {
     }
 
     /**
-     * Adds an orb of the given class type with the given uid to appropriate player's lists. Does
+     * Adds an orb of the given class type with the given uidCounter to appropriate player's lists. Does
      * not initialize the state of the orb.
      * @param playerNum 0-base integer uniquely identifying the player
      * @param cls class of created orb (ChargeOrb, nova, void)
@@ -325,19 +324,19 @@ public abstract class Model {
     void addOrb(int playerNum, Class cls, int uid) {
         if (cls == ChargeOrb.class) {
             ChargeOrb orb = orbPools[playerNum].obtain();
-            orb.uid = uid;
+            orb.uidCounter = uid;
             orbs[playerNum].put(uid, orb);
             state.orbStates[playerNum].put(uid, (ChargeOrb.ChargeOrbState) orb.state);
         }
         else if (cls == Void.class) {
             Void vd = voidPools[playerNum].obtain();
-            vd.uid = uid;
+            vd.uidCounter = uid;
             voids[playerNum].put(uid, vd);
             state.voidStates[playerNum].put(uid, (ChargeOrb.ChargeOrbState) vd.state);
         }
         else {
             Nova nova = novaPools[playerNum].obtain();
-            nova.uid = uid;
+            nova.uidCounter = uid;
             novas[playerNum].put(uid, nova);
             state.novaStates[playerNum].put(uid, nova.state);
         }
@@ -358,29 +357,29 @@ public abstract class Model {
         if (cls == ChargeOrb.class) {
             ChargeOrb orb = orbPools[playerNum].obtain();
             orb.init(x,y,v,w); // make sure its calling init w ChargeOrbState not OrbState
-            orbs[playerNum].put(orb.uid, orb);
-            this.state.orbStates[playerNum].put(orb.uid, (ChargeOrb.ChargeOrbState) orb.state);
+            orbs[playerNum].put(orb.uidCounter, orb);
+            this.state.orbStates[playerNum].put(orb.uidCounter, (ChargeOrb.ChargeOrbState) orb.state);
             return orb;
         }
         else if (cls == Void.class) {
             Void vd = voidPools[playerNum].obtain();
             vd.init(x,y,v,w);
-            voids[playerNum].put(vd.uid, vd);
-            this.state.voidStates[playerNum].put(vd.uid, (ChargeOrb.ChargeOrbState) vd.state);
+            voids[playerNum].put(vd.uidCounter, vd);
+            this.state.voidStates[playerNum].put(vd.uidCounter, (ChargeOrb.ChargeOrbState) vd.state);
             return vd;
         }
         else {
             Nova nova = novaPools[playerNum].obtain();
             nova.init(x,y,v,w);
-            novas[playerNum].put(nova.uid, nova);
-            this.state.novaStates[playerNum].put(nova.uid, nova.state);
+            novas[playerNum].put(nova.uidCounter, nova);
+            this.state.novaStates[playerNum].put(nova.uidCounter, nova.state);
             return nova;
         }
     }
 
     /**
      * Adds an orb for the given player of the given class and copies the OrbState onto the state of the new orb object,
-     * not including uid.
+     * not including uidCounter.
      * @param playerNum 0-base integer uniquely identifying the player
      * @param cls class of created orb (ChargeOrb, Nova, Void)
      * @param state state of the new orb
@@ -389,20 +388,20 @@ public abstract class Model {
         if (cls == ChargeOrb.class) {
             ChargeOrb orb = orbPools[playerNum].obtain();
             orb.init((ChargeOrb.ChargeOrbState)state); // make sure its calling init w ChargeOrbState not OrbState
-            orbs[playerNum].put(orb.uid, orb);
-            this.state.orbStates[playerNum].put(orb.uid, (ChargeOrb.ChargeOrbState) orb.state);
+            orbs[playerNum].put(orb.uidCounter, orb);
+            this.state.orbStates[playerNum].put(orb.uidCounter, (ChargeOrb.ChargeOrbState) orb.state);
         }
         else if (cls == Void.class) {
             Void vd = voidPools[playerNum].obtain();
             vd.init(state);
-            voids[playerNum].put(vd.uid, vd);
-            this.state.voidStates[playerNum].put(vd.uid, (ChargeOrb.ChargeOrbState) vd.state);
+            voids[playerNum].put(vd.uidCounter, vd);
+            this.state.voidStates[playerNum].put(vd.uidCounter, (ChargeOrb.ChargeOrbState) vd.state);
         }
         else {
             Nova nova = novaPools[playerNum].obtain();
             nova.init(state);
-            novas[playerNum].put(nova.uid, nova);
-            this.state.novaStates[playerNum].put(nova.uid, nova.state);
+            novas[playerNum].put(nova.uidCounter, nova);
+            this.state.novaStates[playerNum].put(nova.uidCounter, nova.state);
         }
         incrementCounters(playerNum, cls);
     }
@@ -415,21 +414,21 @@ public abstract class Model {
             }
 
             state.orbStates[o.playerNum].remove(o.state.uid);
-            orbs[o.playerNum].remove(o.uid);
+            orbs[o.playerNum].remove(o.uidCounter);
 
             assert (!orbs[o.playerNum].containsValue(o));
-            assert (!orbs[o.playerNum].containsKey(o.uid));
+            assert (!orbs[o.playerNum].containsKey(o.uidCounter));
 
             orbPools[o.playerNum].free((ChargeOrb)o);
         }
         else if (o.getClass() == Nova.class) {
             state.novaStates[o.playerNum].remove(o.state.uid);
-            novas[o.playerNum].remove(o.uid);
+            novas[o.playerNum].remove(o.uidCounter);
             novaPools[o.playerNum].free((Nova)o);
         }
         else {
             state.voidStates[o.playerNum].remove(o.state.uid);
-            voids[o.playerNum].remove(o.uid);
+            voids[o.playerNum].remove(o.uidCounter);
             voidPools[o.playerNum].free((Void)o);
         }
     }
