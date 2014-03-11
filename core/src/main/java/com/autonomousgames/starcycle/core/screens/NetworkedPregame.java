@@ -5,6 +5,7 @@ import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.controllers.MenuController;
 import com.autonomousgames.starcycle.core.ui.*;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
 public class NetworkedPregame extends MenuScreen {
@@ -14,6 +15,10 @@ public class NetworkedPregame extends MenuScreen {
     ToggleButton searchBar;
     LayeredButton options;
 
+    int winNum = 0;
+    CharSequence winStr;
+    Color winColor;
+
 	public NetworkedPregame() {
 		Gdx.input.setInputProcessor(new MenuController(this));
 
@@ -21,11 +26,10 @@ public class NetworkedPregame extends MenuScreen {
 		backButton.setRotation(90f);
 		backButton.addListener(new ScreenDoneClickListener(this, ScreenType.MULTIPLAYERMODESELECT));
 
-        Vector2 netPos = new Vector2(ui.getWidth()/16f, ui.getHeight()*5f/6f);
         Vector2 netTouch = new Vector2(ui.getHeight()/3f, ui.getWidth()/8f);
         Vector2 netSize = new Vector2(1f, 1f).scl(ui.getWidth()/18f);
         Vector2 netVec = new Vector2(ui.getHeight()/12f, ui.getWidth()/36f);
-        netMode = new ToggleButton(netPos, netTouch);
+        netMode = new ToggleButton(new Vector2(ui.getWidth()/16f, ui.getHeight()*5f/6f), netTouch);
         netMode.addLayer(new SpriteLayer(StarCycle.tex.block, netTouch).setSpriteAlpha(0.5f), LayerType.DOWN);
         netMode.addLayer(new SpriteLayer(StarCycle.tex.wifi, new Vector2(-netVec.x, netVec.y), new Vector2(netSize.x, netSize.y*3f/4f)).setSpriteColor(Colors.yellow), LayerType.UNTOGGLED);
         netMode.addLayer(new SpriteLayer(StarCycle.tex.wifi, new Vector2(-netVec.x, netVec.y), new Vector2(netSize.x, netSize.y*3f/4f)).setSpriteColor(Colors.charcoal), LayerType.TOGGLED);
@@ -35,8 +39,18 @@ public class NetworkedPregame extends MenuScreen {
         netMode.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "GLOBAL", new Vector2(netVec.y, 0f), netSize, Colors.cyan, 90f), LayerType.TOGGLED);
         netMode.setRotation(90f);
 
+        Vector2 statsTouch = new Vector2(netTouch.x, netTouch.y/2f);
+        winStr = winNum < 0 ? "- "+-1*winNum : "+ "+winNum;
+        winColor = winNum < 0 ? Colors.red :  Colors.spinach;
+        stats = new LayeredButton(new Vector2(ui.getWidth()/32f, ui.getHeight()/6f), statsTouch);
+        stats.addLayer(new SpriteLayer(StarCycle.tex.block, statsTouch).setSpriteAlpha(0.5f), LayerType.DOWN);
+        stats.addLayer(new SpriteLayer(StarCycle.tex.stats, new Vector2(-ui.getHeight() / 16f, 0f), new Vector2(1f, 1f).scl(ui.getWidth() / 20f)).setSpriteColor(Colors.indigo));
+        stats.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, winStr, new Vector2(0f, ui.getHeight()/18f), netSize, winColor, 90f));
+        stats.setRotation(90f);
+
 		ui.addActor(backButton);
         ui.addActor(netMode);
+        ui.addActor(stats);
 	}
 	
 	public String toString(){
