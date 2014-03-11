@@ -8,12 +8,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 
 public class LevelSelectScreen extends MenuScreen {
-	
+
+    StandardButton backButton;
+
 	public LevelSelectScreen () {
-		StandardButton backButton = new StandardButton(backPosition, backSize, StarCycle.tex.backIcon, padding);
+		backButton = new StandardButton(backPosition, backSize, StarCycle.tex.backIcon, padding);
 		backButton.setRotation(90f);
-		backButton.addListener(new ScreenDoneClickListener(this, ScreenType.STARTMENU));
-		
 		ui.addActor(backButton);
         drawFakeOrbs = false;
 	}

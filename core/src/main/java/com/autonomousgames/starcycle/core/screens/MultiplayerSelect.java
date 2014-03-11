@@ -60,7 +60,9 @@ public class MultiplayerSelect extends LevelSelectScreen{
 	public MultiplayerSelect(LevelType lvl, BaseType[] skins, Color[][] colors) {
 		
 		super();
-		
+
+        backButton.addListener(new ScreenDoneClickListener(this, ScreenType.MULTIPLAYERMODESELECT));
+
 		Vector2 buttonDims = new Vector2(ui.getHeight()/6f, ui.getHeight()/6f);
 		
 		ready0 = new ToggleButton(new Vector2(ui.getWidth()*8f/9f, ui.getHeight()/7f), buttonDims);

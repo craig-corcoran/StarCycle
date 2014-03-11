@@ -26,7 +26,9 @@ public class CampaignSelect extends LevelSelectScreen {
     public CampaignSelect() {
 		
 		super();
-		
+
+        backButton.addListener(new ScreenDoneClickListener(this, ScreenType.STARTMENU));
+
 		// star positions
 		HashMap<SinglePlayerLevel,	Vector2> posMap = new HashMap<SinglePlayerLevel,	Vector2>();  
 		//posMap.put(SinglePlayerLevel.TUTORIAL,new Vector2(ui.getWidth()*7/8f, ui.getHeight()*3/16f));
