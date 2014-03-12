@@ -15,8 +15,9 @@ public class SpriteLayer extends Layer{
 	public Sprite image;
 	float rotationSpeed;
 	float revolutionSpeed;
+    public boolean revolving;
 	Vector2 relPos = new Vector2();
-	
+
 	public SpriteLayer(TextureRegion texture, Vector2 relPos, Vector2 dims) {
 		super(relPos, dims);
 		image = new Sprite(texture);
@@ -58,9 +59,12 @@ public class SpriteLayer extends Layer{
 	public SpriteLayer setRevolutionSpeed(float speed) {
 		if (speed != 0f) {
 			revolutionSpeed = speed / 60f; // In degrees/second, assuming 60 FPS.
+            revolving = true;
 			Action revolveAction = new Action(){
 				public boolean act (float delta) {
-					setCenter(center.rotate(revolutionSpeed));
+                    if (revolving) {
+					    setCenter(center.rotate(revolutionSpeed));
+                    }
 					return false;
 				}
 			};

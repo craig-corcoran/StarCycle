@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class ToggleButton extends LayeredButton{
 	
-	public boolean toggled = false;
+	boolean toggled = false;
 	public boolean sticksDown = false; // Radio button behavior
 
 	public ToggleButton(Vector2 center, Vector2 touchSize) {
@@ -14,7 +14,7 @@ public class ToggleButton extends LayeredButton{
 		
 		this.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
-				toggled = !toggled;
+				toggle();
 				if (sticksDown) {
 					active = !toggled && active;
 				}
@@ -33,5 +33,17 @@ public class ToggleButton extends LayeredButton{
 			return super.layerOn(layer);
 		}
 	}
+
+    public boolean isToggled() {
+        return toggled;
+    }
+
+    public void toggle() {
+        toggled = !toggled;
+    }
+
+    public void toggle(boolean value) {
+        toggled = value;
+    }
 	
 }

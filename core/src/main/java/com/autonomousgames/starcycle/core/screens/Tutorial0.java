@@ -85,13 +85,12 @@ public class Tutorial0 extends Tutorial {
         CharSequence text02 = "to progress through this tutorial.";
         CharSequence text03 = "Access the pause menu by tapping";
         CharSequence text04 = "within the blue rectangular area.";
-        Vector2 textDims = new Vector2(sh, sw/10f);
         welcomeText = new LayeredButton(new Vector2(sw/2f - pauseButton.getDims().x/4f, sh/2f + offset));
-        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikJumbo, text00, textDims).rotateText(90f));
-        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text01, new Vector2(1.5f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
-        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text02, new Vector2(2.25f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
-        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text03, new Vector2(6.75f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
-        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text04, new Vector2(7.25f * StarCycle.pixelsPerMeter, 0f), textDims).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikJumbo, text00).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text01, new Vector2(1.5f * StarCycle.pixelsPerMeter, 0f)).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, text02, new Vector2(2.25f * StarCycle.pixelsPerMeter, 0f)).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text03, new Vector2(6.75f * StarCycle.pixelsPerMeter, 0f)).rotateText(90f));
+        welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text04, new Vector2(7.25f * StarCycle.pixelsPerMeter, 0f)).rotateText(90f));
         add(welcomeText);
 
         pauseArea = new LayeredButton(pauseButton.getCenter());
@@ -112,8 +111,8 @@ public class Tutorial0 extends Tutorial {
         CharSequence text12 = "but feel free to move at your own pace.";
         holdText = new LayeredButton(new Vector2(swipeCenter.x-bw*2.5f, swipeCenter.y + offset));
         holdText.addLayer(new TextLayer(StarCycle.tex.gridnikJumbo, text10, swipeSize).rotateText(90f));
-        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text11, new Vector2(bw*3.5f, 0f), swipeSize).rotateText(90f));
-        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text12, new Vector2(bw*5f, 0f), swipeSize).rotateText(90f));
+        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text11, new Vector2(bw*3.5f, 0f)).rotateText(90f));
+        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text12, new Vector2(bw*5f, 0f)).rotateText(90f));
         add(holdText);
 
         holdImage = new LayeredButton(new Vector2(sw*0.7f, sh*0.5f+offset));
@@ -257,17 +256,16 @@ public class Tutorial0 extends Tutorial {
         lvl2Control = Star.getControlButton(lvl2Star.getCenter(), starRadius*0.9f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.5f);
         add(lvl2Control);
 
-        Vector2 numberSize = new Vector2(2f, 1f).scl(StarCycle.pixelsPerMeter);
         lvlNums = new LayeredButton(new Vector2(row0, sh/8f + offset));
-        lvlNums.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "0 x", numberSize).rotateText(90f));
-        lvlNums.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "1 x", new Vector2(row1-row0, 0f), numberSize).rotateText(90f));
-        lvlNums.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "2 x", new Vector2(row2 - row0, 0f), numberSize).rotateText(90f));
+        lvlNums.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "0 x").rotateText(90f));
+        lvlNums.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "1 x", new Vector2(row1-row0, 0f)).rotateText(90f));
+        lvlNums.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "2 x", new Vector2(row2 - row0, 0f)).rotateText(90f));
         add(lvlNums);
 
         orbNames = new LayeredButton(new Vector2(row0, sh*7f/16f + offset));
-        orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Orbs", numberSize).rotateText(90f));
-        orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Voids", new Vector2(row1-row0, 0f), numberSize).rotateText(90f));
-        orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Novas", new Vector2(row2 - row0, 0f), numberSize).rotateText(90f));
+        orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Orbs").rotateText(90f));
+        orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Voids", new Vector2(row1-row0, 0f)).rotateText(90f));
+        orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Novas", new Vector2(row2 - row0, 0f)).rotateText(90f));
         add(orbNames);
 
         launch0 = players[0].launchPad.getOrbButton(new Vector2(row0+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);

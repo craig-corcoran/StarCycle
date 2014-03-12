@@ -180,17 +180,16 @@ public class Tutorial1 extends Tutorial {
         lvl2Control = Star.getControlButton(lvl2Star.getCenter(), starRadius*0.9f*StarCycle.pixelsPerMeter, Colors.cyan, 0, 0.5f);
         add(lvl2Control);
 
-        Vector2 numberSize = new Vector2(2f, 1f).scl(StarCycle.pixelsPerMeter);
         lvlNums = new LayeredButton(new Vector2(row0, sh/8f + offset));
-        lvlNums.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "0 x", numberSize).rotateText(90f));
-        lvlNums.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "1 x", new Vector2(row1-row0, 0f), numberSize).rotateText(90f));
-        lvlNums.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "2 x", new Vector2(row2 - row0, 0f), numberSize).rotateText(90f));
+        lvlNums.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "0 x").rotateText(90f));
+        lvlNums.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "1 x", new Vector2(row1-row0, 0f)).rotateText(90f));
+        lvlNums.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "2 x", new Vector2(row2 - row0, 0f)).rotateText(90f));
         add(lvlNums);
 
         orbNames = new LayeredButton(new Vector2(row0, sh*7f/16f + offset));
-        orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Orbs", numberSize).rotateText(90f));
-        orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Voids", new Vector2(row1-row0, 0f), numberSize).rotateText(90f));
-        orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Novas", new Vector2(row2 - row0, 0f), numberSize).rotateText(90f));
+        orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Orbs").rotateText(90f));
+        orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Voids", new Vector2(row1-row0, 0f)).rotateText(90f));
+        orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Novas", new Vector2(row2 - row0, 0f)).rotateText(90f));
         add(orbNames);
 
         launch0 = players[0].launchPad.getOrbButton(new Vector2(row0+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
@@ -222,8 +221,8 @@ public class Tutorial1 extends Tutorial {
         offset = 2f*sh;
 
         voidText = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y + offset));
-        voidText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture a star to unlock voids", new Vector2(-swipeSize.x/8f, 0f), swipeSize).rotateText(90f));
-        voidText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Voids can destroy enemy orbs", new Vector2(swipeSize.x/8f, 0f), swipeSize).rotateText(90f));
+        voidText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture a star to unlock voids", new Vector2(-swipeSize.x/8f, 0f)).rotateText(90f));
+        voidText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Voids can destroy enemy orbs", new Vector2(swipeSize.x/8f, 0f)).rotateText(90f));
         add(voidText);
 
         players[0].base.translateBase(0f, offset);
@@ -258,7 +257,7 @@ public class Tutorial1 extends Tutorial {
 
         voidHint = new LayeredButton(new Vector2(sw-sh/12f, sh*7f/12f + offset));
         voidHint.addLayer(new SpriteLayer(StarCycle.tex.fingerRight, new Vector2(swipeSize.x/6f, swipeSize.x/4.5f)), LayerType.ACTIVE);
-        voidHint.addLayer(new TextLayer(StarCycle.tex.gridnikSmall, "Launch a void!", new Vector2(-sh/12f, 0f), swipeSize).rotateText(90f), LayerType.ACTIVE);
+        voidHint.addLayer(new TextLayer(StarCycle.tex.gridnikSmall, "Launch a void!", new Vector2(-sh/12f, 0f)).rotateText(90f), LayerType.ACTIVE);
         voidHint.deactivate();
         add(voidHint);
 
@@ -267,8 +266,8 @@ public class Tutorial1 extends Tutorial {
         offset = 3f*sh;
 
         novaText = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y + offset));
-        novaText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Capture two stars to unlock novas", new Vector2(-swipeSize.x/8f, 0f), swipeSize).rotateText(90f));
-        novaText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Novas can instantly capture a star", new Vector2(swipeSize.x/8f, 0f), swipeSize).rotateText(90f));
+        novaText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Capture two stars to unlock novas", new Vector2(-swipeSize.x/8f, 0f)).rotateText(90f));
+        novaText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Novas can instantly capture a star", new Vector2(swipeSize.x/8f, 0f)).rotateText(90f));
         add(novaText);
 
         model.stars.get(2).moveStar(1f, offset / StarCycle.pixelsPerMeter);
@@ -278,7 +277,7 @@ public class Tutorial1 extends Tutorial {
 
         novaHint = new LayeredButton(new Vector2(sw - sh/3f, sh*8f/9f + offset));
         novaHint.addLayer(new SpriteLayer(StarCycle.tex.fingerRight, new Vector2(swipeSize.x/8f, swipeSize.x/6f)).rotateSprite(-60f), LayerType.ACTIVE);
-        novaHint.addLayer(new TextLayer(StarCycle.tex.gridnikSmall, "Launch a nova!", new Vector2(-sh/12f, -sh/12f), swipeSize).rotateText(90f), LayerType.ACTIVE);
+        novaHint.addLayer(new TextLayer(StarCycle.tex.gridnikSmall, "Launch a nova!", new Vector2(-sh/12f, -sh/12f)).rotateText(90f), LayerType.ACTIVE);
         novaHint.deactivate();
         add(novaHint);
 
@@ -287,10 +286,10 @@ public class Tutorial1 extends Tutorial {
         offset = 4f*sh;
 
         ammoText = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y + offset));
-        ammoText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Orbs gather energy from stars.", new Vector2(-swipeSize.x/4f, 0f), swipeSize).rotateText(90f));
-        ammoText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Launching each orb requires energy.", new Vector2(-swipeSize.x/16f, 0f), swipeSize).rotateText(90f));
-        ammoText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Voids need more energy than orbs.", new Vector2(swipeSize.x/16f, 0f), swipeSize).rotateText(90f));
-        ammoText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Novas use lots of energy, so aim carefully!", new Vector2(swipeSize.x*3f/16f, 0f), swipeSize).rotateText(90f));
+        ammoText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Orbs gather energy from stars.", new Vector2(-swipeSize.x/4f, 0f)).rotateText(90f));
+        ammoText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Launching each orb requires energy.", new Vector2(-swipeSize.x/16f, 0f)).rotateText(90f));
+        ammoText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Voids need more energy than orbs.", new Vector2(swipeSize.x/16f, 0f)).rotateText(90f));
+        ammoText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Novas use lots of energy, so aim carefully!", new Vector2(swipeSize.x*3f/16f, 0f)).rotateText(90f));
         add(ammoText);
 
         model.stars.get(3).moveStar(-2f, offset / StarCycle.pixelsPerMeter);
@@ -306,9 +305,9 @@ public class Tutorial1 extends Tutorial {
 
         outroText = new LayeredButton(new Vector2(sw/2f, sh/2f + offset));
         outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "This concludes the tutorial.", swipeSize).rotateText(90f));
-        outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Now you are ready to play StarCycle!", new Vector2(bw*1.5f, 0f), swipeSize).rotateText(90f));
-        outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Jump into the solo campaign,", new Vector2(bw*4f, 0f), swipeSize).rotateText(90f));
-        outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "or challenge a friend in multiplayer!", new Vector2(bw*5.5f, 0f), swipeSize).rotateText(90f));
+        outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Now you are ready to play StarCycle!", new Vector2(bw*1.5f, 0f)).rotateText(90f));
+        outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Jump into the solo campaign,", new Vector2(bw*4f, 0f)).rotateText(90f));
+        outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "or challenge a friend in multiplayer!", new Vector2(bw*5.5f, 0f)).rotateText(90f));
         StarCycle.virgin = false;
         add(outroText);
 
