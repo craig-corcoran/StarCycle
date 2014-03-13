@@ -221,6 +221,10 @@ public class LayeredButton extends Group {
         return colors;
     }
 
+    public void removeLayer(int i) {
+        layers.remove(i);
+    }
+
     public void flip(boolean x, boolean y) {
         for (Layer layer : layers) {
             layer.flip(x, y);

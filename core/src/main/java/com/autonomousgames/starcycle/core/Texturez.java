@@ -101,6 +101,7 @@ public class Texturez {
     public final AtlasRegion splashTexture;
     public final AtlasRegion genericLogo;
     public final AtlasRegion questionIcon;
+    public final AtlasRegion warningIcon;
     public final AtlasRegion settingsIcon;
     public final AtlasRegion soloIcon;
     public final AtlasRegion multiplayerIcon; // 4:3
@@ -274,6 +275,7 @@ public class Texturez {
         splashTexture = atlas.findRegion("ag-logo");
         genericLogo = atlas.findRegion("generic-starcycle-logo");
         questionIcon = atlas.findRegion("icon-question");
+        warningIcon = atlas.findRegion("icon-warning");
         settingsIcon = atlas.findRegion("icon-tools");
         soloIcon = atlas.findRegion("icon-solo");
         multiplayerIcon = atlas.findRegion("icon-multi"); // 4:3
