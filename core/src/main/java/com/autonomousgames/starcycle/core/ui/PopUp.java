@@ -41,14 +41,14 @@ public class PopUp extends LayeredButton {
 
         background.add(new SpriteLayer(StarCycle.tex.block, touchSize).setSpriteColor(Color.BLACK));
         background.add(new SpriteLayer(StarCycle.tex.block, boxDims).setSpriteColor(Colors.smoke));
-        background.add(new SpriteLayer(StarCycle.tex.block, boxDims.cpy().sub(edge*2f, edge*2f)).setSpriteColor(Colors.night));
+        background.add(new SpriteLayer(StarCycle.tex.block, boxDims.cpy().sub(edge*2f, edge*2f)).setSpriteColor(Colors.ebony));
 
         text = new TextLayer(font, message).rotateText(90f);
 
         buttonSize = new Vector2(1f/16f, 1f/8f).scl(ui.getHeight());
         buttonOne = new LayeredButton(boxDims.cpy().sub(buttonSize).scl(0.5f).sub(2f * edge, 2f * edge).add(center), buttonSize.cpy().scl(1.2f));
-        buttonOne.addLayer(new SpriteLayer(StarCycle.tex.block, buttonSize).setSpriteColor(Colors.cyan), LayerType.DOWN);
-        buttonOne.addLayer(new SpriteLayer(StarCycle.tex.block, buttonSize).setSpriteColor(Colors.navy), LayerType.UP);
+        buttonOne.addLayer(new SpriteLayer(StarCycle.tex.block, buttonSize).setSpriteColor(Colors.smoke), LayerType.DOWN);
+        buttonOne.addLayer(new SpriteLayer(StarCycle.tex.block, buttonSize).setSpriteColor(Colors.charcoal), LayerType.UP);
         buttonOne.addLayer(new TextLayer(font, label).rotateText(90f));
         buttonOne.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y) {
@@ -67,6 +67,7 @@ public class PopUp extends LayeredButton {
 
     public PopUp (Stage ui, BitmapFont font, CharSequence message) {
         this(ui, font, message, "OK");
+        buttonOneColors(Colors.navy, Colors.cyan);
     }
 
     public PopUp yesNo() {

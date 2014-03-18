@@ -10,6 +10,7 @@ public class Colors {
     public static Color smoke = new Color(0.533f, 0.533f, 0.533f, 1f);
     public static Color charcoal = new Color(0.4f, 0.4f, 0.4f, 1f);
     public static Color night = new Color(0.267f, 0.267f, 0.267f, 1f);
+    public static Color ebony = new Color(0.133f, 0.133f, 0.133f, 1f);
     public static Color matcha = new Color(0.624f, 0.925f, 0.443f, 1f);
     public static Color spinach = new Color(0f, 0.51f, 0.133f, 1f);
     public static Color magenta = new Color(0.769f, 0f, 0.471f, 1f);

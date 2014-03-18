@@ -19,8 +19,6 @@ public class NetworkedPregame extends MenuScreen {
     LayeredButton levelSelect;
     LayeredButton skinSelect;
     ToggleButton ready;
-    PopUp test;
-    PopUp test2;
 
     int winNum = 0;
     CharSequence winStr;
@@ -32,14 +30,6 @@ public class NetworkedPregame extends MenuScreen {
         StandardButton backButton = new StandardButton(backPosition, backSize, StarCycle.tex.backIcon, padding);
         backButton.setRotation(90f);
         backButton.addListener(new ScreenDoneClickListener(this, ScreenType.MULTIPLAYERMODESELECT));
-
-        test = new PopUp(ui, StarCycle.tex.gridnikMedium, "This is a test!"){
-            @Override
-            public void clickOne(){
-                test2.go();
-            }
-        }.info();
-        test2 = new PopUp(ui, StarCycle.tex.gridnikMedium, "Error!", "RETRY", "FAIL").alert();
 
         Vector2 netTouch = new Vector2(ui.getHeight()/3f, ui.getWidth()/8f);
         Vector2 netSize = new Vector2(1f, 1f).scl(ui.getWidth()/18f);
@@ -58,7 +48,6 @@ public class NetworkedPregame extends MenuScreen {
                     search.deactivate();
                     statusText.switchTo(1);
                     ready.activate();
-                    test.go();
                 }
                 else {
                     search.activate();
