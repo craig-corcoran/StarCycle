@@ -9,7 +9,7 @@ import java.lang.*;
 
 public class Sensor {
 
-	public static Fixture addSensor(Object obj, Body body, float radius) {
+	public static Fixture addSensor(Class cls, int playerNum, Body body, float radius) {
 
 		// add sensor for detecting if within radius
 		CircleShape shape = new CircleShape();
@@ -18,11 +18,11 @@ public class Sensor {
 		fixtureDef.shape = shape;
         shape.dispose();
 
-		if (obj instanceof Void) {
-			fixtureDef.filter.categoryBits = Model.voidCategoryBits[((Orb)obj).playerNum];
-			fixtureDef.filter.maskBits = Model.voidMaskBits[((Orb)obj).playerNum];
+		if (cls == Void.class) {
+			fixtureDef.filter.categoryBits = Model.voidCategoryBits[playerNum];
+			fixtureDef.filter.maskBits = Model.voidMaskBits[playerNum];
 		} 
-		else if(obj instanceof Star) {
+		else if( cls == Star.class) {
 			fixtureDef.filter.categoryBits = Model.starCat;
 			fixtureDef.filter.maskBits = Model.starMask;
 		}

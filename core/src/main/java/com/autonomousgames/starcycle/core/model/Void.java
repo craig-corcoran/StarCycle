@@ -18,7 +18,7 @@ public class Void extends ChargeOrb implements Collidable {
     public Void(Player player, World world) {
         super(player, world, Void.class);
         float voidRadius = ModelSettings.getFloatSetting("voidSensorRadius");
-        Sensor.addSensor(this, body, voidRadius);
+        Sensor.addSensor(Void.class, player.number, body, voidRadius);
 
     }
 

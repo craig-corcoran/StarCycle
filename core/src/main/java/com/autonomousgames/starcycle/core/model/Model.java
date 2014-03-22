@@ -161,8 +161,6 @@ public abstract class Model {
         @Override
         protected ChargeOrb newObject() {
             ChargeOrb orb = new ChargeOrb(player, world);
-            //orbs[player.number].put(orb.uidCounter, orb);
-            //state.orbStates[player.number].put(orb.uidCounter, orb.state);
             return orb;
         }
     }
@@ -176,8 +174,6 @@ public abstract class Model {
         @Override
         protected Void newObject() {
             Void vd = new Void(player, world);
-            //voids[player.number].put(vd.uidCounter, vd);
-            //state.voidStates[player.number].put(vd.uidCounter, vd.state);
             return vd;
         }
     }
@@ -190,8 +186,6 @@ public abstract class Model {
         @Override
         protected Nova newObject() {
             Nova nova = new Nova(player, world);
-            novas[player.number].put(nova.uidCounter, nova);
-            state.novaStates[player.number].put(nova.uidCounter, nova.state);
             return nova;
         }
     }
@@ -252,12 +246,12 @@ public abstract class Model {
 
     }
 
-    Vector2 _pos = new Vector2();
+    //Vector2 _pos = new Vector2();
     public void launch(Player player, Class cls) {
         float cost = orbCosts.get(cls);
         if (player.state.ammo >= cost) {
             player.state.ammo -= cost;
-            _pos.set(player.state.pointerX, player.state.pointerY);
+            Vector2 _pos = new Vector2(player.state.pointerX, player.state.pointerY);
             _pos.nor().scl(0.3f * player.base.baseDiams[player.base.level]);
             _pos.add(player.base.origin);
             addOrb(player.number, cls, _pos.x, _pos.y, player.state.pointerX, player.state.pointerY);
@@ -274,10 +268,10 @@ public abstract class Model {
             for (Orb o: orbs[p.number].values()) {
                 o.update(stars);
             }
-            for (Orb o: voids[p.number].values()) {
+            for (Void o: voids[p.number].values()) {
                 o.update(stars);
             }
-            for (Orb o: novas[p.number].values()) {
+            for (Nova o: novas[p.number].values()) {
                 o.update(stars);
             }
 

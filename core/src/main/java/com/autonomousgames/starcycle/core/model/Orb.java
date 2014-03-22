@@ -104,7 +104,7 @@ public class Orb implements Collidable, Pool.Poolable {
 	public void draw(SpriteBatch batch) {
 		// Only draw when visible
         if (isOnScreen()) {
-            boolean active = (!(this instanceof ChargeOrb)) || ((ChargeOrb.ChargeOrbState) state).lockedOn;
+            boolean active = (this instanceof ChargeOrb) ? ((ChargeOrb.ChargeOrbState) state).lockedOn : true;
             orbLayers[playerNum].draw(batch, 1f, state.x*StarCycle.pixelsPerMeter, state.y*StarCycle.pixelsPerMeter, 0f, active);
         }
 	}
