@@ -10,13 +10,14 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ListIterator;
 
 public class Player {
 
-    public static class PlayerState {
+    public static class PlayerState implements Serializable {
         public float ammo = 0f;
         public int starsControlled = 0;
         public int numActiveOrbs = 0;

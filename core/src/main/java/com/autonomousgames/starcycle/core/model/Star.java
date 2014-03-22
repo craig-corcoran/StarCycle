@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
+import java.io.Serializable;
 import java.lang.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,7 +22,7 @@ import java.util.LinkedList;
 
 public class Star extends Orbitable implements Collidable {
 
-    public static class StarState {
+    public static class StarState implements Serializable {
         public int index = -1;
         public float x = 0f;
         public float y = 0f;

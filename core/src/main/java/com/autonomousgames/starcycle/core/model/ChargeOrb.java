@@ -5,6 +5,7 @@ import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.ui.LayerType;
 import com.autonomousgames.starcycle.core.ui.LayeredButton;
 import com.autonomousgames.starcycle.core.ui.SpriteLayer;
+import com.autonomousgames.starcycle.core.ui.SpriteLayerLite;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -22,7 +23,7 @@ public class ChargeOrb extends Orb implements Collidable {
         public boolean lockedOn = false;
     }
 
-	static final LayeredButton[] chargeButtons = new LayeredButton[Model.numPlayers];
+	//static final LayeredButton[] chargeButtons = new LayeredButton[Model.numPlayers];
 
     private static final float angleThresh = ModelSettings.getFloatSetting("angleThresh");
     private static final float chargeRadius = ModelSettings.getFloatSetting("chargeRadius")*StarCycle.pixelsPerMeter;
@@ -39,9 +40,9 @@ public class ChargeOrb extends Orb implements Collidable {
 		super(player, world, new ChargeOrbState(), (cls == Void.class) ?
                         (int) ModelSettings.getFloatSetting("powerupLifeSpan") :
                         (int) ModelSettings.getFloatSetting("orbLifeSpan"));
-		chargeButtons[playerNum] = new LayeredButton(orbButtons[playerNum].getCenter(),orbButtons[playerNum].getDims());
-		chargeButtons[playerNum].addLayer(new SpriteLayer(StarCycle.tex.chargeBeam, new Vector2(chargeRadius/2f, 0f), new Vector2(chargeRadius,beamWidth)).setSpriteColor(player.colors[1]),LayerType.ACTIVE);
-		chargeButtons[playerNum].deactivate();
+		//chargeButtons[playerNum] = new LayeredButton(orbButtons[playerNum].getCenter(),orbButtons[playerNum].getDims());
+		//chargeButtons[playerNum].addLayer(new SpriteLayer(StarCycle.tex.chargeBeam, new Vector2(chargeRadius/2f, 0f), new Vector2(chargeRadius,beamWidth)).setSpriteColor(player.colors[1]),LayerType.ACTIVE);
+		//chargeButtons[playerNum].deactivate();
 	}
 
     public ChargeOrb(Player player, World world) {
@@ -121,22 +122,21 @@ public class ChargeOrb extends Orb implements Collidable {
             }
         }
         if (((ChargeOrbState)state).star >= 0) { // if locked on
-            beamAngle = stars[((ChargeOrbState)state).star].getButtonCenter().sub(orbButtons[playerNum].getCenter()).angle();
+            // TODO update beam angle
+            //beamAngle = stars[((ChargeOrbState)state).star].getButtonCenter().sub(orbButtons[playerNum].getCenter()).angle();
         }
 	}
 
 	@Override
 	public void draw(SpriteBatch batch) {
-		if (!(((ChargeOrbState)state).star == -1)) {
-
-			// Move to the orb's current position and point toward the star.
-			chargeButtons[playerNum].setCenter(orbButtons[playerNum].getCenter());
-			chargeButtons[playerNum].setRotation(beamAngle);
-			chargeButtons[playerNum].draw(batch, 1f);
-		}
-
-
-		super.draw(batch);
+		if (!(((ChargeOrbState)state).star == -1)) { // if within range of a star
+            // draw the charge beam
+            // Move to the orb's current position and point toward the star.
+            //chargeButtons[playerNum].setCenter(orbButtons[playerNum].getCenter());
+            //chargeButtons[playerNum].setRotation(beamAngle);
+            //chargeButtons[playerNum].draw(batch, 1f);
+        }
+        super.draw(batch);
 	}
 
     private float measureAngle(float x, float y) {
@@ -155,7 +155,7 @@ public class ChargeOrb extends Orb implements Collidable {
             // activate charge beam and set star
             if (((ChargeOrbState)state).star == -1) {
                 ((ChargeOrbState)state).star = ((Star) obj).state.index;
-                chargeButtons[playerNum].activate();
+                //chargeButtons[playerNum].activate();
                 resetLockCounter((Star)obj);
             }
 		}
@@ -178,7 +178,7 @@ public class ChargeOrb extends Orb implements Collidable {
                 }
                 else {
                     ((ChargeOrbState)state).star = -1;
-                    chargeButtons[playerNum].deactivate();
+                    //chargeButtons[playerNum].deactivate();
                 }
             }
         }
@@ -186,7 +186,6 @@ public class ChargeOrb extends Orb implements Collidable {
 
     public void lockOn(Star star) {
         ((ChargeOrbState)state).lockedOn = true;
-        orbButtons[playerNum].activate();
         state.v = dTheta;
         star.addOrb(this);
     }

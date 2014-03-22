@@ -5,6 +5,7 @@ import com.autonomousgames.starcycle.core.Colors;
 import com.autonomousgames.starcycle.core.model.*;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
+import com.autonomousgames.starcycle.core.model.Void;
 import com.autonomousgames.starcycle.core.ui.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -220,13 +221,13 @@ public abstract class ModelScreen extends GameScreen{
 
         for (Player player : model.players) {
             player.draw(batch);
-            for (Orb o: model.orbs[player.number].values()) {
+            for (ChargeOrb o: model.orbs[player.number].values()) {
                 o.draw(batch);
             }
-            for (Orb o: model.voids[player.number].values()) {
+            for (Void o: model.voids[player.number].values()) {
                 o.draw(batch);
             }
-            for (Orb o: model.novas[player.number].values()) {
+            for (Nova o: model.novas[player.number].values()) {
                 o.draw(batch);
             }
         }

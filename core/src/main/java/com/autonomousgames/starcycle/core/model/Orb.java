@@ -3,9 +3,7 @@ package com.autonomousgames.starcycle.core.model;
 import com.autonomousgames.starcycle.core.log.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez.TextureType;
-import com.autonomousgames.starcycle.core.ui.LayerType;
-import com.autonomousgames.starcycle.core.ui.LayeredButton;
-import com.autonomousgames.starcycle.core.ui.SpriteLayer;
+import com.autonomousgames.starcycle.core.ui.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -14,12 +12,16 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Pool;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 public class Orb implements Collidable, Pool.Poolable {
 
     static int uidCounter = 0;
     public static boolean useLifeSpan = true;
 
-    public static class OrbState {
+    public static class OrbState implements Serializable {
         public float x = 0f;
         public float y = 0f;
         public float v = 0f;
@@ -39,11 +41,11 @@ public class Orb implements Collidable, Pool.Poolable {
     }
 
     final int lifeSpan;
-    LayeredButton[] orbButtons = new LayeredButton[Model.numPlayers]; // XXX is it overkill to use LayeredButton to draw orbs?
+    static final LayeredSprite[] orbLayers = new LayeredSprite[Model.numPlayers];
     static final float radius = ModelSettings.getFloatSetting("OrbRadius");
     static final float gravScalar = ModelSettings.getFloatSetting("gravScalar");
 
-    public OrbState state;
+    final public OrbState state;
     public final Body body; // Physics Box2D body
     final float rotVel;
     final int playerNum;
@@ -53,22 +55,24 @@ public class Orb implements Collidable, Pool.Poolable {
         playerNum = player.number;
         this.state = state;
         this.lifeSpan = lifeSpan;
-		Vector2 imageDims = new Vector2(radius, radius).scl(StarCycle.pixelsPerMeter);
+		Vector2 imageDims = new Vector2(radius * StarCycle.pixelsPerMeter, radius * StarCycle.pixelsPerMeter);
         AtlasRegion[] textures = getTextures(player);
 
-        orbButtons[player.number] = new LayeredButton(new Vector2());
-
+        LinkedList<SpriteLayerLite> spriteLayers = new LinkedList<SpriteLayerLite>();
         // if building a void, the first layer must be the void ring
         if (getClass() == Void.class) {
-            orbButtons[playerNum].addLayer(new SpriteLayer(StarCycle.tex.voidRing, ((Void) this).voidRingDims.cpy().scl(StarCycle.pixelsPerMeter)).setSpriteColor(player.colors[0]));
+            spriteLayers.add(new SpriteLayerLite(StarCycle.tex.voidRing, new Vector2(), ((Void) this).voidRingDims.cpy().scl(StarCycle.pixelsPerMeter), player.colors[0]));
         }
 
-        orbButtons[player.number].addLayer(new SpriteLayer(StarCycle.tex.gradientRound, imageDims.cpy().scl(3f)).setSpriteColor(player.colors[0]), LayerType.ACTIVE);
-        //orbButtons[player.number].deactivate();
+        SpriteLayerLite activeGrad = new SpriteLayerLite(StarCycle.tex.gradientRound, new Vector2(), imageDims.cpy().scl(3f), player.colors[0]);
+        activeGrad.activateable = true;
+        spriteLayers.add(activeGrad);
 
         for (int i = 0; i < 2; i ++) {
-            orbButtons[player.number].addLayer(new SpriteLayer(textures[i], imageDims).setSpriteColor(player.colors[i]));
+            spriteLayers.add(new SpriteLayerLite(textures[i], new Vector2(), imageDims, player.colors[i]));
         }
+
+        orbLayers[playerNum] = new LayeredSprite(spriteLayers);
 
         // choose rotation velocity randomly
         int flip = (Math.random() > 0.5) ? 1 : 0;
@@ -99,14 +103,10 @@ public class Orb implements Collidable, Pool.Poolable {
 	
 	public void draw(SpriteBatch batch) {
 		// Only draw when visible
-		if ((state.x > -radius*2f) & (state.y > -radius*2f)
-				& (state.x < StarCycle.meterWidth + radius)
-				& (state.y < StarCycle.meterHeight + radius)) {
-
-			orbButtons[playerNum].setCenter(state.x * StarCycle.pixelsPerMeter, state.y * StarCycle.pixelsPerMeter);
-            orbButtons[playerNum].setRotation(rotVel * state.age); // XXX ok to move before each draw (is this part. expensive?)
-            orbButtons[playerNum].draw(batch, 1f);
-		}
+        if (isOnScreen()) {
+            boolean active = (!(this instanceof ChargeOrb)) || ((ChargeOrb.ChargeOrbState) state).lockedOn;
+            orbLayers[playerNum].draw(batch, 1f, state.x*StarCycle.pixelsPerMeter, state.y*StarCycle.pixelsPerMeter, 0f, active);
+        }
 	}
 
     public void update(Star[] stars) {
@@ -125,6 +125,7 @@ public class Orb implements Collidable, Pool.Poolable {
             body.setLinearVelocity(state.v, state.w);
 
             Gdx.app.log("Orb", "body position: " + body.getPosition());
+            Gdx.app.log("Orb", "orb position: " + state.x + " , " + state.y);
         }
     }
 
@@ -174,7 +175,7 @@ public class Orb implements Collidable, Pool.Poolable {
         state.w = w;
         body.setActive(true);
         body.setTransform(this.state.x, this.state.y, 0f);
-        Vector2 after = body.getPosition();
+        Vector2 after = body.getPosition(); // TODO remove / examine position sync
         body.setLinearVelocity(this.state.v, this.state.w);
     }
 
@@ -189,8 +190,14 @@ public class Orb implements Collidable, Pool.Poolable {
         body.setTransform(this.state.x, this.state.y, 0f);
     }
 
+    boolean isOnScreen() {
+        return ((state.x > -radius*2f) & (state.y > -radius*2f)
+                & (state.x < StarCycle.meterWidth + radius)
+                & (state.y < StarCycle.meterHeight + radius));
+    }
+
     public void removeIfOff() {
-        if (state.x < -radius*1.5f || state.x > StarCycle.meterWidth + radius*1.5f || state.y < -radius*1.5f || state.y > StarCycle.meterHeight + radius*1.5f) {
+        if (!isOnScreen()) {
             Model.toRemove.add(this);
         }
     }
