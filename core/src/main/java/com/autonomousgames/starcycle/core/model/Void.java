@@ -26,7 +26,6 @@ public class Void extends ChargeOrb implements Collidable {
         sensShape.setRadius(voidRadius);
         FixtureDef sensFixtureDef = new FixtureDef();
         sensFixtureDef.shape = sensShape;
-        sensShape.dispose();
 
         sensFixtureDef.filter.categoryBits = Model.voidCategoryBits[playerNum];
         sensFixtureDef.filter.maskBits = Model.voidMaskBits[playerNum];
@@ -34,6 +33,8 @@ public class Void extends ChargeOrb implements Collidable {
         Fixture sensor = body.createFixture(sensFixtureDef);
         sensor.setSensor(true);
         sensor.setUserData(this);
+
+        sensShape.dispose();
 
     }
 
