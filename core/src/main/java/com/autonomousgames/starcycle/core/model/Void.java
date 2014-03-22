@@ -6,6 +6,9 @@ import com.autonomousgames.starcycle.core.ui.SpriteLayer;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.autonomousgames.starcycle.core.Texturez.TextureType;
 
@@ -18,7 +21,19 @@ public class Void extends ChargeOrb implements Collidable {
     public Void(Player player, World world) {
         super(player, world, Void.class);
         float voidRadius = ModelSettings.getFloatSetting("voidSensorRadius");
-        Sensor.addSensor(Void.class, player.number, body, voidRadius);
+
+        CircleShape sensShape = new CircleShape();
+        sensShape.setRadius(voidRadius);
+        FixtureDef sensFixtureDef = new FixtureDef();
+        sensFixtureDef.shape = sensShape;
+        sensShape.dispose();
+
+        sensFixtureDef.filter.categoryBits = Model.voidCategoryBits[playerNum];
+        sensFixtureDef.filter.maskBits = Model.voidMaskBits[playerNum];
+
+        Fixture sensor = body.createFixture(sensFixtureDef);
+        sensor.setSensor(true);
+        sensor.setUserData(this);
 
     }
 

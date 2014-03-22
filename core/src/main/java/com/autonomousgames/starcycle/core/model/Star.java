@@ -105,7 +105,20 @@ public class Star extends Orbitable implements Collidable {
 
         // add charge sensor
 		float chargeRadius = ModelSettings.getFloatSetting("chargeRadius") + this.radius;
-		Fixture sensor = Sensor.addSensor(getClass(), -1, body, chargeRadius);
+        CircleShape sensShape = new CircleShape();
+        sensShape.setRadius(chargeRadius);
+        FixtureDef sensFixtureDef = new FixtureDef();
+        sensFixtureDef.shape = sensShape;
+        sensShape.dispose();
+
+        sensFixtureDef.filter.categoryBits = Model.starCat;
+        sensFixtureDef.filter.maskBits = Model.starMask;
+
+        Fixture sensor = body.createFixture(sensFixtureDef);
+        sensor.setSensor(true);
+
+		//Fixture sensor = Sensor.addSensor(Star.class, -1, body, chargeRadius);
+
         sensor.setUserData(this);
         body.setUserData(this); // add a pointer back to this object in the Body
 
