@@ -42,7 +42,7 @@ public class Orb implements Collidable, Pool.Poolable {
 
     final int lifeSpan;
     static final LayeredSprite[] orbLayers = new LayeredSprite[Model.numPlayers];
-    static final float radius = ModelSettings.getFloatSetting("OrbRadius");
+    static final float radius = ModelSettings.getFloatSetting("orbRadius");
     static final float gravScalar = ModelSettings.getFloatSetting("gravScalar");
 
     final public OrbState state;
@@ -123,9 +123,6 @@ public class Orb implements Collidable, Pool.Poolable {
             state.v += force.x;
             state.w += force.y;
             body.setLinearVelocity(state.v, state.w);
-
-            Gdx.app.log("Orb", "body position: " + body.getPosition());
-            Gdx.app.log("Orb", "orb position: " + state.x + " , " + state.y);
         }
     }
 

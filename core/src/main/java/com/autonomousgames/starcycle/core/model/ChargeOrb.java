@@ -50,6 +50,7 @@ public class ChargeOrb extends Orb implements Collidable {
     }
 
 
+    final Vector2 delta = new Vector2();
     // TODO move local vars to final class members for optimization
 	@Override
 	public Vector2 getGravForce(Star[] stars) {
@@ -62,21 +63,32 @@ public class ChargeOrb extends Orb implements Collidable {
 		    Vector2 force = new Vector2();
 
 			// add component from regular gravity for the active star, ignoring others
-			// because we assume the orbs dont affect stars, we can treat all objects as having mass 1.
             Star chargeStar = stars[((ChargeOrbState)state).star];
             Vector2 starPos = new Vector2(chargeStar.state.x, chargeStar.state.y);
 
-            float dist = (float) Math.sqrt(Math.pow(starPos.x-state.x,2) + Math.pow(starPos.y-state.y,2));
-            float scal = stars[((ChargeOrbState)state).star].mass * gravScalar / (dist * dist * dist);
-			force.add(scal * (starPos.x - state.x), scal * (starPos.y - state.y));
+            float dist = (float) Math.sqrt(Math.pow(starPos.x-state.x, 2) + Math.pow(starPos.y-state.y, 2));
+            float scal = stars[((ChargeOrbState)state).star].mass * gravScalar / (dist * dist);
+            delta.set((starPos.x - state.x)/dist, (starPos.y - state.y)/dist); // normalized vector toward the star
+			force.add(scal * delta.x, scal * delta.y);
+
+            // dprod = dot(vel, delta) where delta is the direction toward the star
+            float dprod = (delta.x*state.v+delta.y*state.w);
+            force.add(-orbitScal*dprod*delta.x, -orbitScal*dprod*delta.y);
+
+            // only change magnitude: slow down if v^2/r is too large
+            // change direction toward
+//
+//            if ((state.v*state.v+state.w*state.w)/dist > force.len()) {
+//                force.add(-state.v * orbitScal, -state.w * orbitScal);
+//            }
 
             // TODO more efficient to not create vector 2's here?
 			// adjust orbit toward stable velocity
-			Vector2 diffVec = new Vector2(starPos.x - state.x, starPos.y - state.y).nor(); // unit vector from star to orb
-            diffVec.scl(diffVec.x * state.v + diffVec.y * state.w); // dot(diffVec, state.vel)
-            Vector2 dir = new Vector2(state.v - diffVec.x, state.w - diffVec.y); // direction orth to star
-			dir.nor().scl((float) Math.sqrt(chargeStar.mass * gravScalar) / (dist)); // target velocity
-			force.add(dir.sub(state.x, state.y).scl(orbitScal)); // adjust velocity toward target
+//			Vector2 diffVec = new Vector2(starPos.x - state.x, starPos.y - state.y).nor(); // unit vector from star to orb
+//            diffVec.scl(diffVec.x * state.v + diffVec.y * state.w); // dot(diffVec, state.vel)
+//            Vector2 dir = new Vector2(state.v - diffVec.x, state.w - diffVec.y); // direction orth to star
+//			dir.nor().scl((float) Math.sqrt(chargeStar.mass * gravScalar) / (dist)); // target velocity
+//			force.add(dir.sub(state.x, state.y).scl(orbitScal)); // adjust velocity toward target
 
 			return force;
 		}
@@ -99,9 +111,10 @@ public class ChargeOrb extends Orb implements Collidable {
 
             Vector2 starPos = new Vector2(stars[((ChargeOrbState)state).star].state.x, stars[((ChargeOrbState)state).star].state.y);
             vec.set(state.x - starPos.x, state.y - starPos.y);
-            vec.rotate(state.v); // v is used as rot vel when locked on
+            vec.rotate(((float)(state.v * 180f/Math.PI))); // v is used as rot vel when locked on
             state.x = starPos.x + vec.x;
             state.y = starPos.y + vec.y;
+            body.setTransform(state.x, state.y, 0f);
         }
         else {
 
@@ -151,12 +164,13 @@ public class ChargeOrb extends Orb implements Collidable {
 	@Override
 	public void beginSensorContact(Collidable obj) {
 		if (obj instanceof Star) {
-            activeStars.addLast((Star)obj);
-            // activate charge beam and set star
-            if (((ChargeOrbState)state).star == -1) {
-                ((ChargeOrbState)state).star = ((Star) obj).state.index;
-                //chargeButtons[playerNum].activate();
-                resetLockCounter((Star)obj);
+
+            if (!((ChargeOrbState)state).lockedOn) {
+                activeStars.addLast((Star)obj);
+                if (((ChargeOrbState)state).star == -1) {
+                    ((ChargeOrbState)state).star = ((Star) obj).state.index;
+                    resetLockCounter((Star)obj);
+                }
             }
 		}
     }
@@ -165,27 +179,29 @@ public class ChargeOrb extends Orb implements Collidable {
 	public void endSensorContact(Collidable obj) {
 
         if (obj instanceof Star) {
+            if (!((ChargeOrbState)state).lockedOn) {
 
-            int idx = ((Star) obj).state.index;
-            activeStars.remove(obj); // remove from the active set
+                int idx = ((Star) obj).state.index;
+                activeStars.remove(obj); // remove from the active set
 
-            // if we just left range of the current charge star
-            if (idx == ((ChargeOrbState)state).star) {
-                if (!activeStars.isEmpty()) {
-                    Star star = activeStars.getFirst();
-                    ((ChargeOrbState)state).star = star.state.index;
-                    resetLockCounter(star);
-                }
-                else {
-                    ((ChargeOrbState)state).star = -1;
-                    //chargeButtons[playerNum].deactivate();
+                // if we just left range of the current charge star
+                if (idx == ((ChargeOrbState)state).star) {
+                    if (!activeStars.isEmpty()) {
+                        Star star = activeStars.getFirst();
+                        ((ChargeOrbState)state).star = star.state.index;
+                        resetLockCounter(star);
+                    }
+                    else {
+                        ((ChargeOrbState)state).star = -1;
+                    }
                 }
             }
         }
 	}
 
     public void lockOn(Star star) {
-        ((ChargeOrbState)state).lockedOn = true;
+        ((ChargeOrbState) state).star = star.state.index;
+        ((ChargeOrbState) state).lockedOn = true;
         state.v = dTheta;
         star.addOrb(this);
     }
