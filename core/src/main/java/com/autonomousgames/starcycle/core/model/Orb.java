@@ -50,29 +50,14 @@ public class Orb implements Collidable, Pool.Poolable {
     final float rotVel;
     final int playerNum;
 
+
+
 	public Orb(Player player, World world, OrbState state, int lifeSpan) {
 
         playerNum = player.number;
         this.state = state;
         this.lifeSpan = lifeSpan;
-		Vector2 imageDims = new Vector2(radius * StarCycle.pixelsPerMeter, radius * StarCycle.pixelsPerMeter);
-        AtlasRegion[] textures = getTextures(player);
-
-        LinkedList<SpriteLayerLite> spriteLayers = new LinkedList<SpriteLayerLite>();
-        // if building a void, the first layer must be the void ring
-        if (getClass() == Void.class) {
-            spriteLayers.add(new SpriteLayerLite(StarCycle.tex.voidRing, new Vector2(), ((Void) this).voidRingDims.cpy().scl(StarCycle.pixelsPerMeter), player.colors[0]));
-        }
-
-        SpriteLayerLite activeGrad = new SpriteLayerLite(StarCycle.tex.gradientRound, new Vector2(), imageDims.cpy().scl(3f), player.colors[0]);
-        activeGrad.activateable = true;
-        spriteLayers.add(activeGrad);
-
-        for (int i = 0; i < 2; i ++) {
-            spriteLayers.add(new SpriteLayerLite(textures[i], new Vector2(), imageDims, player.colors[i]));
-        }
-
-        orbLayers[playerNum] = new LayeredSprite(spriteLayers);
+        setTextures(player);
 
         // choose rotation velocity randomly
         int flip = (Math.random() > 0.5) ? 1 : 0;
@@ -95,18 +80,39 @@ public class Orb implements Collidable, Pool.Poolable {
         orbShape.dispose();
 	}
 
-    static AtlasRegion[] getTextures(Player player) {
-        return new AtlasRegion[]{
-                        StarCycle.tex.skinMap.get(player.basetype).get(TextureType.ORB0),
-                        StarCycle.tex.skinMap.get(player.basetype).get(TextureType.ORB1)};
+    AtlasRegion[] getTextures(Player player) {
+            return new AtlasRegion[]{
+                StarCycle.tex.skinMap.get(player.basetype).get(TextureType.ORB0),
+                StarCycle.tex.skinMap.get(player.basetype).get(TextureType.ORB1)};
     }
-	
-	public void draw(SpriteBatch batch) {
-		// Only draw when visible
+
+    void setTextures(Player player) {
+
+        Vector2 imageDims = new Vector2(2*radius * StarCycle.pixelsPerMeter, 2*radius * StarCycle.pixelsPerMeter);
+        AtlasRegion[] textures = getTextures(player);
+
+        LinkedList<SpriteLayerLite> spriteLayers = new LinkedList<SpriteLayerLite>();
+        if (this instanceof ChargeOrb) {
+            SpriteLayerLite activeGrad = new SpriteLayerLite(StarCycle.tex.gradientRound, new Vector2(), imageDims.cpy().scl(3f), player.colors[0]);
+            activeGrad.activateable = true;
+            spriteLayers.add(activeGrad);
+        }
+
+        for (int i = 0; i < textures.length; i ++) {
+            spriteLayers.add(new SpriteLayerLite(textures[i], new Vector2(), imageDims, player.colors[i]));
+        }
+        orbLayers[player.number] = new LayeredSprite(spriteLayers);
+    }
+
+    public void draw(SpriteBatch batch, LayeredSprite[] layers) {
         if (isOnScreen()) {
             boolean active = (this instanceof ChargeOrb) ? ((ChargeOrb.ChargeOrbState) state).lockedOn : true;
-            orbLayers[playerNum].draw(batch, 1f, state.x*StarCycle.pixelsPerMeter, state.y*StarCycle.pixelsPerMeter, 0f, active);
+            layers[playerNum].draw(batch, 1f, state.x*StarCycle.pixelsPerMeter, state.y*StarCycle.pixelsPerMeter, 0f, active);
         }
+    }
+
+	public void draw(SpriteBatch batch) {
+        draw(batch, orbLayers);
 	}
 
     public void update(Star[] stars) {
@@ -172,7 +178,6 @@ public class Orb implements Collidable, Pool.Poolable {
         state.w = w;
         body.setActive(true);
         body.setTransform(this.state.x, this.state.y, 0f);
-        Vector2 after = body.getPosition(); // TODO remove / examine position sync
         body.setLinearVelocity(this.state.v, this.state.w);
     }
 

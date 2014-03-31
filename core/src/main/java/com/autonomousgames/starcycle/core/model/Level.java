@@ -11,12 +11,9 @@ import java.util.ArrayList;
 public class Level {
 
 	public final int numStars;
-    private ArrayList<Orbitable> pathedObjList = new ArrayList<Orbitable>();
 
-	public float totalEnergy;
 	private final World world;
 	public Star[] stars;
-	//private Player[] players;
 
 	public static enum LevelType {
 		DOUBLEBINARY, TREFOIL, VENNDIAGRAM, CONCENTRIC, SINGLE, DOUBLE, TRIPLE, QUAD, QUAD2, NOSTARS
@@ -143,7 +140,6 @@ public class Level {
 								PathType pathMap, float startPercent, float rotSpeed) {
 		
 		stars[starIndex] = new Star(radius, players, center, world, starIndex, pathMap, startPercent, rotSpeed);
-		pathedObjList.add(stars[starIndex]);
 	}
 
 	private void addStarGroup(Player[] players, int startingIndex, int groupSize, Vector2 center, float radius,
@@ -155,9 +151,4 @@ public class Level {
 		}
 	}
 
-	public void updatePosition(float delta) {
-        for (Orbitable aPathedObjList : pathedObjList) {
-            aPathedObjList.updatePosition(delta);
-        }
-	}
 }

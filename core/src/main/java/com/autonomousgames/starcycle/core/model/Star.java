@@ -56,9 +56,6 @@ public class Star extends Orbitable implements Collidable {
     PathType pathMap;
     ArrayList<LayeredButton> controlButtons = new ArrayList<LayeredButton>();
 
-    // XXX change all position arguments to state.x and state.y
-    //public boolean targetted = false;
-
 	// Drawing stuff
     // TODO do we need to store all of these for each star? can some be local or static?
 	final float minSideLen; // Smallest hexagon side length.
@@ -115,8 +112,6 @@ public class Star extends Orbitable implements Collidable {
         Fixture sensor = body.createFixture(sensFixtureDef);
         sensor.setSensor(true);
 
-		//Fixture sensor = Sensor.addSensor(Star.class, -1, body, chargeRadius);
-
         sensor.setUserData(this);
         body.setUserData(this); // add a pointer back to this object in the Body
 
@@ -146,7 +141,7 @@ public class Star extends Orbitable implements Collidable {
 			float startPercent,
             float rotSpeed) {
 
-		this(radius, new Vector2(), players, world, index, rotSpeed); // TODO why was center not getting passed through here?
+		this(radius, new Vector2(), players, world, index, rotSpeed);
 		this.pathMap = pathMap;
 		this.startPercent = startPercent;
 	}
@@ -170,7 +165,7 @@ public class Star extends Orbitable implements Collidable {
 
 		for (int i = 0; i < Model.numPlayers; i ++) {
 			// The new control percent is calculated and stored for later.
-			float newPercent = populations[i] / maxPop;
+			float newPercent = state.possession[i];
 			// If the button has become active:
 			if (0f < newPercent && newPercent < 1f && !(controlButtons.get(i).isActive())) {
 				controlButtons.get(i).activate();
@@ -265,36 +260,34 @@ public class Star extends Orbitable implements Collidable {
 			} else if (Model.numPlayers == 1) {
 				populations[playerNum] -= excess;
 			}
-			//popSum = maxPop;
 		}
+
+        for (int i=0; i < Model.numPlayers; i++) {
+            state.possession[i] = populations[i] / maxPop;
+        }
 	}
 
-    // TODO add income orbs
-    //private float[] nonlinearIncome = {0f, 0f};
-    public void updateControl() {
+    public void update() {
         for (int i = 0; i < Model.numPlayers; i++) {
-
             addPop(popRate*state.numActiveOrbs[i], i);
-
-            //nonlinearIncome[i] += ammoRate * ((float) Math.pow(((double) state.numActiveOrbs[i]), ((double)2/3)));
-
-            //while(showIncomeOrbs && (nonlinearIncome[i] > incAmmoThresh)) {
-            //    // emit fake income orb
-            //    nonlinearIncome[i] -= incAmmoThresh;
-            //    Color color = (MathUtils.random(1f) < 0.3f) ? player.colors[0] : player.colors[1];
-
-            //    vel = new Vector2(MathUtils.random(-initVelScale,initVelScale), MathUtils.random(-initVelScale,initVelScale));
-            //    pos = this.getButtonCenter();
-            //    nor = vel.len();
-            //    pos = pos.add(this.radius*StarCycle.pixelsPerMeter*vel.x/nor, this.radius*StarCycle.pixelsPerMeter*vel.y/nor);
-            //    player.incomeOrbs.add(new ImageOrb(StarCycle.tex.bgMote, incOrbSize * StarCycle.screenHeight, pos,
-            //            StarCycle.screenWidth, StarCycle.screenHeight, vel, new Vector2()).tint(color).set_alpha(incOrbAlpha));
-            //}
         }
+        updatePosition(Model.dt);
+
+        // TODO add income orbs
+        //nonlinearIncome[i] += ammoRate * ((float) Math.pow(((double) state.numActiveOrbs[i]), ((double)2/3)));
+        //while(showIncomeOrbs && (nonlinearIncome[i] > incAmmoThresh)) {
+        //    // emit fake income orb
+        //    nonlinearIncome[i] -= incAmmoThresh;
+        //    Color color = (MathUtils.random(1f) < 0.3f) ? player.colors[0] : player.colors[1];
+
+        //    vel = new Vector2(MathUtils.random(-initVelScale,initVelScale), MathUtils.random(-initVelScale,initVelScale));
+        //    pos = this.getButtonCenter();
+        //    nor = vel.len();
+        //    pos = pos.add(this.radius*StarCycle.pixelsPerMeter*vel.x/nor, this.radius*StarCycle.pixelsPerMeter*vel.y/nor);
+        //    player.incomeOrbs.add(new ImageOrb(StarCycle.tex.bgMote, incOrbSize * StarCycle.screenHeight, pos,
+        //            StarCycle.screenWidth, StarCycle.screenHeight, vel, new Vector2()).tint(color).set_alpha(incOrbAlpha));
+        //}
     }
-
-
-    // TODO move more of this to level?
 
 	void updatePosition(float delta) {
 
@@ -339,6 +332,7 @@ public class Star extends Orbitable implements Collidable {
 		return starButton.getCenter();
 	}
 
+    // note: this probably doesn't play nice with stars with motion paths
     public void moveStar(float x, float y) {
         state.x += x;
         state.y += y;

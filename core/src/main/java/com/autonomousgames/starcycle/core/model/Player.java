@@ -26,13 +26,6 @@ public class Player {
         public boolean[] buttonStates = new boolean[3];
     }
 
-    //TODO safe to get rid of these?
-    //public boolean win;
-    //public final boolean ammoCap = false;
-    //public final float maxAmmo = 80f * 5f - 1f; //
-    //private float winOrbAngle = 0;
-    //private boolean winner = false;
-    //public boolean altWin = false;
     public boolean showIncomeOrbs = true; // TODO can these be final?
     public boolean altWin = false;
 
@@ -53,7 +46,6 @@ public class Player {
     public final PlayerState state = new PlayerState();
     public boolean frozen = false; // Prevents launching any orbs.
     float ammoDripRate;
-    //Model model;
     final float basePad = StarCycle.meterHeight * (1 / 4.2f);
 	final Vector2[] baseOrigins = {
 			new Vector2(StarCycle.meterWidth - basePad, basePad),
@@ -91,8 +83,10 @@ public class Player {
 	public void update(Star[] stars) {
 
 		state.starsControlled = 0;
+        state.numActiveOrbs = 0;
         for (Star star : stars) {
-            if (star.populations[number] > captureFrac * star.maxPop) {
+            state.numActiveOrbs += star.state.numActiveOrbs[number];
+            if (star.state.possession[number] > captureFrac) {
                 state.starsControlled += 1;
             }
         }

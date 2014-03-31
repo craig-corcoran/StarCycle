@@ -45,7 +45,7 @@ public abstract class Model {
         @Override
         public int getWinner() {
             for (Player p : players) {
-                if (p.state.starsControlled == level.numStars) {
+                if (p.state.starsControlled == stars.length) {
                     return p.number;
                 }
             }
@@ -53,6 +53,7 @@ public abstract class Model {
         }
     };
 
+    // TODO
     public void checkStateConsistent(GameState state) {
 
     }
@@ -99,7 +100,6 @@ public abstract class Model {
     public final GameState state;
 
 	public final World world;
-	public final Level level;
 
 	public Model(LevelType lvl, ModelScreen screen) {
 
@@ -110,7 +110,7 @@ public abstract class Model {
 
 
         players = initPlayers(screen);
-		level = new Level(world, lvl, players);
+		Level level = new Level(world, lvl, players);
         state = new GameState(level.numStars);
         stars = level.stars; // TODO clean up level / Model interface
         initState();
@@ -261,6 +261,10 @@ public abstract class Model {
 		world.step(dt, 6, 2); // check for collisions
         removeOrbs(); // remove collided orbs
 
+        for (Star star: stars) {
+            star.update();
+        }
+
         // update orbs and player state
         for (Player p: players) {
 
@@ -289,7 +293,8 @@ public abstract class Model {
                 p.state.buttonStates[2] = false;
             }
         }
-        level.updatePosition(dt); // XXX stars updated here?
+
+
         state.orbID = Orb.uidCounter;
         state.frame++;
 	}

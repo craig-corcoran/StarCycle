@@ -30,7 +30,7 @@ public abstract class ModelScreen extends GameScreen{
 	private Json json = new Json();
 	private BaseButton winBase;
 	private final Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
-	public final boolean dbRender = true;
+	public final boolean dbRender = false;
 	
 	ScreenType backScreen;
 	LayeredButton pauseButton;

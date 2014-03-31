@@ -19,41 +19,41 @@ public class ModelSettings {
 			// padding in units of multiples of pixels per meter: padding = StarCycle.pixelsPerMeter * paddingMeters;
 			userPrefs.putFloat("paddingMeters",0.5f);      // UI
 
-			userPrefs.putFloat("initAmmo", 80.0f);         // Player
-			userPrefs.putFloat("ammoDripRate", .04f);      // Player
+			userPrefs.putFloat("initAmmo", 80.0f);
+			userPrefs.putFloat("ammoDripRate", .04f);
             userPrefs.putFloat("ammoRate", 0.008f);         //
             userPrefs.putFloat("maxAmmo", -1f);         // neg means no max ammo
-			userPrefs.putFloat("baseRadius", 1.75f);          // Player
+			userPrefs.putFloat("baseRadius", 1.75f);
 
-			userPrefs.putFloat("gravScalar", 1.0f);     		// Level
-			userPrefs.putFloat("orbitSpeed", 0.02f);    	// Level
-			userPrefs.putFloat("starRadius", 0.45f);        // Level
+			userPrefs.putFloat("gravScalar", 1.0f);
+			userPrefs.putFloat("orbitSpeed", 0.02f);
+			userPrefs.putFloat("starRadius", 0.45f);
 
-			userPrefs.putFloat("explosionRadius",0.6f);     // explosions
+			userPrefs.putFloat("explosionRadius",0.6f);
 
-			userPrefs.putFloat("chargeRadius",0.5f);       // ChargeOrb
-			userPrefs.putFloat("orbitScal", 0.2f);           // ChargeOrb
+			userPrefs.putFloat("chargeRadius",0.5f);
+			userPrefs.putFloat("orbitScal", 0.2f);
 
             userPrefs.putFloat("incOrbLifeSpan", 5000f);
 
-			userPrefs.putFloat("baseRotationSpeed", 12f);	// Base
-			userPrefs.putFloat("minSpeed", 0.75f);          // Base
-			userPrefs.putFloat("velScale", 1f);          	// Base
+			userPrefs.putFloat("baseRotationSpeed", 12f);
+			userPrefs.putFloat("minSpeed", 0.75f);
+			userPrefs.putFloat("velScale", 1f);
 
-			userPrefs.putFloat("angleDelta", 0.5f);        // Star
-			userPrefs.putFloat("captureFraction", 0.5f);      // Star
+			userPrefs.putFloat("angleDelta", 0.5f);
+			userPrefs.putFloat("captureFraction", 0.5f);
 
-			userPrefs.putFloat("voidRadius", 0.12f);   //
-			userPrefs.putFloat("voidSensorRadius", 0.6f);   //
+			userPrefs.putFloat("voidRadius", 0.12f);
+			userPrefs.putFloat("voidSensorRadius", 0.6f);
 
-			userPrefs.putFloat("orbCost", 4f);       //
-			userPrefs.putFloat("voidCost", 30f);       //
-			userPrefs.putFloat("novaCost", 80f);           //
-			userPrefs.putFloat("orbRadius", 0.115f); //
+			userPrefs.putFloat("orbCost", 4f);
+			userPrefs.putFloat("voidCost", 30f);
+			userPrefs.putFloat("novaCost", 80f);
+			userPrefs.putFloat("orbRadius", 0.115f);
 
-			userPrefs.putFloat("novaRadius", 0.28f);       //
-			userPrefs.putFloat("voidStars", 1f);        // LaunchPad
-			userPrefs.putFloat("novaStars", 2f);			   // LaunchPad
+			userPrefs.putFloat("novaRadius", 0.28f);
+			userPrefs.putFloat("voidStars", 1f);
+			userPrefs.putFloat("novaStars", 2f);
 
 			userPrefs.putFloat("coolDown",0.7f);
 			userPrefs.putFloat("orbLifeSpan", 30000f);
