@@ -219,12 +219,13 @@ public class ChargeOrb extends Orb implements Collidable {
         activeStars.clear();
     }
 
-    public void init(ChargeOrbState state) {
+    @Override
+    public void init(OrbState state) {
         init(state.x, state.y, state.v, state.w);
         this.state.age = state.age;
-        ((ChargeOrbState)this.state).lockedOn = state.lockedOn;
-        ((ChargeOrbState)this.state).star = state.star;
-        ((ChargeOrbState)this.state).dAngle = state.dAngle;
+        ((ChargeOrbState)this.state).lockedOn = ((ChargeOrbState)this.state).lockedOn;
+        ((ChargeOrbState)this.state).star = ((ChargeOrbState)this.state).star;
+        ((ChargeOrbState)this.state).dAngle = ((ChargeOrbState)this.state).dAngle;
     }
 
 }

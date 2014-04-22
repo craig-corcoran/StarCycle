@@ -83,7 +83,6 @@ public class Star extends Orbitable implements Collidable {
 		populations = new float[Model.numPlayers]; // populations are initialized to zero
         startPercent = 0;
 
-
 		// create the box2d star body
         BodyDef starBodyDef = new BodyDef();
 		starBodyDef.type = BodyType.StaticBody;

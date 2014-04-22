@@ -11,6 +11,10 @@ import com.badlogic.gdx.utils.Pool;
 import java.io.Serializable;
 import java.util.*;
 
+// TODO:
+// voids should not provide income
+// voids and novas should only be able to be used when stars have been captured
+
 public abstract class Model {
 
     public class GameState implements Serializable {
@@ -189,49 +193,79 @@ public abstract class Model {
         }
     }
 
-    void makeEquivalent(int playerNum, LinkedHashMap orbMap, LinkedHashSet<Integer> newSet, LinkedHashSet<Integer> oldSet) {
+    void makeOrbsEquivalent(int playerNum, LinkedHashMap<Integer, ChargeOrb> orbMap, Set<Integer> newSet, Set<Integer> oldSet, GameState newState) {
+        LinkedList<Integer> toRemove = makeSetEquivalent(playerNum, newSet, oldSet, orbMap.values().getClass());
+        for (Integer ii: toRemove) {
+            removeOrb(orbMap.get(ii));
+        }
+
+        for (Map.Entry<Integer, ChargeOrb> entry: orbMap.entrySet()) {
+            entry.getValue().init(newState.orbStates[playerNum].get(entry.getKey()));
+        }
+    }
+
+    void makeVoidsEquivalent(int playerNum, LinkedHashMap<Integer, Void> orbMap, Set<Integer> newSet, Set<Integer> oldSet, GameState newState) {
+        LinkedList<Integer> toRemove = makeSetEquivalent(playerNum, newSet, oldSet, orbMap.values().getClass());
+        for (Integer ii: toRemove) {
+            removeOrb(orbMap.get(ii));
+        }
+
+        for (Map.Entry<Integer, Void> entry: orbMap.entrySet()) {
+            entry.getValue().init(newState.voidStates[playerNum].get(entry.getKey()));
+        }
+    }
+
+    void makeNovasEquivalent(int playerNum, LinkedHashMap<Integer, Nova> orbMap, Set<Integer> newSet, Set<Integer> oldSet, GameState newState) {
+        LinkedList<Integer> toRemove = makeSetEquivalent(playerNum, newSet, oldSet, orbMap.values().getClass());
+        for (Integer ii: toRemove) {
+            removeOrb(orbMap.get(ii));
+        }
+
+        for (Map.Entry<Integer, Nova> entry: orbMap.entrySet()) {
+            entry.getValue().init(newState.novaStates[playerNum].get(entry.getKey()));
+        }
+    }
+
+    LinkedList<Integer> makeSetEquivalent(int playerNum, Set<Integer> newSet, Set<Integer> oldSet, Class cls) {
         HashSet<Integer> newOrbs = new HashSet<Integer>(newSet);
         HashSet<Integer> deadOrbs = new HashSet<Integer>(oldSet);
 
         newOrbs.removeAll(oldSet);
-        deadOrbs.removeAll(newOrbs);
+        deadOrbs.removeAll(newSet);
 
-        // remove dead orbs
+        LinkedList<Integer> toRemove = new LinkedList<Integer>();
+
+        // add dead orbs to remove list
         Iterator<Integer> itDead = deadOrbs.iterator();
         while (itDead.hasNext()) {
-            Integer uid = itDead.next();
-            removeOrb((Orb)orbMap.get(uid));
+            toRemove.add(itDead.next());
         }
 
         // add new ones
         Iterator<Integer> itNew = newOrbs.iterator();
         while (itNew.hasNext()) {
             Integer uid = itNew.next();
-            addOrb(playerNum, orbMap.values().getClass(), uid); // does not intialize other state vars than uidCounter
+            addOrb(playerNum, cls, uid); // does not intialize other state vars than uidCounter
         }
 
-        // make sure orbs are active and overwrite their state (init)
-        Iterator<Integer> it = orbMap.keySet().iterator();
-        while (it.hasNext()) {
-            Integer uid = it.next();
-            Orb.OrbState st = state.orbStates[playerNum].get(uid);
-            ((Orb) orbMap.get(uid)).init(st); // XXX make init that takes state inf and/or make init in chargeorb
-            // XXX does this affect state.orbStates?
-        }
+        return toRemove;
     }
 
-    public void setState(GameState state) { // XXX
+    public void setState(GameState state) {
 
         for (int i=0; i < numPlayers; i++) {
-            makeEquivalent(i, this.orbs[i],
-                    (LinkedHashSet)state.orbStates[i].keySet(),
-                    (LinkedHashSet)this.state.orbStates[i].keySet());
-            makeEquivalent(i, this.voids[i],
-                    (LinkedHashSet)state.novaStates[i].keySet(),
-                    (LinkedHashSet)this.state.novaStates[i].keySet());
-            makeEquivalent(i, this.novas[i],
-                    (LinkedHashSet)state.novaStates[i].keySet(),
-                    (LinkedHashSet)this.state.novaStates[i].keySet());
+            makeOrbsEquivalent(i, this.orbs[i],
+                    state.orbStates[i].keySet(),
+                    this.state.orbStates[i].keySet(),
+                    state);
+            makeVoidsEquivalent(i, this.voids[i],
+                    state.voidStates[i].keySet(),
+                    this.state.voidStates[i].keySet(),
+                    state);
+            makeNovasEquivalent(i, this.novas[i],
+                    state.novaStates[i].keySet(),
+                    this.state.novaStates[i].keySet(),
+                    state);
             players[i].setState(state.playerStates[i]);
         }
 
@@ -241,7 +275,7 @@ public abstract class Model {
 
         this.state.frame = state.frame;
         this.state.orbID = state.orbID;
-        Orb.uidCounter = this.state.orbID;
+        Orb.uidCounter = state.orbID;
 
     }
 
@@ -297,6 +331,8 @@ public abstract class Model {
 
         state.orbID = Orb.uidCounter;
         state.frame++;
+
+        // setState(this.state); // TODO remove; testing
 	}
 
 
@@ -356,7 +392,7 @@ public abstract class Model {
         incrementCounters(playerNum, cls);
         if (cls == ChargeOrb.class) {
             ChargeOrb orb = orbPools[playerNum].obtain();
-            orb.init(x,y,v,w); // make sure its calling init w ChargeOrbState not OrbState
+            orb.init(x,y,v,w);
             orbs[playerNum].put(orb.state.uid, orb);
             this.state.orbStates[playerNum].put(orb.state.uid, (ChargeOrb.ChargeOrbState) orb.state);
             totalOrbs[playerNum]++;

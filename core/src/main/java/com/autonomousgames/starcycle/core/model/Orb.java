@@ -50,8 +50,6 @@ public class Orb implements Collidable, Pool.Poolable {
     final float rotVel;
     final int playerNum;
 
-
-
 	public Orb(Player player, World world, OrbState state, int lifeSpan) {
 
         playerNum = player.number;

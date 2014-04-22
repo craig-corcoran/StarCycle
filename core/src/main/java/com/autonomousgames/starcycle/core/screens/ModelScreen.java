@@ -172,14 +172,15 @@ public abstract class ModelScreen extends GameScreen{
 		if (dbRender){
 			debugRenderer.render(model.world,cam.combined);
     		long start = System.currentTimeMillis();
-    		//displayFPS(start);
-     		//printFPS(start); // log fps to console output
+    		displayFPS(start);
+     		printFPS(start); // log fps to console output
 		}
 
-        if ((!gameOver) & (!paused)) {
+        if (!paused) { // TODO add win condition here
             // while the gpu renders, we update the world physics and manage collisions
             update(delta);
         }
+
         if (gameOver){
             for (Player player : model.players) {
                 //player.updateWinOrbs(delta);
@@ -188,15 +189,15 @@ public abstract class ModelScreen extends GameScreen{
 
         background.update(); // Moves while paused.
 
-        sleepTime = Math.max(0,delay-(System.nanoTime()-startTime)/1000000L);
-        if (sleepTime > 0) {
-            try {
-                Thread.sleep(sleepTime);
-            }
-            catch(InterruptedException e) {
-                Gdx.app.log("ModelScreen", "Interrupted Exception while sleeping: " + e);
-            }
-        }
+//        sleepTime = Math.max(0,delay-(System.nanoTime()-startTime)/1000000L);
+//        if (sleepTime > 0) {
+//            try {
+//                Thread.sleep(sleepTime);
+//            }
+//            catch(InterruptedException e) {
+//                Gdx.app.log("ModelScreen", "Interrupted Exception while sleeping: " + e);
+//            }
+//        }
 	}
 	
 	public void update(float delta) {
