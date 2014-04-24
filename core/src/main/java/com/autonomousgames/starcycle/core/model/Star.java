@@ -42,7 +42,7 @@ public class Star extends Orbitable implements Collidable {
     public final LinkedList<ChargeOrb> activeOrbs = new LinkedList<ChargeOrb>();
 
     final Body body;
-    final float maxOrbs;
+    final int maxOrbs;
     final float orbitSpeed;
     final float[] populations;
     final float rotateSpeed = MathUtils.random(0.2f, 0.4f)*(1-2*MathUtils.random(1)); // This is purely visual.
@@ -77,7 +77,7 @@ public class Star extends Orbitable implements Collidable {
         this.state.y = position.y;
         this.orbitSpeed = orbitSpeed;
         state.index = index;
-        maxOrbs = ModelSettings.getFloatSetting("maxOrbs");
+        maxOrbs = (int) ModelSettings.getFloatSetting("maxOrbs");
 		mass = this.radius * this.radius;
 		maxPop = 100 * radius;
 		populations = new float[Model.numPlayers]; // populations are initialized to zero

@@ -72,7 +72,17 @@ public abstract class Model {
             assert (totalVoids[p.number] == state.voidStates[p.number].size());
             assert (totalNovas[p.number] == state.novaStates[p.number].size());
         }
+
+        for (Star st: stars) {
+            assert (st.activeOrbs.size() <= st.maxOrbs);
+            assert ((st.state.numActiveOrbs[0] + st.state.numActiveOrbs[1]) == st.activeOrbs.size());
+        }
     }
+
+    public static final LinkedHashSet<Orb> toRemove = new LinkedHashSet<Orb>(); // add orbs to this to remove them
+    public static final int numPlayers = 2;
+    public static final int voidStars = (int) ModelSettings.getFloatSetting("voidStars");
+    public static final int novaStars = (int) ModelSettings.getFloatSetting("novaStars");
 
     public int[] totalOrbs = new int[numPlayers];
     public int[] totalVoids = new int[numPlayers];
@@ -100,8 +110,6 @@ public abstract class Model {
 
     static final HashMap<Class,Float> orbCosts = new HashMap<Class,Float>(3);
 
-    public static final LinkedHashSet<Orb> toRemove = new LinkedHashSet<Orb>(); // add orbs to this to remove them
-    public static final int numPlayers = 2;
 
     public final LinkedHashMap<Integer,ChargeOrb>[] orbs = new LinkedHashMap[numPlayers];
     public final LinkedHashMap<Integer,Void>[] voids = new LinkedHashMap[numPlayers];
@@ -326,15 +334,15 @@ public abstract class Model {
 
             p.update(stars);
 
-            if ((p.state.buttonStates[0] == true) & (p.launchPad.sinceLastShot >= coolDown)) {
+            if ((p.state.buttonStates[0] == true) && (p.launchPad.sinceLastShot >= coolDown)) {
                 launch(p, ChargeOrb.class);
                 p.launchPad.sinceLastShot=0f;
             }
-            if (p.state.buttonStates[1] == true) {
+            if ((p.state.buttonStates[1] == true) && (p.state.starsControlled >= voidStars)) {
                 launch(p, Void.class);
                 p.state.buttonStates[1] = false;
             }
-            if (p.state.buttonStates[2] == true) {
+            if ((p.state.buttonStates[2] == true) && (p.state.starsControlled >= novaStars)) {
                 launch(p, Nova.class);
                 p.state.buttonStates[2] = false;
             }

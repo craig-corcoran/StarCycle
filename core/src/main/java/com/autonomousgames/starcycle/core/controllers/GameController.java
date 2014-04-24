@@ -15,15 +15,15 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 
 public class GameController extends LogController{
 
-	private float controlRadius = 1.1f* Base.maxPointerLength;
-	private float sqrdControlRadius = controlRadius*controlRadius;
-	private ModelScreen screen;
+	private final float controlRadius = 1.1f* Base.maxPointerLength;
+	private final float sqrdControlRadius = controlRadius*controlRadius;
+	private final ModelScreen screen;
 	
-	private int[] activePointer;
-	private Vector2[] origins;
-	private Vector2 vec = new Vector2();
-	private int numActivePlayers;
-	
+	private final int[] activePointer;
+	private final Vector2[] origins;
+	private final Vector2 vec = new Vector2();
+	private final int numActivePlayers;
+
 	public GameController(ModelScreen screen, int numActivePlayers){
 		super(screen, numActivePlayers);
 		Gdx.input.setCatchBackKey(true);
@@ -66,11 +66,11 @@ public class GameController extends LogController{
         if (keycode == Keys.Q) {
         	screen.model.players[0].state.buttonStates[0] = true;
         }
-        if (keycode == Keys.W) {
-            screen.model.launch(screen.model.players[0], com.autonomousgames.starcycle.core.model.Void.class);
+        if ((keycode == Keys.W) && (screen.model.players[0].state.starsControlled >= Model.voidStars)) {
+            screen.model.players[0].state.buttonStates[1] = true;
         }
-        if (keycode == Keys.E) {
-            screen.model.launch(screen.model.players[0], Nova.class);
+        if ((keycode == Keys.E) && (screen.model.players[0].state.starsControlled >= Model.novaStars))  {
+            screen.model.players[0].state.buttonStates[2] = true;
         }
         if (keycode == Keys.BACK){
         	screen.addPauseBanner();

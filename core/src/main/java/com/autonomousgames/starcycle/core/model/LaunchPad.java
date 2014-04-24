@@ -22,8 +22,6 @@ public class LaunchPad {
 
 
     static final float coolDown = ModelSettings.getFloatSetting("coolDown");
-    static final int voidStars = (int) ModelSettings.getFloatSetting("voidStars");
-    static final int novaStars = (int) ModelSettings.getFloatSetting("novaStars");
     static final int orbCost = (int) ModelSettings.getFloatSetting("chargeOrbCost");
     static final int voidCost = (int) ModelSettings.getFloatSetting("voidCost");
     static final int novaCost = (int) ModelSettings.getFloatSetting("novaCost");
@@ -151,17 +149,17 @@ public class LaunchPad {
         sinceLastShot = Math.min(sinceLastShot + delta, coolDown);
 
         if (!manualLvl) {
-            if (player.state.starsControlled >= voidStars && !(pw1Button.isActive())) {
+            if (player.state.starsControlled >= Model.voidStars && !(pw1Button.isActive())) {
                 pw1Button.activate();
             }
-            else if (player.state.starsControlled < voidStars && pw1Button.isActive()) {
+            else if (player.state.starsControlled < Model.voidStars && pw1Button.isActive()) {
                 pw1Button.deactivate();
             }
 
-            if (player.state.starsControlled >= novaStars && !(pw2Button.isActive())) {
+            if (player.state.starsControlled >= Model.novaStars && !(pw2Button.isActive())) {
                 pw2Button.activate();
             }
-            else if (player.state.starsControlled < novaStars && pw2Button.isActive()) {
+            else if (player.state.starsControlled < Model.novaStars && pw2Button.isActive()) {
                 pw2Button.deactivate();
             }
         }
