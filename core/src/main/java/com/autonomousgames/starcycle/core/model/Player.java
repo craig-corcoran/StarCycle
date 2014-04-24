@@ -34,7 +34,6 @@ public class Player {
     static final float maxAmmo = ModelSettings.getFloatSetting("maxAmmo");
     static final float captureFrac = ModelSettings.getFloatSetting("captureFraction");
 
-
     public final int number;
     public final BaseType basetype;
     public final Color[] colors;

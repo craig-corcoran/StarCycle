@@ -205,7 +205,9 @@ public class ChargeOrb extends Orb implements Collidable {
         ((ChargeOrbState) state).star = star.state.index;
         ((ChargeOrbState) state).lockedOn = true;
         state.v = dTheta;
-        star.addOrb(this);
+        if (getClass() == ChargeOrb.class) {
+            star.addOrb(this);
+        }
     }
 
     @Override

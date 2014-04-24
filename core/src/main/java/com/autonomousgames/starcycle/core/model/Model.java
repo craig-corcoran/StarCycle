@@ -12,8 +12,10 @@ import java.io.Serializable;
 import java.util.*;
 
 // TODO:
-// voids should not provide income
 // voids and novas should only be able to be used when stars have been captured
+// reimplement income orbs with pools
+// fix drawing for stars
+// fix win conditions
 
 public abstract class Model {
 
@@ -57,9 +59,19 @@ public abstract class Model {
         }
     };
 
-    // TODO
     public void checkStateConsistent(GameState state) {
 
+        for (Player p: players) {
+            int activePl = p.state.numActiveOrbs;
+            int activeSt = 0;
+            for (Star s: stars) {
+                activeSt += s.state.numActiveOrbs[p.number];
+            }
+            assert (activePl == activeSt);
+            assert (totalOrbs[p.number] == state.orbStates[p.number].size());
+            assert (totalVoids[p.number] == state.voidStates[p.number].size());
+            assert (totalNovas[p.number] == state.novaStates[p.number].size());
+        }
     }
 
     public int[] totalOrbs = new int[numPlayers];
@@ -332,7 +344,8 @@ public abstract class Model {
         state.orbID = Orb.uidCounter;
         state.frame++;
 
-        // setState(this.state); // TODO remove; testing
+        setState(this.state); // TODO remove; testing
+        checkStateConsistent(this.state);
 	}
 
 
