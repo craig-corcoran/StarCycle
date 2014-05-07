@@ -38,6 +38,7 @@ public class ChargeOrb extends Orb implements Collidable {
 
 
     final Vector2 delta = new Vector2();
+    final Vector2 gamma = new Vector2();
     // TODO move local vars to final class members for optimization
 	@Override
 	public Vector2 getGravForce(Star[] stars) {
@@ -55,27 +56,19 @@ public class ChargeOrb extends Orb implements Collidable {
 
             float dist = (float) Math.sqrt(Math.pow(starPos.x-state.x, 2) + Math.pow(starPos.y-state.y, 2));
             float scal = stars[((ChargeOrbState)state).star].mass * gravScalar / (dist * dist);
-            delta.set((starPos.x - state.x)/dist, (starPos.y - state.y)/dist); // normalized vector toward the star
+            delta.set((starPos.x - state.x)/dist, (starPos.y - state.y)/dist); // normalized vector from orb to star
 			force.add(scal * delta.x, scal * delta.y);
 
-            // dprod = dot(vel, delta) where delta is the direction toward the star
-            float dprod = (delta.x*state.v+delta.y*state.w);
-            force.add(-orbitScal*dprod*delta.x, -orbitScal*dprod*delta.y);
+            // dprod is the components of velocity toward the star
+            float radialComp = (delta.x*state.v+delta.y*state.w);
 
-            // only change magnitude: slow down if v^2/r is too large
-            // change direction toward
-//
-//            if ((state.v*state.v+state.w*state.w)/dist > force.len()) {
-//                force.add(-state.v * orbitScal, -state.w * orbitScal);
-//            }
+            // gamma is set to the normalized vector tangent to the circular orbit
+            gamma.set(state.v - radialComp * delta.x, state.w - radialComp * delta.y).nor();
+            gamma.scl(6f * (float)Math.sqrt(chargeStar.mass * gravScalar / dist)); // then scaled to target velocity
+			force.add(gamma.sub(state.v, state.w).scl(orbitScal)); // adjust velocity toward target
 
-            // TODO more efficient to not create vector 2's here?
-			// adjust orbit toward stable velocity
-//			Vector2 diffVec = new Vector2(starPos.x - state.x, starPos.y - state.y).nor(); // unit vector from star to orb
-//            diffVec.scl(diffVec.x * state.v + diffVec.y * state.w); // dot(diffVec, state.vel)
-//            Vector2 dir = new Vector2(state.v - diffVec.x, state.w - diffVec.y); // direction orth to star
-//			dir.nor().scl((float) Math.sqrt(chargeStar.mass * gravScalar) / (dist)); // target velocity
-//			force.add(dir.sub(state.x, state.y).scl(orbitScal)); // adjust velocity toward target
+            // harder alternative
+//            force.add(-orbitScal*dprod*delta.x, -orbitScal*dprod*delta.y);
 
 			return force;
 		}

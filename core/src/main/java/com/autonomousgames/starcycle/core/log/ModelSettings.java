@@ -9,7 +9,7 @@ public class ModelSettings {
 	static {
 		userPrefs = Gdx.app.getPreferences("StarCycle-model-settings");
 		int clientSettingsVersion = userPrefs.getInteger("settingsVersion");
-		int currentSettingsVersion = 36;
+		int currentSettingsVersion = 61;
 		if (clientSettingsVersion != currentSettingsVersion) {
 			Gdx.app.log("ModelSettings", "rewriting settings file");
 			userPrefs.putInteger("settingsVersion", currentSettingsVersion);
@@ -25,14 +25,16 @@ public class ModelSettings {
             userPrefs.putFloat("maxAmmo", -1f);         // neg means no max ammo
 			userPrefs.putFloat("baseRadius", 1.75f);
 
-			userPrefs.putFloat("gravScalar", 1.0f);
+            //
+			userPrefs.putFloat("gravScalar", 0.6f);
+            userPrefs.putFloat("orbitScal" , 0.1f);
+
 			userPrefs.putFloat("orbitSpeed", 0.02f);
 			userPrefs.putFloat("starRadius", 0.45f);
 
 			userPrefs.putFloat("explosionRadius",0.6f);
 
-			userPrefs.putFloat("chargeRadius",0.5f);
-			userPrefs.putFloat("orbitScal", 0.2f);
+			userPrefs.putFloat("chargeRadius", 0.7f);
 
             userPrefs.putFloat("incOrbLifeSpan", 5000f);
 
