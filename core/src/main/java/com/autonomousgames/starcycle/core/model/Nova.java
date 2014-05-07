@@ -18,7 +18,7 @@ public class Nova extends Orb implements Collidable {
     static final float radius = ModelSettings.getFloatSetting("novaRadius");
 
     public Nova(Player player, World world) {
-        super(player, world, new OrbState(), (int) ModelSettings.getFloatSetting("powerupLifeSpan"));
+        super(player, world, new OrbState(Orb.uidCounter++), (int) ModelSettings.getFloatSetting("powerupLifeSpan"));
         StarCycle.audio.launchnukeSound.play(StarCycle.audio.sfxVolume);
     }
 

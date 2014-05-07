@@ -2,9 +2,6 @@ package com.autonomousgames.starcycle.core.model;
 
 import com.autonomousgames.starcycle.core.screens.ModelScreen;
 
-/**
- * Created by ccor on 3/6/14.
- */
 public class MultiplayerModel extends Model {
 
     public MultiplayerModel(Level.LevelType lvl, ModelScreen screen) {

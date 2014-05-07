@@ -9,7 +9,7 @@ public class ModelSettings {
 	static {
 		userPrefs = Gdx.app.getPreferences("StarCycle-model-settings");
 		int clientSettingsVersion = userPrefs.getInteger("settingsVersion");
-		int currentSettingsVersion = 35;
+		int currentSettingsVersion = 36;
 		if (clientSettingsVersion != currentSettingsVersion) {
 			Gdx.app.log("ModelSettings", "rewriting settings file");
 			userPrefs.putInteger("settingsVersion", currentSettingsVersion);
@@ -21,7 +21,7 @@ public class ModelSettings {
 
 			userPrefs.putFloat("initAmmo", 80.0f);
 			userPrefs.putFloat("ammoDripRate", .04f);
-            userPrefs.putFloat("ammoRate", 0.008f);         //
+            userPrefs.putFloat("ammoRate", 0.016f);         //
             userPrefs.putFloat("maxAmmo", -1f);         // neg means no max ammo
 			userPrefs.putFloat("baseRadius", 1.75f);
 
@@ -72,10 +72,22 @@ public class ModelSettings {
 	}
 
 	public static float getFloatSetting(String istring) {
-		return ModelSettings.userPrefs.getFloat(istring);
+        float valueReturned = ModelSettings.userPrefs.getFloat(istring);
+        /*
+        if (valueReturned == 0)
+            Gdx.app.log("StarCycle", "Float Value returned" + istring +  valueReturned);
+        Gdx.app.log("StarCycle", "Float Value returned" + valueReturned);
+        */
+		return valueReturned;
 	}
 
 	public static long getLongSetting(String istring) {
-		return ModelSettings.userPrefs.getLong(istring);
+        long valueReturned = ModelSettings.userPrefs.getLong(istring);
+        /*
+        if (valueReturned == 0)
+            Gdx.app.log("StarCycle", "Long Value returned" + istring +  valueReturned);
+        Gdx.app.log("StarCycle", "Long Value returned" + valueReturned);
+        */
+		return valueReturned;
 	}
 }

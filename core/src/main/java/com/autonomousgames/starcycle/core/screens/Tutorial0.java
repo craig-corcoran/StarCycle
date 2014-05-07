@@ -70,8 +70,8 @@ public class Tutorial0 extends Tutorial {
     int orbKillPage = 4;
     boolean gravityOn = false;
 
-    public Tutorial0(boolean startAtEnd) {
-        super(Level.LevelType.DOUBLE, ScreenType.TUTORIAL0, ScreenType.TUTORIAL1, ScreenType.STARTMENU, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm});
+    public Tutorial0(boolean startAtEnd, StarCycle starcycle) {
+        super(Level.LevelType.DOUBLE, ScreenType.TUTORIAL0, ScreenType.TUTORIAL1, ScreenType.STARTMENU, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm}, starcycle);
 
         Gdx.input.setInputProcessor(new GameController(this, 1));
 

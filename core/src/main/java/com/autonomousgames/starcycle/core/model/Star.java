@@ -13,25 +13,15 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-
-import java.io.Serializable;
 import java.lang.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 public class Star extends Orbitable implements Collidable {
 
-    public static class StarState implements Serializable {
-        public int index = -1;
-        public float x = 0f;
-        public float y = 0f;
-        public final float[] possession = new float[Model.numPlayers];
-        public final int[] numActiveOrbs = new int[Model.numPlayers];
-    }
     // TODO need index as part of state?
 
-    public final StarState state = new StarState();
+    public final StarState state = new StarState(Model.numPlayers);
 
     static final float popRate = ModelSettings.getFloatSetting("popRate");
     static final float sideScale = 2f * 0.57735f; // The second value is tand(30deg), but MathUtils doesn't have tangent.
@@ -52,7 +42,6 @@ public class Star extends Orbitable implements Collidable {
     public float mass;
     public boolean hitByNova = false;
 
-    float startPercent;
     PathType pathMap;
     ArrayList<LayeredButton> controlButtons = new ArrayList<LayeredButton>();
 
@@ -81,7 +70,6 @@ public class Star extends Orbitable implements Collidable {
 		mass = this.radius * this.radius;
 		maxPop = 100 * radius;
 		populations = new float[Model.numPlayers]; // populations are initialized to zero
-        startPercent = 0;
 
 		// create the box2d star body
         BodyDef starBodyDef = new BodyDef();
@@ -142,13 +130,15 @@ public class Star extends Orbitable implements Collidable {
 
 		this(radius, new Vector2(), players, world, index, rotSpeed);
 		this.pathMap = pathMap;
-		this.startPercent = startPercent;
+        this.state.startPercent = startPercent;
 	}
 
     public void setState(StarState state) {
         this.state.index = state.index;
         this.state.x = state.x;
         this.state.y = state.y;
+        this.state.tValue = state.tValue;
+        this.state.startPercent = state.startPercent;
 
         for (int i=0; i < Model.numPlayers; i++) {
             this.state.possession[i] = state.possession[i];
@@ -174,7 +164,7 @@ public class Star extends Orbitable implements Collidable {
 				controlButtons.get(i).deactivate();
 			}
 			// If the the star has become fully controlled:
-			if (newPercent >= 0.99f && state.possession[i] < 0.99f) {
+			if (newPercent >= 0.99f && state.possession[i] > 0.99f) {
 				// Tint the star image.
 				for (int j = quadLayer0; j < quadLayer0 + 4; j ++) {
 					starButton.getLayer(j).setColor(playerColors[i][0]);
@@ -291,11 +281,11 @@ public class Star extends Orbitable implements Collidable {
 	void updatePosition(float delta) {
 
 		if (pathMap != null) {
-		    Vector2 pos = pathMap.getPosition(t, startPercent);
+		    Vector2 pos = pathMap.getPosition(state.tValue, state.startPercent);
             state.x = pos.x;
             state.y = pos.y;
 			body.setTransform(pos.x, pos.y, 0f);
-			t += orbitSpeed * delta;
+			state.tValue += orbitSpeed * delta;
 		}
 	}
 

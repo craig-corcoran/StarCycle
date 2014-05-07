@@ -50,8 +50,8 @@ public abstract class Tutorial extends ModelScreen {
     int[] orbClamp = new int[]{0, 0};
     int pages;
 
-    public Tutorial (Level.LevelType lvlType, ScreenType screenType, ScreenType nextScreen, ScreenType prevScreen, BaseType[] skins, Color[][] colors) {
-        super(lvlType, screenType, skins, colors);
+    public Tutorial (Level.LevelType lvlType, ScreenType screenType, ScreenType nextScreen, ScreenType prevScreen, BaseType[] skins, Color[][] colors, StarCycle starcycle) {
+        super(lvlType, screenType, skins, colors, starcycle);
         this.nextScreen = nextScreen;
         this.prevScreen = prevScreen;
         silentSwitch = true;

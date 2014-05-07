@@ -16,8 +16,8 @@ public class SinglePlayer extends ModelScreen {
 
 	private SinglePlayerLevel leveltype;
 	
-	public SinglePlayer(LevelType lvl, BaseType[] skins, Color[][] colors, SinglePlayerLevel leveltype, BotType botType) {
-		super(lvl, ScreenType.SINGLEPLAYER, skins, colors);
+	public SinglePlayer(LevelType lvl, BaseType[] skins, Color[][] colors, SinglePlayerLevel leveltype, BotType botType, StarCycle starcycle) {
+		super(lvl, ScreenType.SINGLEPLAYER, skins, colors, starcycle);
 		Gdx.input.setInputProcessor(new GameController(this, 1)); // only one active touch interface
 		nextScreen = ScreenType.CAMPAIGNSELECT;
 		this.leveltype = leveltype;

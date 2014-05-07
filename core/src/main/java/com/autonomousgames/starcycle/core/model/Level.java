@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class Level {
 
 	public final int numStars;
+    private ArrayList<Orbitable> pathedObjList = new ArrayList<Orbitable>();
 
 	private final World world;
 	public Star[] stars;
@@ -126,7 +127,6 @@ public class Level {
 		case NOSTARS:
 			numStars = 0;
 			stars = new Star[numStars];
-//			addStaticStar(players, 0, players[0].baseOrigins[0], 0f);
 			break;
         default: numStars=0;
 		} 
@@ -140,6 +140,7 @@ public class Level {
 								PathType pathMap, float startPercent, float rotSpeed) {
 		
 		stars[starIndex] = new Star(radius, players, center, world, starIndex, pathMap, startPercent, rotSpeed);
+        pathedObjList.add(stars[starIndex]);
 	}
 
 	private void addStarGroup(Player[] players, int startingIndex, int groupSize, Vector2 center, float radius,
@@ -150,5 +151,9 @@ public class Level {
 			addPathedStar(players, indx, center, radius, pathMap, offset + startPercent, rotSpeed);
 		}
 	}
-
+    public void updatePosition(float delta) {
+        for (Orbitable aPathedObjList : pathedObjList) {
+            aPathedObjList.updatePosition(delta);
+        }
+    }
 }

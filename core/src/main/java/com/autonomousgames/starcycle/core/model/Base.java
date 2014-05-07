@@ -117,6 +117,10 @@ public class Base {
 		}
 		angle = (MathUtils.atan2(pointer.y, pointer.x) - MathUtils.PI / 2f) * 180f / MathUtils.PI;
 		pointerScale = pointer.len() / maxPointerLength;
+        if (player.number == 0) {
+            player.state.pointerX = pointer.x;
+            player.state.pointerY = pointer.y;
+        }
 	}
 	
 	public void rotatePointer(float theta) {

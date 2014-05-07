@@ -1,30 +1,15 @@
 package com.autonomousgames.starcycle.core.model;
 
-import com.autonomousgames.starcycle.core.Texturez;
 import com.autonomousgames.starcycle.core.log.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.ui.LayerType;
-import com.autonomousgames.starcycle.core.ui.LayeredButton;
-import com.autonomousgames.starcycle.core.ui.SpriteLayer;
-import com.autonomousgames.starcycle.core.ui.SpriteLayerLite;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.LinkedList;
-import java.util.Vector;
 
 public class ChargeOrb extends Orb implements Collidable {
-
-    public static class ChargeOrbState extends OrbState {
-        public float dAngle = 0f;
-        public int star = -1;
-        public boolean lockedOn = false;
-    }
-
 	//static final LayeredButton[] chargeButtons = new LayeredButton[Model.numPlayers];
 
     private static final float angleThresh = ModelSettings.getFloatSetting("angleThresh");
@@ -39,7 +24,7 @@ public class ChargeOrb extends Orb implements Collidable {
     private LinkedList<Star> activeStars = new LinkedList<Star>();
 
 	public ChargeOrb(Player player, World world, Class cls) {
-		super(player, world, new ChargeOrbState(), (cls == Void.class) ?
+		super(player, world, new ChargeOrbState(Orb.uidCounter++), (cls == Void.class) ?
                         (int) ModelSettings.getFloatSetting("powerupLifeSpan") :
                         (int) ModelSettings.getFloatSetting("orbLifeSpan"));
 		//chargeButtons[playerNum] = new LayeredButton(orbButtons[playerNum].getCenter(),orbButtons[playerNum].getDims());
@@ -229,5 +214,4 @@ public class ChargeOrb extends Orb implements Collidable {
         ((ChargeOrbState)this.state).star = ((ChargeOrbState)this.state).star;
         ((ChargeOrbState)this.state).dAngle = ((ChargeOrbState)this.state).dAngle;
     }
-
 }

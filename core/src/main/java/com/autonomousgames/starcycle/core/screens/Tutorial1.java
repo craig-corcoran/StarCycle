@@ -72,8 +72,8 @@ public class Tutorial1 extends Tutorial {
     int[] basePages;
     int[] launchPages;
 
-    public Tutorial1() {
-        super(Level.LevelType.QUAD2, ScreenType.TUTORIAL1, ScreenType.STARTMENU, ScreenType.TUTORIAL0, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm});
+    public Tutorial1(StarCycle starCycle) {
+        super(Level.LevelType.QUAD2, ScreenType.TUTORIAL1, ScreenType.STARTMENU, ScreenType.TUTORIAL0, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm}, starCycle);
 
         Gdx.input.setInputProcessor(new GameController(this, 1));
 
@@ -250,9 +250,9 @@ public class Tutorial1 extends Tutorial {
                         ChargeOrb.class,
                         starPos.x+orbDist.x,
                         starPos.y+orbDist.y,
-                        -120/60f, 0f);
-                ((ChargeOrb.ChargeOrbState)orb.state).star = 0; // set orbiting the 0th star
-                ((ChargeOrb.ChargeOrbState)orb.state).lockedOn = true;
+                        -120/60f, 0f, false);
+                ((ChargeOrbState)orb.state).star = 0; // set orbiting the 0th star
+                ((ChargeOrbState)orb.state).lockedOn = true;
             }
             orbDist.rotate(30f);
         }
@@ -376,11 +376,11 @@ public class Tutorial1 extends Tutorial {
                     ChargeOrb.class,
                     model.players[0].base.origin.x,
                     model.players[0].base.origin.y,
-                    vel.x, vel.y);
+                    vel.x, vel.y, false);
             page2orbLaunched = true;
         }
         if (page2orbLaunched && !gravityOn) {
-            if (((ChargeOrb.ChargeOrbState)orb.state).star >= 0) { // if orbiting
+            if (((ChargeOrbState)orb.state).star >= 0) { // if orbiting
                 for (int i = 0; i < 3; i ++) {
                     Star star = model.stars[i];
                     star.gravityOn();
@@ -435,16 +435,16 @@ public class Tutorial1 extends Tutorial {
             model.players[0].launchPad.showMeter(true);
             Vector2 starPos = new Vector2(model.stars[3].state.x, model.stars[3].state.y);
             Vector2 orbDist = new Vector2(ModelSettings.getFloatSetting("chargeRadius"), 0f).scl(2f);
-            for (int i = 0; i < 3; i ++) {
+            for (int i = 0; i < 2; i ++) {
                 orbDist.rotate(120f);
 
                 ChargeOrb orb = (ChargeOrb) model.addOrb(model.players[i].number, // TODO create locked orb method in Model?
                                                         ChargeOrb.class,
                                                         starPos.x+orbDist.x,
                                                         starPos.y+orbDist.y,
-                                                        -180/60f, 0f);
-                ((ChargeOrb.ChargeOrbState)orb.state).star = 3; // set orbiting the 3rd star
-                ((ChargeOrb.ChargeOrbState)orb.state).lockedOn = true;
+                                                        -180/60f, 0f, false);
+                ((ChargeOrbState)orb.state).star = 3; // set orbiting the 3rd star
+                ((ChargeOrbState)orb.state).lockedOn = true;
             }
             pageDone.set(4, true);
         }
@@ -474,13 +474,12 @@ public class Tutorial1 extends Tutorial {
             public Player[] initPlayers(ModelScreen screen) {
                 Player[] players = new Player[numPlayers];
                 for (int i=0; i < numPlayers; i++){
-
-                    model.players[i] = new Player(i, ui, skins[i], colors[i], true, i == 0);
-                    model.players[i].altWin = true;
-                    model.players[i].launchPad.showMeter(false);
-                    model.players[i].showIncomeOrbs = false;
-                    model.players[i].launchPad.manualLvl = true;
-                    model.players[i].base.manualLvl = true;
+                    players[i] = new Player(i, ui, skins[i], colors[i], true, i == 0);
+                    players[i].altWin = true;
+                    players[i].launchPad.showMeter(false);
+                    players[i].showIncomeOrbs = false;
+                    players[i].launchPad.manualLvl = true;
+                    players[i].base.manualLvl = true;
 
                 }
                 return players;

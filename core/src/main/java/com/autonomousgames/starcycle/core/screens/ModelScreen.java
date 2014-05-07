@@ -16,8 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
-import java.io.Serializable;
-import java.util.ArrayList;
 
 public abstract class ModelScreen extends GameScreen{
 
@@ -41,8 +39,11 @@ public abstract class ModelScreen extends GameScreen{
 	float side = StarCycle.screenHeight / 6f;
 	Vector2 iconSize = new Vector2(side, side);
 	private long gameStartTime;
+
+    // StarCycle object for callbacks
+    private StarCycle starcycle;
 	
-	public ModelScreen(LevelType lvl, ScreenType screentype, BaseType[] skins, Color[][] colors) {
+	public ModelScreen(LevelType lvl, ScreenType screentype, BaseType[] skins, Color[][] colors, StarCycle starcycle) {
 		json.setOutputType(JsonWriter.OutputType.json);
 		nextLvlConfig = lvl;
 		this.screentype = screentype;
@@ -50,7 +51,12 @@ public abstract class ModelScreen extends GameScreen{
 		this.colors = colors;
 		gameStartTime = System.currentTimeMillis();
 
+        this.starcycle = starcycle;
+
         model = initModel(lvl, this);
+        if (this.starcycle.getStateReceiver() != null) {
+            this.starcycle.getStateReceiver().setModel(model);
+        }
 
         // if there is a bot, it needs additional initialization
         for (int i=0; i < Model.numPlayers; i++) {
@@ -198,44 +204,69 @@ public abstract class ModelScreen extends GameScreen{
 //                Gdx.app.log("ModelScreen", "Interrupted Exception while sleeping: " + e);
 //            }
 //        }
+
+        GameState testGameState = new GameState(1, 2);
+        // Send the state to the clients if this is the server
+        if (starcycle.getStateSender() != null) {
+        // Grab the lock because model.state is a shared resource
+            synchronized(model.stateLock)
+            {
+                starcycle.getStateSender().sendState(model.state);
+
+                if (this.starcycle.getMode() == StarCycle.Mode.kClient)
+                {
+                    // TODO: Player numbers need to be assigned correctly
+                    model.predictedActionsMap.put(model.state.playerStates[StarCycle.playerNum].getPlayerActionMessageNumber(), model.state.playerStates[StarCycle.playerNum]);
+                    model.state.playerStates[StarCycle.playerNum].incrementPlayerActionMessageCount();
+                    for (Player p: model.players) {
+                        p.state.buttonStates[1] = false;
+                        p.state.buttonStates[2] = false;
+                    }
+                }
+            }
+        }
 	}
 	
 	public void update(float delta) {
-		
-		model.update(); // here's where the magic happens
+        model.update(this.starcycle.getMode()==StarCycle.Mode.kClient);
 
         // check for win conditions
         int winner = model.winCondition.getWinner();
         if (winner >= 0) { // if not -1 (no winner)
-
+            this.gameOver = true;
+            this.addWinBanner(this.model.players[winner]);
         }
 
     }
 
 	void renderSprites(float delta) {
-		batch.begin();
+        // grab the state lock to prevent corruption
+        synchronized (model.stateLock)
+        {
+            batch.begin();
 
-		background.draw(batch);
-        if (gameOver) {
-            winBase.draw(batch, 1f);
-        }
+            background.draw(batch);
+            if (gameOver) {
+                winBase.draw(batch, 1f);
+            }
 
-        for (Player player : model.players) {
-            player.draw(batch);
-            for (ChargeOrb o: model.orbs[player.number].values()) {
-                o.draw(batch);
+            for (Player player : model.players) {
+                player.draw(batch);
+                for (ChargeOrb o: model.orbs[player.number].values()) {
+                    o.draw(batch);
+                }
+                for (Void o: model.voids[player.number].values()) {
+                    o.draw(batch);
+                }
+                for (Nova o: model.novas[player.number].values()) {
+                    o.draw(batch);
+                }
             }
-            for (Void o: model.voids[player.number].values()) {
-                o.draw(batch);
+            for (int i = 0; i < model.stars.length; i++) {
+                model.stars[i].draw(batch);
             }
-            for (Nova o: model.novas[player.number].values()) {
-                o.draw(batch);
-            }
+            batch.end();
         }
-		for (int i = 0; i < model.stars.length; i++) {
-			model.stars[i].draw(batch);
-		}
-		batch.end();
 	}
 	
 	void displayFPS(float start) {

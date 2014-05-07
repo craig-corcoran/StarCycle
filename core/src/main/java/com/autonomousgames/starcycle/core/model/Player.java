@@ -6,25 +6,10 @@ import com.autonomousgames.starcycle.core.screens.ModelScreen;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.ListIterator;
-
 public class Player {
-
-    public static class PlayerState implements Serializable {
-        public float ammo = 0f;
-        public int starsControlled = 0;
-        public int numActiveOrbs = 0;
-        public float pointerX = 0f;
-        public float pointerY = 0f;
-        public boolean[] buttonStates = new boolean[3];
-    }
 
     public boolean showIncomeOrbs = true; // TODO can these be final?
     public boolean altWin = false;
@@ -75,7 +60,7 @@ public class Player {
                   BaseType basetype,
                   Color[] colors,
                   boolean UIVisible) {
-		this(num, ui, basetype, colors,  UIVisible, UIVisible);
+		this(num, ui, basetype, colors, UIVisible, UIVisible);
 	}
 
     final Vector2 pos = new Vector2();
@@ -107,7 +92,6 @@ public class Player {
         state.pointerY = pos.y;
 
 		launchPad.update(Model.dt);
-
 	}
 
     //private float incOrbGravScale = ModelSettings.getFloatSetting("incOrbGravScale");
@@ -121,7 +105,6 @@ public class Player {
         // TODO should the launchpad be drawn here (instead of with ui) or base drawn with ui?
 		base.draw(batch);
 	}
-
 
 	public void dispose() {
 		// TODO need to dispose player elements? base, launchpad, incomeorbs, etc
@@ -145,12 +128,16 @@ public class Player {
         launchPad.setLvl(i);
     }
 
-    public void setState(PlayerState state) {
+    public void setMyState(PlayerState state) {
         this.state.ammo = state.ammo;
         this.state.starsControlled = state.starsControlled;
         this.state.numActiveOrbs = state.numActiveOrbs;
-        this.state.pointerX = state.pointerX;
-        this.state.pointerY = state.pointerY;
-        this.state.buttonStates = state.buttonStates;
+        this.setLevel(Math.min(state.starsControlled, 2));
+        this.launchPad.updateMeter();
+    }
+
+    public void setOpponentState(PlayerState state) {
+        setMyState(state);
+        this.base.setPointer(new Vector2(state.pointerX, state.pointerY));
     }
 }

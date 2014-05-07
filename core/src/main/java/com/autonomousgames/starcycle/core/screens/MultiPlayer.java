@@ -1,5 +1,6 @@
 package com.autonomousgames.starcycle.core.screens;
 
+import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.controllers.GameController;
 import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Level;
@@ -13,8 +14,8 @@ import com.badlogic.gdx.graphics.Color;
 
 public class MultiPlayer extends ModelScreen {
 
-	public MultiPlayer(LevelType lvl, BaseType[] skins, Color[][] colors) { 
-		super(lvl, ScreenType.MULTIPLAYER, skins, colors);
+	public MultiPlayer(LevelType lvl, BaseType[] skins, Color[][] colors, StarCycle starcycle) {
+		super(lvl, ScreenType.MULTIPLAYER, skins, colors, starcycle);
 		Gdx.input.setInputProcessor(new GameController(this, Model.numPlayers));
 		nextScreen = ScreenType.MULTIPLAYERLEVELSELECT;
 	}

@@ -5,12 +5,17 @@ import com.autonomousgames.starcycle.core.log.ModelSettings;
 import com.autonomousgames.starcycle.core.log.UserId;
 import com.autonomousgames.starcycle.core.log.UserProgress;
 import com.autonomousgames.starcycle.core.model.BackgroundManager;
+import com.autonomousgames.starcycle.core.network.*;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.autonomousgames.starcycle.core.screens.*;
+import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.SocketException;
+import java.util.Vector;
 
 public class StarCycle implements ApplicationListener {
 	public static float pixelsPerMeter;  
@@ -35,6 +40,33 @@ public class StarCycle implements ApplicationListener {
     private GameScreen screen;
     boolean startAtEnd;
     private long lastChange;
+    private StarCycle.Mode mode;
+    private DatagramSocket stateSenderSocket;
+    private Vector<NodeUDPInfo> nodeAddressVector;
+    private StateSender stateSender;
+    private StateReceiver stateReceiver;
+    private TCPServerHandler serverHandler;
+    public static Integer playerNum = -1;
+
+    public enum Mode{
+    	kClient,
+    	kServer
+    }
+
+    public StarCycle(){
+        this(StarCycle.Mode.kClient);
+    }
+
+    public StarCycle(StarCycle.Mode startMode){
+        super();
+        mode = startMode;
+    }
+
+    public StarCycle(StarCycle.Mode startMode, Vector<NodeUDPInfo> nodeAddressVector){
+        super();
+        mode = startMode;
+        this.nodeAddressVector = nodeAddressVector;
+    }
 
     @Override
 	public void create() {
@@ -57,6 +89,7 @@ public class StarCycle implements ApplicationListener {
 		logHandler = new LogHandler();
 		startTime = System.currentTimeMillis();
 		logHandler.run();
+        Gdx.app.log("StarCycle", mode.toString());
 	}
 
 	@Override
@@ -87,22 +120,25 @@ public class StarCycle implements ApplicationListener {
 			    audio.screenswitchSound.play(audio.sfxVolume);
             }
             startAtEnd = (screen instanceof Tutorial) && ((Tutorial) screen).startAtEnd;
+            if (screen instanceof NetworkedPregame && screen.nextScreen.equals(ScreenType.MULTIPLAYERMODESELECT)){
+                killConnections();
+            }
 			screen.dispose();
 
 			switch (screen.nextScreen) {
 			case MULTIPLAYER:
-				screen = new MultiPlayer(screen.nextLvlConfig, screen.skins, screen.colors); // TODO use factory methods instead of constructor? may not have to repeatedly make objects
+				screen = new MultiPlayer(screen.nextLvlConfig, screen.skins, screen.colors, this); // TODO use factory methods instead of constructor? may not have to repeatedly make objects
 				break;
 			case SINGLEPLAYER:
 				screen = new SinglePlayer(screen.nextLvlConfig, screen.skins, screen.colors,
 										  ((CampaignSelect)screen).nextLvlSinglePlayer,
-										  ((CampaignSelect)screen).botType);
+										  ((CampaignSelect)screen).botType, this);
 				break;
 			case TUTORIAL0:
-				screen = new Tutorial0(startAtEnd);
+				screen = new Tutorial0(startAtEnd, this);
 				break;
 			case TUTORIAL1:
-				screen = new Tutorial1();
+				screen = new Tutorial1(this);
 				break;
 			case ABOUT:
 				screen = new AboutScreen();
@@ -123,7 +159,8 @@ public class StarCycle implements ApplicationListener {
                 screen = new MultiplayerSelect(screen.nextLvlConfig, screen.skins, screen.colors);
                 break;
             case NETWORKEDPREGAME:
-                screen = new NetworkedPregame();
+                screen = new NetworkedPregame(mode, nodeAddressVector);
+                setConnections();
                 break;
 			case MULTIPLAYERMODESELECT:
 				screen = new MultiplayerModeScreen();
@@ -146,7 +183,77 @@ public class StarCycle implements ApplicationListener {
         background = new BackgroundManager();
     }
 
+    public void setConnections() {
+        if (mode == StarCycle.Mode.kServer) {
+            try {
+                this.stateReceiver = new StateReceiver(new DatagramSocket(nodeAddressVector.get(0).getPort()), mode);
+                Thread thread = new Thread (this.stateReceiver);
+                thread.start();
+                int port = nodeAddressVector.get(0).getPort();
+                serverHandler = new TCPServerHandler(port);
+                serverHandler.start();
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
+            try {
+                this.stateSenderSocket = new DatagramSocket();
+            }
+            catch (SocketException e)
+            {
+                Gdx.app.log ("StarCycle", "Exception creating server send socket");
+            }
+            this.stateSender = new StateSender(stateSenderSocket, nodeAddressVector, mode);
+        }
+        else {
+            try {
+                this.stateSenderSocket = new DatagramSocket();
+            }
+            catch (SocketException e)
+            {
+                Gdx.app.log ("StarCycle", "Exception creating client send socket");
+            }
+            this.stateSender = new StateSender(stateSenderSocket, nodeAddressVector, mode);
+            initClientReceiver();
+        }
+    }
+
+    public void initClientReceiver() {
+        for (int i=0; i < nodeAddressVector.size(); i++) {
+            try {
+                // Hard-coding the
+                if (i > 0) {
+                    if (nodeAddressVector.get(i).getIp().toString().equals("/127.0.0.1")){
+                        this.stateReceiver = new StateReceiver(new DatagramSocket(nodeAddressVector.get(i).getPort()), mode);
+                        Gdx.app.log("StarCycle", "listening " + nodeAddressVector.get(i).getIp() + ":" + nodeAddressVector.get(i).getPort());
+                        Thread thread = new Thread (this.stateReceiver);
+                        thread.start();
+                        break;
+                    }
+                }
+            }
+            catch (IOException e) {
+                Gdx.app.log("StarCycle", e.getMessage());
+            }
+        }
+    }
+
+    public void killConnections() {
+        this.stateReceiver = null;
+        this.stateSender = null;
+        this.stateSenderSocket = null;
+        this.serverHandler.interrupt();
+    }
+
     public static BackgroundManager getBackground() {
         return background;
     }
+
+    public StarCycle.Mode getMode()
+    {
+        return mode;
+    }
+
+    public StateSender getStateSender (){ return stateSender; }
+
+    public StateReceiver getStateReceiver(){ return stateReceiver;}
 }

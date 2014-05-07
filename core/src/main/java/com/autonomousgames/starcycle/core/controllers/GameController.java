@@ -64,7 +64,7 @@ public class GameController extends LogController{
 	public boolean keyDown(int keycode) {
 		super.keyDown(keycode);
         if (keycode == Keys.Q) {
-        	screen.model.players[0].state.buttonStates[0] = true;
+        	screen.model.state.playerStates[0].buttonStates[0] = true;
         }
         if ((keycode == Keys.W) && (screen.model.players[0].state.starsControlled >= Model.voidStars)) {
             screen.model.players[0].state.buttonStates[1] = true;
@@ -82,9 +82,15 @@ public class GameController extends LogController{
 	@Override
 	public boolean keyUp(int keycode) {
 		if (keycode == Keys.Q) {
-        	screen.model.players[0].state.buttonStates[0] = false;
+        	screen.model.state.playerStates[0].buttonStates[0] = false;
         }
-		        return false;
+        if (keycode == Keys.W) {
+            screen.model.state.playerStates[0].buttonStates[1] = false;
+        }
+        if (keycode == Keys.E) {
+            screen.model.state.playerStates[0].buttonStates[2] = false;
+        }
+		return false;
 	}
 
 	@Override

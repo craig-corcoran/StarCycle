@@ -4,31 +4,18 @@ import com.autonomousgames.starcycle.core.log.ModelSettings;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.Texturez.TextureType;
 import com.autonomousgames.starcycle.core.ui.*;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Pool;
-
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Orb implements Collidable, Pool.Poolable {
 
     static int uidCounter = 0;
     public static boolean useLifeSpan = true;
-
-    public static class OrbState implements Serializable {
-        public float x = 0f;
-        public float y = 0f;
-        public float v = 0f;
-        public float w = 0f;
-        public int age = 0;
-        public int uid = Orb.uidCounter++;
-    }
 
     @Override
     public int hashCode() { return state.uid; }
@@ -49,6 +36,9 @@ public class Orb implements Collidable, Pool.Poolable {
     public final Body body; // Physics Box2D body
     final float rotVel;
     final int playerNum;
+    // needed for network mode. Tells us whether this is a predicted orb on the client side
+    public boolean predicted;
+    public int playerActionMessageNumberWhenCreated;
 
 	public Orb(Player player, World world, OrbState state, int lifeSpan) {
 
@@ -104,7 +94,8 @@ public class Orb implements Collidable, Pool.Poolable {
 
     public void draw(SpriteBatch batch, LayeredSprite[] layers) {
         if (isOnScreen()) {
-            boolean active = (this instanceof ChargeOrb) ? ((ChargeOrb.ChargeOrbState) state).lockedOn : true;
+
+            boolean active = (this instanceof ChargeOrb) ? ((ChargeOrbState) state).lockedOn : true;
             layers[playerNum].draw(batch, 1f, state.x*StarCycle.pixelsPerMeter, state.y*StarCycle.pixelsPerMeter, 0f, active);
         }
     }
@@ -134,7 +125,7 @@ public class Orb implements Collidable, Pool.Poolable {
         Vector2 force = new Vector2();
 		for (Star star: stars) {
 			// because we assume the orbs dont affect stars, we can treat all orbs as having mass 1.
-            Star.StarState starState = star.state;
+            StarState starState = star.state;
             float dist = (float) Math.sqrt(Math.pow(starState.x-state.x,2) + Math.pow(starState.y-state.y,2));
             float scal = star.mass * gravScalar / (dist * dist * dist);
 			force.add(scal * (starState.x - state.x),

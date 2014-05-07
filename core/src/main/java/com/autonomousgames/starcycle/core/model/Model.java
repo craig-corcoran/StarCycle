@@ -1,14 +1,14 @@
 package com.autonomousgames.starcycle.core.model;
 
+import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.log.ModelSettings;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
 import com.autonomousgames.starcycle.core.screens.ModelScreen;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
-
-import java.io.Serializable;
 import java.util.*;
 
 // TODO:
@@ -19,30 +19,6 @@ import java.util.*;
 
 public abstract class Model {
 
-    public class GameState implements Serializable {
-
-        // TODO mutex lock
-
-        int frame = 0;
-        int orbID = 0;
-        final LinkedHashMap<Integer, ChargeOrb.ChargeOrbState>[] orbStates = new LinkedHashMap[numPlayers];
-        final LinkedHashMap<Integer,ChargeOrb.ChargeOrbState>[] voidStates = new LinkedHashMap[numPlayers];
-        final LinkedHashMap<Integer,Orb.OrbState>[] novaStates = new LinkedHashMap[numPlayers];
-        final Player.PlayerState[] playerStates = new Player.PlayerState[numPlayers];
-        final Star.StarState[] starStates;
-
-        GameState(int numStars) {
-
-            starStates = new Star.StarState[numStars];
-
-            for (int i=0; i < numPlayers; i++) {
-                orbStates[i] = new LinkedHashMap<Integer,ChargeOrb.ChargeOrbState>(500);
-                voidStates[i] = new LinkedHashMap<Integer,ChargeOrb.ChargeOrbState>(50);
-                novaStates[i] = new LinkedHashMap<Integer,Orb.OrbState>(50);
-            }
-        }
-    }
-
     public abstract class WinCondition {
         public abstract int getWinner();
     }
@@ -50,12 +26,12 @@ public abstract class Model {
     public final WinCondition winCondition = new WinCondition() {
         @Override
         public int getWinner() {
-            for (Player p : players) {
-                if (p.state.starsControlled == stars.length) {
-                    return p.number;
-                }
+        for (Player p : players) {
+            if (p.state.starsControlled == stars.length) {
+                return p.number;
             }
-            return -1;
+        }
+        return -1;
         }
     };
 
@@ -110,7 +86,6 @@ public abstract class Model {
 
     static final HashMap<Class,Float> orbCosts = new HashMap<Class,Float>(3);
 
-
     public final LinkedHashMap<Integer,ChargeOrb>[] orbs = new LinkedHashMap[numPlayers];
     public final LinkedHashMap<Integer,Void>[] voids = new LinkedHashMap[numPlayers];
     public final LinkedHashMap<Integer,Nova>[] novas = new LinkedHashMap[numPlayers];
@@ -122,8 +97,18 @@ public abstract class Model {
     final Pool<Nova>[] novaPools = new NovaPool[numPlayers];
 
     public final GameState state;
-
 	public final World world;
+    public final Level level;
+
+    // PlayerActionMessage buffer
+    // Whenever we receive state from the server
+    // The remaining actions in this buffer after
+    // removing what was sent from the server is
+    // applied and re-simulated
+    public TreeMap<Integer, PlayerState> predictedActionsMap = new TreeMap<Integer, PlayerState>();
+
+    // STATE LOCK
+    public Object stateLock = null;
 
 	public Model(LevelType lvl, ModelScreen screen) {
 
@@ -132,10 +117,11 @@ public abstract class Model {
 		ContactListener contactListener = new OrbContactListener();
 		world.setContactListener(contactListener);
 
-
+        // set up state lock
+        this.stateLock = new Object();
         players = initPlayers(screen);
-		Level level = new Level(world, lvl, players);
-        state = new GameState(level.numStars);
+		level = new Level(world, lvl, players);
+        state = new GameState(level.numStars, numPlayers);
         stars = level.stars; // TODO clean up level / Model interface
         initState();
         setCosts();
@@ -183,8 +169,7 @@ public abstract class Model {
 
         @Override
         protected ChargeOrb newObject() {
-            ChargeOrb orb = new ChargeOrb(player, world);
-            return orb;
+            return new ChargeOrb(player, world);
         }
     }
 
@@ -196,8 +181,7 @@ public abstract class Model {
         }
         @Override
         protected Void newObject() {
-            Void vd = new Void(player, world);
-            return vd;
+            return new Void(player, world);
         }
     }
 
@@ -208,8 +192,7 @@ public abstract class Model {
         }
         @Override
         protected Nova newObject() {
-            Nova nova = new Nova(player, world);
-            return nova;
+            return new Nova(player, world);
         }
     }
 
@@ -271,101 +254,305 @@ public abstract class Model {
         return toRemove;
     }
 
-    public void setState(GameState state) {
+//    final Vector<Integer> objectsForRemoval = new Vector<Integer>();
+//    public void setState(GameState state) {
+//
+//        synchronized (stateLock) {
+//
+//            for (int i=0; i < numPlayers; i++) {
+//                makeOrbsEquivalent(i, this.orbs[i],
+//                        state.orbStates[i].keySet(),
+//                        this.state.orbStates[i].keySet(),
+//                        state);
+//                makeVoidsEquivalent(i, this.voids[i],
+//                        state.voidStates[i].keySet(),
+//                        this.state.voidStates[i].keySet(),
+//                        state);
+//                makeNovasEquivalent(i, this.novas[i],
+//                        state.novaStates[i].keySet(),
+//                        this.state.novaStates[i].keySet(),
+//                        state);
+//            }
+//
+//
+//            // Now in the predictedActionsMap go through and delete the actions that have been seen by the server
+//            // Then resimulate by calling update multiple times for each of the user actions left
+//            for (Map.Entry<Integer, PlayerState> entry: this.predictedActionsMap.entrySet())
+//            {
+//                if (entry.getKey() <= state.playerStates[StarCycle.playerNum].playerActionMessageNumber)
+//                    objectsForRemoval.add(entry.getKey());
+//            }
+//            Iterator<Integer> it = objectsForRemoval.iterator();
+//            while (it.hasNext())
+//            {
+//                this.predictedActionsMap.remove(it.next());
+//            }
+//            objectsForRemoval.clear();
+//
+//            // now call update on the world for the remaining user actions
+//            for (Map.Entry<Integer, PlayerState> entry: this.predictedActionsMap.entrySet())
+//            {
+//                setPlayerState(entry.getValue());
+//                update(true);
+//                Gdx.app.log ("StarCycle", "Calling update to fast forward");
+//            }
+//
+//            this.players[StarCycle.playerNum].setMyState(state.playerStates[StarCycle.playerNum]);
+//            this.players[(StarCycle.playerNum + 1) % 2].setOpponentState(state.playerStates[(StarCycle.playerNum + 1) % 2]);
+//            // Now for the stars. Set the state of the stars received
+//            for (int i = 0; i < state.starStates.length; i++)
+//            {
+//                this.stars[i].setState(state.starStates[i]);
+//            }
+//
+//            this.state.starStates = state.starStates;
+//            this.state.frame = state.frame;
+//            this.state.orbID = state.orbID;
+//            Orb.uidCounter = state.orbID;
+//        }
+//    }
 
-        for (int i=0; i < numPlayers; i++) {
-            makeOrbsEquivalent(i, this.orbs[i],
-                    state.orbStates[i].keySet(),
-                    this.state.orbStates[i].keySet(),
-                    state);
-            makeVoidsEquivalent(i, this.voids[i],
-                    state.voidStates[i].keySet(),
-                    this.state.voidStates[i].keySet(),
-                    state);
-            makeNovasEquivalent(i, this.novas[i],
-                    state.novaStates[i].keySet(),
-                    this.state.novaStates[i].keySet(),
-                    state);
-            players[i].setState(state.playerStates[i]);
+    public void setPlayerState (PlayerState state)
+    {
+        synchronized (stateLock)
+        {
+            for (int i=0; i < this.state.playerStates[state.playerNum].buttonStates.length; i++) {
+                this.state.playerStates[state.playerNum].buttonStates[i] = state.buttonStates[i];
+            }
+            this.players[state.playerNum].base.setPointer(new Vector2(state.pointerX, state.pointerY));
+            this.state.playerStates[state.playerNum].numActiveOrbs = state.numActiveOrbs;
+            this.state.playerStates[state.playerNum].setPlayerActionMessageNumber(state.playerActionMessageNumber);
         }
-
-        for (Star.StarState starSt: state.starStates) {
-            this.stars[starSt.index].setState(starSt);
-        }
-
-        this.state.frame = state.frame;
-        this.state.orbID = state.orbID;
-        Orb.uidCounter = state.orbID;
-
     }
 
-    //Vector2 _pos = new Vector2();
-    public void launch(Player player, Class cls) {
-        float cost = orbCosts.get(cls);
-        if (player.state.ammo >= cost) {
-            player.state.ammo -= cost;
-            Vector2 _pos = new Vector2(player.state.pointerX, player.state.pointerY);
-            _pos.nor().scl(0.3f * player.base.baseDiams[player.base.level]);
-            _pos.add(player.base.origin);
-            addOrb(player.number, cls, _pos.x, _pos.y, player.state.pointerX, player.state.pointerY);
+    public void setState (GameState state)
+    {
+        synchronized (stateLock)
+        {
+            // Debugging
+            int differenceInPlayerActionCount = this.state.playerStates[StarCycle.playerNum].playerActionMessageNumber - state.playerStates[StarCycle.playerNum].playerActionMessageNumber;
+            Gdx.app.log("StarCycle", "The difference is " + differenceInPlayerActionCount);
+            Gdx.app.log("StarCycle", "The server frame number is " + state.frame);
+            Gdx.app.log("StarCycle", "The client frame number is " + this.state.frame);
+            // if an orb, nova or void already exists, we update it
+            // if there is a new one, we need to create it
+            // if we realize an orb is dead we remove it
+            // Now the other way around remove Orbs that are in the old state but not in the new state
+            // This means that those orbs are dead, and need to be removed.
+            Vector<Integer> objectsForRemoval = new Vector<Integer>();
+            for (int i = 0; i< numPlayers; i++) {
+                for (Map.Entry<Integer, ChargeOrb> entry: this.orbs[i].entrySet())
+                {
+                    ChargeOrbState cos = state.orbStates[i].get(entry.getKey());
+                    if ((cos==null) || ((entry.getValue().predicted==true)&&(entry.getValue().playerActionMessageNumberWhenCreated < state.playerStates[StarCycle.playerNum].playerActionMessageNumber + 2)))
+                    {
+                        //this.orbs[i].remove(entry.getKey());
+                        // note all the objects for removal. We need to come up with a more
+                        // optimal method
+                        objectsForRemoval.add(entry.getKey());
+                    }
+                }
+
+                // Now iterate through the vector and remove the objects from the map
+                Iterator<Integer> it = objectsForRemoval.iterator();
+                while (it.hasNext())
+                {
+                    this.orbs[i].remove(it.next());
+                }
+
+                // Done with one type of objects. Clear the vector
+                objectsForRemoval.clear();
+
+                for (Map.Entry<Integer, Nova> entry: this.novas[i].entrySet())
+                {
+                    OrbState os = state.novaStates[i].get(entry.getKey());
+                    if ((os==null) ||((entry.getValue().predicted==true)&& (entry.getValue().playerActionMessageNumberWhenCreated < state.playerStates[StarCycle.playerNum].playerActionMessageNumber + 2)))
+                    {
+                        //this.novas[i].remove(entry.getKey());
+                        objectsForRemoval.add(entry.getKey());
+                    }
+                }
+
+                // Now iterate through the vector and remove the objects from the map
+                it = objectsForRemoval.iterator();
+                while (it.hasNext())
+                {
+                    this.novas[i].remove(it.next());
+                }
+
+                // Done with one type of objects. Clear the vector
+                objectsForRemoval.clear();
+
+                for (Map.Entry<Integer, Void> entry: this.voids[i].entrySet())
+                {
+                    ChargeOrbState cos = state.voidStates[i].get(entry.getKey());
+                    if ((cos==null) || ((entry.getValue().predicted==true)&& (entry.getValue().playerActionMessageNumberWhenCreated < state.playerStates[StarCycle.playerNum].playerActionMessageNumber + 2)))
+                    {
+                        //this.voids[i].remove(entry.getKey());
+                        objectsForRemoval.add(entry.getKey());
+                    }
+                }
+
+                // Now iterate through the vector and remove the objects from the map
+                it = objectsForRemoval.iterator();
+                while (it.hasNext())
+                {
+                    this.voids[i].remove(it.next());
+                }
+
+                // Done!
+                // Done with one type of objects. Clear the vector
+                objectsForRemoval.clear();
+
+                for (Map.Entry<Integer, ChargeOrbState> entry: state.orbStates[i].entrySet())
+                {
+                    ChargeOrb orb = orbs[i].get(entry.getKey());
+                    if (orb!=null)
+                    {
+                        orb.init(entry.getValue());
+                    }
+                    else
+                    {
+                        addOrb(i, ChargeOrb.class, entry.getValue().x, entry.getValue().y, entry.getValue().v, entry.getValue().w, entry.getValue().uid, false);
+                        // TODO: See what needs to happen here
+                    }
+                }
+
+                for (Map.Entry<Integer, OrbState> entry: state.novaStates[i].entrySet())
+                {
+                    Nova nova = novas[i].get(entry.getKey());
+                    if (nova!=null)
+                    {
+                        nova.init(entry.getValue());
+                    }
+                    else
+                    {
+                        addOrb(i, Nova.class, entry.getValue().x, entry.getValue().y, entry.getValue().v, entry.getValue().w, entry.getValue().uid, false);
+                    }
+                }
+
+                for (Map.Entry<Integer, ChargeOrbState> entry: state.voidStates[i].entrySet())
+                {
+                    Void orb = voids[i].get(entry.getKey());
+                    if (orb!=null)
+                    {
+                        orb.init(entry.getValue());
+                    }
+                    else
+                    {
+                        addOrb(i, Void.class, entry.getValue().x, entry.getValue().y, entry.getValue().v, entry.getValue().w, entry.getValue().uid, false);
+                    }
+                }
+            }
+            this.players[StarCycle.playerNum].setMyState(state.playerStates[StarCycle.playerNum]);
+            this.players[(StarCycle.playerNum + 1) % 2].setOpponentState(state.playerStates[(StarCycle.playerNum + 1) % 2]);
+            // Now for the stars. Set the state of the stars received
+            for (int i = 0; i < state.starStates.length; i++)
+            {
+                this.stars[i].setState(state.starStates[i]);
+            }
+
+            this.state.orbStates = state.orbStates;
+            this.state.novaStates = state.novaStates;
+            this.state.voidStates = state.voidStates;
+            this.state.frame = state.frame;
+            this.state.orbID = state.orbID;
+            this.state.starStates = state.starStates;
+
+            // Now in the predictedActionsMap go through and delete the actions that have been seen by the server
+            // Then resimulate by calling update multiple times for each of the user actions left
+            for (Map.Entry<Integer, PlayerState> entry: this.predictedActionsMap.entrySet())
+            {
+                if (entry.getKey() <= state.playerStates[StarCycle.playerNum].playerActionMessageNumber)
+                    objectsForRemoval.add(entry.getKey());
+            }
+            Iterator<Integer> it = objectsForRemoval.iterator();
+            while (it.hasNext())
+            {
+                this.predictedActionsMap.remove(it.next());
+            }
+            objectsForRemoval.clear();
+
+            // now call update on the world for the remaining user actions
+            for (Map.Entry<Integer, PlayerState> entry: this.predictedActionsMap.entrySet())
+            {
+                setPlayerState(entry.getValue());
+                update(true);
+                Gdx.app.log ("StarCycle", "Calling update to fast forward");
+            }
         }
     }
 
-	public void update() {
-		world.step(dt, 6, 2); // check for collisions
-        removeOrbs(); // remove collided orbs
-
-        for (Star star: stars) {
-            star.update();
-        }
-
-        // update orbs and player state
-        for (Player p: players) {
-
-            for (Orb o: orbs[p.number].values()) {
-                o.update(stars);
-            }
-            for (Void o: voids[p.number].values()) {
-                o.update(stars);
-            }
-            for (Nova o: novas[p.number].values()) {
-                o.update(stars);
-            }
-
-            p.update(stars);
-
-            if ((p.state.buttonStates[0] == true) && (p.launchPad.sinceLastShot >= coolDown)) {
-                launch(p, ChargeOrb.class);
-                p.launchPad.sinceLastShot=0f;
-            }
-            if ((p.state.buttonStates[1] == true) && (p.state.starsControlled >= voidStars)) {
-                launch(p, Void.class);
-                p.state.buttonStates[1] = false;
-            }
-            if ((p.state.buttonStates[2] == true) && (p.state.starsControlled >= novaStars)) {
-                launch(p, Nova.class);
-                p.state.buttonStates[2] = false;
+    public void launch(Player player, Class cls, boolean predicted) {
+        synchronized (stateLock)
+        {
+            float cost = orbCosts.get(cls);
+            if (player.state.ammo >= cost) {
+                player.state.ammo -= cost;
+                Vector2 _pos = new Vector2(player.state.pointerX, player.state.pointerY);
+                _pos.nor().scl(0.3f * player.base.baseDiams[player.base.level]);
+                _pos.add(player.base.origin);
+                addOrb(player.number, cls, _pos.x, _pos.y, player.state.pointerX, player.state.pointerY, predicted);
             }
         }
+    }
+
+	public void update(boolean orbsPredicted) {
+        synchronized (stateLock) {
+            world.step(dt, 6, 2); // check for collisions
+            removeOrbs(); // remove collided orbs
 
 
-        state.orbID = Orb.uidCounter;
-        state.frame++;
+            for (Star star: stars) {
+                star.update();
+            }
+            // update orbs and player state
+            for (Player p: players) {
+                for (Orb o: orbs[p.number].values()) {
+                    o.update(stars);
+                }
+                for (Void o: voids[p.number].values()) {
+                    o.update(stars);
+                }
+                for (Nova o: novas[p.number].values()) {
+                    o.update(stars);
+                }
 
-        setState(this.state); // TODO remove; testing
-        checkStateConsistent(this.state);
-	}
+                p.update(stars);
 
+                if (p.state.buttonStates[0] && p.launchPad.sinceLastShot >= coolDown) {
+                    launch(p, ChargeOrb.class, orbsPredicted);
+                    p.launchPad.sinceLastShot=0f;
+                }
+                if (p.state.buttonStates[1] && p.launchPad.sinceLastShot >= coolDown/3f) {
+                    launch(p, Void.class, orbsPredicted);
+                    p.launchPad.sinceLastShot=0f;
+                }
+                if (p.state.buttonStates[2] && p.launchPad.sinceLastShot >= coolDown/3f) {
+                    launch(p, Nova.class, orbsPredicted);
+                    p.launchPad.sinceLastShot=0f;
+                }
+            }
+            level.updatePosition(dt); // XXX stars updated here?
+            state.orbID = Orb.uidCounter;
+            state.frame++;
+//            setState(this.state); // TODO remove; testing
+//            checkStateConsistent(this.state);
+        }
+    }
 
     void incrementCounters(int playerNum, Class cls) {
-        if (cls == ChargeOrb.class) {
-            totalOrbs[playerNum]++;
-        }
-        if (cls == Void.class) {
-            totalVoids[playerNum]++;
-        }
-        if (cls == Nova.class) {
-            totalNovas[playerNum]++;
+        synchronized (stateLock)
+        {
+            if (cls == ChargeOrb.class) {
+                totalOrbs[playerNum]++;
+            }
+            if (cls == Void.class) {
+                totalVoids[playerNum]++;
+            }
+            if (cls == Nova.class) {
+                totalNovas[playerNum]++;
+            }
         }
     }
 
@@ -377,26 +564,29 @@ public abstract class Model {
      * @param uid unique id for the given orb, used as key in HashMaps
      */
     void addOrb(int playerNum, Class cls, int uid) {
-        if (cls == ChargeOrb.class) {
-            ChargeOrb orb = orbPools[playerNum].obtain();
-            orb.state.uid = uid;
-            orbs[playerNum].put(uid, orb);
-            state.orbStates[playerNum].put(uid, (ChargeOrb.ChargeOrbState) orb.state);
-            totalOrbs[playerNum]++;
-        }
-        else if (cls == Void.class) {
-            Void vd = voidPools[playerNum].obtain();
-            vd.state.uid = uid;
-            voids[playerNum].put(uid, vd);
-            state.voidStates[playerNum].put(uid, (ChargeOrb.ChargeOrbState) vd.state);
-            totalVoids[playerNum]++;
-        }
-        else {
-            Nova nova = novaPools[playerNum].obtain();
-            nova.state.uid = uid;
-            novas[playerNum].put(uid, nova);
-            state.novaStates[playerNum].put(uid, nova.state);
-            totalNovas[playerNum]++;
+        synchronized (stateLock)
+        {
+            if (cls == ChargeOrb.class) {
+                ChargeOrb orb = orbPools[playerNum].obtain();
+                orb.state.uid = uid;
+                orbs[playerNum].put(uid, orb);
+                state.orbStates[playerNum].put(uid, (ChargeOrbState) orb.state);
+                totalOrbs[playerNum]++;
+            }
+            else if (cls == Void.class) {
+                Void vd = voidPools[playerNum].obtain();
+                vd.state.uid = uid;
+                voids[playerNum].put(uid, vd);
+                state.voidStates[playerNum].put(uid, (ChargeOrbState) vd.state);
+                totalVoids[playerNum]++;
+            }
+            else {
+                Nova nova = novaPools[playerNum].obtain();
+                nova.state.uid = uid;
+                novas[playerNum].put(uid, nova);
+                state.novaStates[playerNum].put(uid, nova.state);
+                totalNovas[playerNum]++;
+            }
         }
     }
 
@@ -409,74 +599,149 @@ public abstract class Model {
      * @param v vel.x
      * @param w vel.y
      */
-    public Orb addOrb(int playerNum, Class cls, float x, float y, float v, float w) {
-        incrementCounters(playerNum, cls);
-        if (cls == ChargeOrb.class) {
-            ChargeOrb orb = orbPools[playerNum].obtain();
-            orb.init(x,y,v,w);
-            orbs[playerNum].put(orb.state.uid, orb);
-            this.state.orbStates[playerNum].put(orb.state.uid, (ChargeOrb.ChargeOrbState) orb.state);
-            totalOrbs[playerNum]++;
-            return orb;
+//    public Orb addOrb(int playerNum, Class cls, float x, float y, float v, float w) {
+//        incrementCounters(playerNum, cls);
+//        if (cls == ChargeOrb.class) {
+//            ChargeOrb orb = orbPools[playerNum].obtain();
+//            orb.init(x,y,v,w);
+//            orbs[playerNum].put(orb.state.uid, orb);
+//            this.state.orbStates[playerNum].put(orb.state.uid, (ChargeOrb.ChargeOrbState) orb.state);
+//            totalOrbs[playerNum]++;
+//            return orb;
+//        }
+//        else if (cls == Void.class) {
+//            Void vd = voidPools[playerNum].obtain();
+//            vd.init(x,y,v,w);
+//            voids[playerNum].put(vd.state.uid, vd);
+//            this.state.voidStates[playerNum].put(vd.state.uid, (ChargeOrb.ChargeOrbState) vd.state);
+//            totalVoids[playerNum]++;
+//            return vd;
+    public Orb addOrb(int playerNum, Class cls, float x, float y, float v, float w, boolean predicted) {
+        synchronized (stateLock)
+        {
+            incrementCounters(playerNum, cls);
+            if (cls == ChargeOrb.class) {
+                ChargeOrb orb = orbPools[playerNum].obtain();
+                orb.init(x,y,v,w); // make sure its calling init w ChargeOrbState not OrbState
+                orb.predicted = predicted;
+                orb.playerActionMessageNumberWhenCreated = this.state.playerStates[playerNum].playerActionMessageNumber;
+                orbs[playerNum].put(orb.state.uid, orb);
+                this.state.orbStates[playerNum].put(orb.state.uid, (ChargeOrbState) orb.state);
+                totalOrbs[playerNum]++;
+                return orb;
+            }
+            else if (cls == Void.class) {
+                Void vd = voidPools[playerNum].obtain();
+                vd.init(x,y,v,w);
+                vd.predicted = predicted;
+                vd.playerActionMessageNumberWhenCreated = this.state.playerStates[playerNum].playerActionMessageNumber;
+                voids[playerNum].put(vd.state.uid, vd);
+                this.state.voidStates[playerNum].put(vd.state.uid, (ChargeOrbState) vd.state);
+                totalVoids[playerNum]++;
+                return vd;
+            }
+            else {
+                Nova nova = novaPools[playerNum].obtain();
+                nova.init(x,y,v,w);
+                nova.predicted = predicted;
+                novas[playerNum].put(nova.state.uid, nova);
+                this.state.novaStates[playerNum].put(nova.state.uid, nova.state);
+                nova.playerActionMessageNumberWhenCreated = this.state.playerStates[playerNum].playerActionMessageNumber;
+                totalNovas[playerNum]++;
+                return nova;
+            }
         }
-        else if (cls == Void.class) {
-            Void vd = voidPools[playerNum].obtain();
-            vd.init(x,y,v,w);
-            voids[playerNum].put(vd.state.uid, vd);
-            this.state.voidStates[playerNum].put(vd.state.uid, (ChargeOrb.ChargeOrbState) vd.state);
-            totalVoids[playerNum]++;
-            return vd;
-        }
-        else {
-            Nova nova = novaPools[playerNum].obtain();
-            nova.init(x,y,v,w);
-            novas[playerNum].put(nova.state.uid, nova);
-            this.state.novaStates[playerNum].put(nova.state.uid, nova.state);
-            totalNovas[playerNum]++;
-            return nova;
+    }
+
+    public Orb addOrb(int playerNum, Class cls, float x, float y, float v, float w, int uid, boolean predicted) {
+        synchronized (stateLock)
+        {
+            incrementCounters(playerNum, cls);
+            if (cls == ChargeOrb.class) {
+                ChargeOrb orb = orbPools[playerNum].obtain();
+                orb.init(x,y,v,w); // make sure its calling init w ChargeOrbState not OrbState
+                orb.state.uid = uid;
+                orb.predicted = predicted;
+                orb.playerActionMessageNumberWhenCreated = this.state.playerStates[playerNum].playerActionMessageNumber;
+                orbs[playerNum].put(orb.state.uid, orb);
+                this.state.orbStates[playerNum].put(orb.state.uid, (ChargeOrbState) orb.state);
+                totalOrbs[playerNum]++;
+                return orb;
+            }
+            else if (cls == Void.class) {
+                Void vd = voidPools[playerNum].obtain();
+                vd.init(x,y,v,w);
+                vd.state.uid = uid;
+                vd.predicted = predicted;
+                vd.playerActionMessageNumberWhenCreated = this.state.playerStates[playerNum].playerActionMessageNumber;
+                voids[playerNum].put(vd.state.uid, vd);
+                this.state.voidStates[playerNum].put(vd.state.uid, (ChargeOrbState) vd.state);
+                totalVoids[playerNum]++;
+                return vd;
+            }
+            else {
+                Nova nova = novaPools[playerNum].obtain();
+                nova.init(x,y,v,w);
+                nova.state.uid = uid;
+                nova.predicted = predicted;
+                nova.playerActionMessageNumberWhenCreated = this.state.playerStates[playerNum].playerActionMessageNumber;
+                novas[playerNum].put(nova.state.uid, nova);
+                this.state.novaStates[playerNum].put(nova.state.uid, nova.state);
+                totalNovas[playerNum]++;
+                return nova;
+            }
         }
     }
 
     void removeOrb(Orb o) {
-        if (o.getClass() == ChargeOrb.class) {
+        synchronized (stateLock)
+        {
+            if (o.getClass() == ChargeOrb.class) {
 
-            if (((ChargeOrb.ChargeOrbState) o.state).lockedOn) {
-                stars[((ChargeOrb.ChargeOrbState) o.state).star].removeOrb((ChargeOrb) o);
+                if (((ChargeOrbState) o.state).lockedOn) {
+                    stars[((ChargeOrbState) o.state).star].removeOrb((ChargeOrb) o);
+                }
+
+                state.orbStates[o.playerNum].remove(o.state.uid);
+                orbs[o.playerNum].remove(o.state.uid);
+
+                assert (!orbs[o.playerNum].containsValue(o));
+                assert (!orbs[o.playerNum].containsKey(o.state.uid)); // TODO remove eventually, add to debug?
+
+                orbPools[o.playerNum].free((ChargeOrb)o);
+                totalOrbs[o.playerNum]--;
             }
-
-            state.orbStates[o.playerNum].remove(o.state.uid);
-            orbs[o.playerNum].remove(o.state.uid);
-
-            assert (!orbs[o.playerNum].containsValue(o));
-            assert (!orbs[o.playerNum].containsKey(o.state.uid)); // TODO remove eventually, add to debug?
-
-            orbPools[o.playerNum].free((ChargeOrb)o);
-            totalOrbs[o.playerNum]--;
-        }
-        else if (o.getClass() == Nova.class) {
-            state.novaStates[o.playerNum].remove(o.state.uid);
-            novas[o.playerNum].remove(o.state.uid);
-            novaPools[o.playerNum].free((Nova)o);
-            totalNovas[o.playerNum]--;
-        }
-        else {
-            state.voidStates[o.playerNum].remove(o.state.uid);
-            voids[o.playerNum].remove(o.state.uid);
-            voidPools[o.playerNum].free((Void)o);
-            totalVoids[o.playerNum]--;
+            else if (o.getClass() == Nova.class) {
+                state.novaStates[o.playerNum].remove(o.state.uid);
+                novas[o.playerNum].remove(o.state.uid);
+                novaPools[o.playerNum].free((Nova)o);
+                totalNovas[o.playerNum]--;
+            }
+            else {
+                state.voidStates[o.playerNum].remove(o.state.uid);
+                voids[o.playerNum].remove(o.state.uid);
+                voidPools[o.playerNum].free((Void)o);
+                totalVoids[o.playerNum]--;
+            }
         }
     }
 
     public void removeOrbs() {
-        for (Orb o: toRemove) {
-            removeOrb(o);
+        synchronized (stateLock)
+        {
+            for (Orb o: toRemove) {
+                removeOrb(o);
+            }
+            toRemove.clear();
         }
-        toRemove.clear();
     }
 
 	// TODO flesh out dispose, anything else?
 	public void dispose() {
-		world.dispose(); // need to dispose of stars?
-        toRemove.clear();
+        synchronized (stateLock)
+        {
+            world.dispose(); // need to dispose of stars?
+            toRemove.clear();
+        }
 	}
 }

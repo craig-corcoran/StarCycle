@@ -34,16 +34,16 @@ public class SettingsScreen extends MenuScreen {
 		musIcon.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				if (musIcon.toggled) {
-					musVolSlider.setPercent(0f);
-					StarCycle.audio.gameMusic.setVolume(0f);
-					UserSettings.setFloatSetting("musicVolume", 0f);
-				}
-				else {
-					musVolSlider.setPercent(0.5f);
-					StarCycle.audio.gameMusic.setVolume(0.5f);
-					UserSettings.setFloatSetting("musicVolume", 0.5f);
-				}
+            if (musIcon.toggled) {
+                musVolSlider.setPercent(0f);
+                StarCycle.audio.gameMusic.setVolume(0f);
+                UserSettings.setFloatSetting("musicVolume", 0f);
+            }
+            else {
+                musVolSlider.setPercent(0.5f);
+                StarCycle.audio.gameMusic.setVolume(0.5f);
+                UserSettings.setFloatSetting("musicVolume", 0.5f);
+            }
 			}
 		});
 		
@@ -82,20 +82,20 @@ public class SettingsScreen extends MenuScreen {
 		sfxIcon.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				if (sfxIcon.toggled) {
-					sfxVolSlider.setPercent(0f);
-					StarCycle.audio.sfxVolume = 0f;
-					UserSettings.setFloatSetting("sfxVolume", 0f);
-				}
-				else {
-					sfxVolSlider.setPercent(0.5f);
-					StarCycle.audio.sfxVolume = 0.5f;
-					UserSettings.setFloatSetting("sfxVolume", 0.5f);
-					if (sfxLastTime + sfxCooldown < System.currentTimeMillis()) {
-						StarCycle.audio.levelup1Sound.play(StarCycle.audio.sfxVolume);
-						sfxLastTime = System.currentTimeMillis();
-					}
-				}
+            if (sfxIcon.toggled) {
+                sfxVolSlider.setPercent(0f);
+                StarCycle.audio.sfxVolume = 0f;
+                UserSettings.setFloatSetting("sfxVolume", 0f);
+            }
+            else {
+                sfxVolSlider.setPercent(0.5f);
+                StarCycle.audio.sfxVolume = 0.5f;
+                UserSettings.setFloatSetting("sfxVolume", 0.5f);
+                if (sfxLastTime + sfxCooldown < System.currentTimeMillis()) {
+                    StarCycle.audio.levelup1Sound.play(StarCycle.audio.sfxVolume);
+                    sfxLastTime = System.currentTimeMillis();
+                }
+            }
 			}
 		});
 		
@@ -134,7 +134,6 @@ public class SettingsScreen extends MenuScreen {
 		});
 		
 		sfxVolSlider.setPercent(UserSettings.getFloatSetting("sfxVolume"));
-
         sfxIcon.toggled = sfxVolSlider.getPercent() == 0f;
 		
 		ui.addActor(backButton);	
@@ -144,7 +143,7 @@ public class SettingsScreen extends MenuScreen {
 		ui.addActor(sfxVolSlider);
 
         drawFakeOrbs = false;
-		}
+	}
 
 
 	public String toString(){
