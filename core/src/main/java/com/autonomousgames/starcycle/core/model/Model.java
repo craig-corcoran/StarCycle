@@ -14,10 +14,11 @@ import java.util.*;
 // TODO:
 // voids and novas should only be able to be used when stars have been captured
 // reimplement income orbs with pools
-// fix drawing for stars
 // fix win conditions
 
 public abstract class Model {
+
+    public boolean altWin = false;
 
     public abstract class WinCondition {
         public abstract int getWinner();
@@ -26,12 +27,14 @@ public abstract class Model {
     public final WinCondition winCondition = new WinCondition() {
         @Override
         public int getWinner() {
-        for (Player p : players) {
-            if (p.state.starsControlled == stars.length) {
-                return p.number;
+            if (!altWin) {
+                for (Player p : players) {
+                    if (p.state.starsControlled == stars.length) {
+                        return p.number;
+                    }
+                }
             }
-        }
-        return -1;
+            return -1;
         }
     };
 
@@ -66,30 +69,30 @@ public abstract class Model {
 
     static final float dt = 1/30f;
     static final float coolDown = ModelSettings.getFloatSetting("coolDown");
-	static final short starCat = 0x0001;   		// 0000000000000001
-	static final short p1orbCat = 0x0004;  		// 0000000000000100
-	static final short p2orbCat = 0x0008;  		// 0000000000001000
-	static final short p1voidSensorCat = 0x0010; // 0000000000010000
-	static final short p2voidSensorCat = 0x0020; // 0000000000100000
-	
-	static final short starMask = p1orbCat | p2orbCat;
-	static final short p1orbMask = starCat | p2voidSensorCat;
-	static final short p2orbMask = starCat | p1voidSensorCat;
-	static final short p1voidSensorMask = p2orbCat;
-	static final short p2voidSensorMask = p1orbCat;
-	
-	static final short[] orbCategoryBits = new short[] {p1orbCat, p2orbCat};
-	static final short[] voidCategoryBits = new short[] {p1voidSensorCat, p2voidSensorCat};
+    static final short starCat = 0x0001;   		// 0000000000000001
+    static final short p1orbCat = 0x0004;  		// 0000000000000100
+    static final short p2orbCat = 0x0008;  		// 0000000000001000
+    static final short p1voidSensorCat = 0x0010; // 0000000000010000
+    static final short p2voidSensorCat = 0x0020; // 0000000000100000
 
-	static final short[] orbMaskBits = new short[] { p1orbMask, p2orbMask };
-	static final short[] voidMaskBits = new short[] { p1voidSensorMask, p2voidSensorMask };
+    static final short starMask = p1orbCat | p2orbCat;
+    static final short p1orbMask = starCat | p2voidSensorCat;
+    static final short p2orbMask = starCat | p1voidSensorCat;
+    static final short p1voidSensorMask = p2orbCat;
+    static final short p2voidSensorMask = p1orbCat;
+
+    static final short[] orbCategoryBits = new short[] {p1orbCat, p2orbCat};
+    static final short[] voidCategoryBits = new short[] {p1voidSensorCat, p2voidSensorCat};
+
+    static final short[] orbMaskBits = new short[] { p1orbMask, p2orbMask };
+    static final short[] voidMaskBits = new short[] { p1voidSensorMask, p2voidSensorMask };
 
     static final HashMap<Class,Float> orbCosts = new HashMap<Class,Float>(3);
 
     public final LinkedHashMap<Integer,ChargeOrb>[] orbs = new LinkedHashMap[numPlayers];
     public final LinkedHashMap<Integer,Void>[] voids = new LinkedHashMap[numPlayers];
     public final LinkedHashMap<Integer,Nova>[] novas = new LinkedHashMap[numPlayers];
-	public final Player[] players;
+    public final Player[] players;
     public final Star[] stars;
 
     final Pool<ChargeOrb>[] orbPools = new OrbPool[numPlayers];
@@ -97,7 +100,7 @@ public abstract class Model {
     final Pool<Nova>[] novaPools = new NovaPool[numPlayers];
 
     public final GameState state;
-	public final World world;
+    public final World world;
     public final Level level;
 
     // PlayerActionMessage buffer
@@ -110,17 +113,17 @@ public abstract class Model {
     // STATE LOCK
     public Object stateLock = null;
 
-	public Model(LevelType lvl, ModelScreen screen) {
+    public Model(LevelType lvl, ModelScreen screen) {
 
-		world = new World(new Vector2(0, 0), true); // no absolute gravity,
-													// sleep if able to
-		ContactListener contactListener = new OrbContactListener();
-		world.setContactListener(contactListener);
+        world = new World(new Vector2(0, 0), true); // no absolute gravity,
+        // sleep if able to
+        ContactListener contactListener = new OrbContactListener();
+        world.setContactListener(contactListener);
 
         // set up state lock
         this.stateLock = new Object();
         players = initPlayers(screen);
-		level = new Level(world, lvl, players);
+        level = new Level(world, lvl, players);
         state = new GameState(level.numStars, numPlayers);
         stars = level.stars; // TODO clean up level / Model interface
         initState();
@@ -135,7 +138,7 @@ public abstract class Model {
             voids[p.number] = new LinkedHashMap<Integer, Void>(50);
             novas[p.number] = new LinkedHashMap<Integer, Nova>(50);
         }
-	}
+    }
 
     public abstract Player[] initPlayers(ModelScreen screen);
 
@@ -497,7 +500,7 @@ public abstract class Model {
         }
     }
 
-	public void update(boolean orbsPredicted) {
+    public void update(boolean orbsPredicted) {
         synchronized (stateLock) {
             world.step(dt, 6, 2); // check for collisions
             removeOrbs(); // remove collided orbs
@@ -736,12 +739,12 @@ public abstract class Model {
         }
     }
 
-	// TODO flesh out dispose, anything else?
-	public void dispose() {
+    // TODO flesh out dispose, anything else?
+    public void dispose() {
         synchronized (stateLock)
         {
             world.dispose(); // need to dispose of stars?
             toRemove.clear();
         }
-	}
+    }
 }

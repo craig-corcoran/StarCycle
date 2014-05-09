@@ -11,8 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class Player {
 
-    public boolean showIncomeOrbs = true; // TODO can these be final?
-    public boolean altWin = false;
+    public boolean showIncomeOrbs = true; // TODO can these be final? // No.
 
     static final float velScale = ModelSettings.getFloatSetting("velScale");
     static final float ammoRate = ModelSettings.getFloatSetting("ammoRate");

@@ -431,7 +431,6 @@ public class Tutorial0 extends Tutorial {
                 for (int i=0; i < numPlayers; i++){
 
                     players[i] = new Player(i, ui, skins[i], colors[i], true, i == 0);
-                    players[i].altWin = true;
                     players[i].launchPad.showMeter(false);
                     players[i].showIncomeOrbs = false;
                     players[i].launchPad.manualLvl = true;
