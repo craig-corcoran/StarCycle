@@ -124,7 +124,9 @@ public abstract class ModelScreen extends GameScreen{
         }
         StarCycle.audio.winSound.play(StarCycle.audio.sfxVolume);
         winBase = new BaseButton(winner.basetype, winner.colors, StarCycle.pixelScreenCenter,
-                winner.base.baseDims.scl(1.5f), 2);
+                winner.base.baseDims.cpy().scl(1.5f), 2);
+        winBase.addBottomLayer(new SpriteLayer(StarCycle.tex.circle, winBase.getDims().scl(1.5f)).setSpriteColor(Color.BLACK).setSpriteAlpha(0.6f));
+        winBase.addBottomLayer(new SpriteLayer(StarCycle.tex.gradientRound, winBase.getDims().scl(4f)).setSpriteColor(Color.BLACK));
         winButton = new LayeredButton(new Vector2(StarCycle.screenWidth/2f, side*3f), iconSize.cpy().scl(4f));
         ui.addActor(winBase);
         logGame(winner.number);
@@ -230,11 +232,13 @@ public abstract class ModelScreen extends GameScreen{
 	public void update(float delta) {
         model.update(this.starcycle.getMode()==StarCycle.Mode.kClient);
 
-        // check for win conditions
-        int winner = model.winCondition.getWinner();
-        if (winner >= 0) { // if not -1 (no winner)
-            this.gameOver = true;
-            this.addWinBanner(this.model.players[winner]);
+        // check for win conditions, but only if the game is still going.
+        if (!this.gameOver) {
+            int winner = model.winCondition.getWinner();
+            if (winner >= 0) { // if not -1 (no winner)
+                this.gameOver = true;
+                this.addWinBanner(this.model.players[winner]);
+            }
         }
 
     }

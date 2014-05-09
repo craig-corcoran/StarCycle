@@ -35,6 +35,7 @@ public class Orb implements Collidable, Pool.Poolable {
     final public OrbState state;
     public final Body body; // Physics Box2D body
     final float rotVel;
+    float drawAngle = 0f;
     final int playerNum;
     // needed for network mode. Tells us whether this is a predicted orb on the client side
     public boolean predicted;
@@ -93,10 +94,11 @@ public class Orb implements Collidable, Pool.Poolable {
     }
 
     public void draw(SpriteBatch batch, LayeredSprite[] layers) {
+        drawAngle += rotVel; // This must happen here, because update doesn't get called for charging orbs.
         if (isOnScreen()) {
 
             boolean active = (this instanceof ChargeOrb) ? ((ChargeOrbState) state).lockedOn : true;
-            layers[playerNum].draw(batch, 1f, state.x*StarCycle.pixelsPerMeter, state.y*StarCycle.pixelsPerMeter, 0f, active);
+            layers[playerNum].draw(batch, 1f, state.x*StarCycle.pixelsPerMeter, state.y*StarCycle.pixelsPerMeter, drawAngle, active);
         }
     }
 

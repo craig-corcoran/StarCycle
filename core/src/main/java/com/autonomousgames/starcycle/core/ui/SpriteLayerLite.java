@@ -21,6 +21,7 @@ public class SpriteLayerLite {
         this.relPos = relPos;
         image = new Sprite(texture);
         image.setSize(size.x, size.y);
+        image.setOrigin(size.x/2f, size.y/2f);
         image.setColor(tint);
     }
 

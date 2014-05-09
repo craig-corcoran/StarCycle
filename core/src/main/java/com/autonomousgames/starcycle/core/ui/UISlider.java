@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 
 public class UISlider extends Actor {
 
@@ -35,6 +37,20 @@ public class UISlider extends Actor {
 		slideMin = xDir ? this.getX() : this.getY();
 		slideMax = xDir ? this.getX() + touchSize.x : this.getY() + touchSize.y;
 		slideLength = slideMax-slideMin;
+        addListener(new DragListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (super.touchDown(event, x, y, pointer, button)) {
+                    setSlider(x, y);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            public void drag(InputEvent event, float x, float y, int pointer) {
+                setSlider(x, y);
+            }
+        });
 	}
 	
 	public UISlider(Vector2 position, Vector2 touchSize, boolean slideX, TextureRegion sliderImage, Vector2 sliderSize) {
@@ -96,11 +112,7 @@ public class UISlider extends Actor {
 	}
 	
 	public void setPercent(float p) {
-		if (xDir) {
-			sliderPos.set(MathUtils.clamp(slideMin+p*slideLength,  slideMin, slideLength), sliderPos.y);
-		}
-		else {
-			sliderPos.set(sliderPos.x, MathUtils.clamp(slideMin+p*slideLength,  slideMin, slideLength));
-		}
+        // Set both x and y, because setSlider will determine which is appropriate.
+        setSlider(p*slideLength, p*slideLength);
 	}
 }
