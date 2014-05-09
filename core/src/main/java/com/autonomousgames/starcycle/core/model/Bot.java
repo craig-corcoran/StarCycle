@@ -13,7 +13,7 @@ public class Bot extends Player {
 	
 	private ModelScreen screen;
 	private int other;
-	public Vector2[] starPositions;
+	public Star[] stars;
 	private ArrayList<Float> starDistances = new ArrayList<Float>();
 	private Star targetStar;
 	private Vector2 aimPos = new Vector2();
@@ -31,20 +31,21 @@ public class Bot extends Player {
 	private boolean active = true;
 	
 	public Bot(int num, Base.BaseType basetype, Color[] colors, ModelScreen screen, Stage ui, boolean drawBase, boolean drawLaunchPad) {
-		super(num, basetype, colors, screen, ui, drawBase, drawLaunchPad);
+
+        super(num, ui, basetype, colors, true, drawLaunchPad);
 		this.screen = screen;
 		other = (num == 0) ? 1 : 0;
 		
 //		maxOrbSpeed = Base.maxPointerLength*ModelSettings.getSetting("velScaleOrbFact");
 		chargeRadius = ModelSettings.getFloatSetting("chargeRadius");
-		launchPad.streamOrbs = true;
+		state.buttonStates[0] = true;
 	}
 	
 	public void setBotType(BotType botType) {
 		switch (botType) {
 		case DEAD:
 			active = false;
-			launchPad.streamOrbs = false; 
+			state.buttonStates[0] = false;
 			break;
 		case EZ:
 			voidThreshold = 30f;
@@ -63,61 +64,61 @@ public class Bot extends Player {
 			novaThreshold = 0f;
 			voidPeriod = 2f;
 			novaPeriod = 15f;
-			this.ammo = 400;
+			this.state.ammo = 400;
 			break;
 		}
 	}
 
 	public void initializeModel(Model model) { // This can't happen in the constructor, as the model has not been constructed.
-		starPositions = model.starPositions;
-		targetStar = model.stars.get(0);
-        for (Vector2 starPosition : starPositions) {
-            this.starDistances.add(baseOrigins[number].dst(starPosition));
+		stars = model.stars;
+		targetStar = model.stars[0];
+        for (Star st : stars) {
+            this.starDistances.add(baseOrigins[number].dst(st.state.x, st.state.y));
         }
 	}
 	
 	@Override
-	public void update(float delta, ArrayList<Star> stars, Vector2[] starPositions) {
+	public void update(Star[] stars) {
 		if (active) {
 			if (retargetCounter >= retargetPeriod) {
-				targetStar.targetted=false;
+				//targetStar.targetted=false;
 				targetStar = nearestStar(stars);
-				targetStar.targetted=true;
+				//targetStar.targetted=true;
 				retargetCounter = 0f;
 			}
 			else {
-				retargetCounter += delta;
+				retargetCounter += Model.dt;
 			}
 			
 			aimAtStar(targetStar);
 			
-			voidCounter += delta;
-			novaCounter += delta;
+			voidCounter += Model.dt;
+			novaCounter += Model.dt;
 			
 			//launch voids!
 			if ((voidCounter >= voidPeriod) & 
-					((targetStar.numOrbs[other] >= voidThreshold) || (targetStar.numOrbs[this.number] >= voidThreshold)) &
-					(this.starsCaptured >= ModelSettings.getFloatSetting("gravWellStars"))) {
+					((targetStar.state.numActiveOrbs[other] >= voidThreshold) || (targetStar.state.numActiveOrbs[this.number] >= voidThreshold)) &
+					(this.state.starsControlled >= ModelSettings.getFloatSetting("gravWellStars"))) {
 				if (MathUtils.random() < .3f ){
 					base.setPointer(new Vector2(MathUtils.random()*Base.maxPointerLength,(MathUtils.random()-0.5f)*Base.maxPointerLength*2));
 				}
-				screen.launch(Orb.OrbType.VOID, this);
+                state.buttonStates[1] = true;
 				voidCounter = 0f;
 			}
 			
 			// launch novas!
-			if ((novaCounter >= novaPeriod) & (targetStar.numOrbs[other] >= novaThreshold) &
-					(this.starsCaptured >= ModelSettings.getFloatSetting("nukeStars"))) {
+			if ((novaCounter >= novaPeriod) & (targetStar.state.numActiveOrbs[other] >= novaThreshold) &
+					(this.state.starsControlled >= ModelSettings.getFloatSetting("nukeStars"))) {
 				base.setPointer(new Vector2(MathUtils.random()*Base.maxPointerLength,(MathUtils.random()-0.5f)*Base.maxPointerLength*2));
-				screen.launch(Orb.OrbType.NOVA, this);
+                state.buttonStates[2] = true;
 				novaCounter = 0f;
 			}
 		}
-		super.update(delta, stars, starPositions);
+		super.update(stars);
 	}
 	
 	public void aimAtStar(Star target) {
-		aimPos.set(target.position);
+		aimPos.set(target.state.x, target.state.y);
         float radiusScalar = 1.5f * (target.radius + chargeRadius);
 		aimPos.sub(baseOrigins[number]);
 		aimPos.rotate(MathUtils.radDeg*MathUtils.atan2(radiusScalar, aimPos.len()));
@@ -132,16 +133,16 @@ public class Bot extends Player {
 		base.setPointer(aimPos);
 	}
 	
-	private Star nearestStar(ArrayList<Star> stars) {
+	private Star nearestStar(Star[] stars) {
 		int nearest = 0;
-		starDistances.set(0, baseOrigins[number].dst(starPositions[0]));
+		starDistances.set(0, baseOrigins[number].dst(stars[0].state.x, stars[0].state.y));
 		for (int i=1; i < starDistances.size(); i++) {
-			starDistances.set(i, baseOrigins[number].dst(starPositions[i]));
+			starDistances.set(i, baseOrigins[number].dst(stars[i].state.x, stars[i].state.y));
 			if (starDistances.get(i) < starDistances.get(nearest)) {
 				nearest = i;
 			}
 		}
-		return stars.get(nearest);
+		return stars[nearest];
 	}
 	
 }

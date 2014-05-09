@@ -1,7 +1,6 @@
 package com.autonomousgames.starcycle.core.log;
 
 import com.autonomousgames.starcycle.core.StarCycle;
-
 import java.util.ArrayList;
 
 public class LogPackage {

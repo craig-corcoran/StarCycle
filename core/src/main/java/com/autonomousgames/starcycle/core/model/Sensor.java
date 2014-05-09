@@ -4,31 +4,31 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-
 import java.lang.*;
 
 public class Sensor {
 
-	public static void addSensor(Object obj, Body body, float radius) {
+	public static Fixture addSensor(Class cls, int playerNum, Body body, float radius) {
 
 		// add sensor for detecting if within radius
 		CircleShape shape = new CircleShape();
 		shape.setRadius(radius);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
+        shape.dispose();
 
-		if (obj instanceof Void) {
-			fixtureDef.filter.categoryBits = Model.voidCategoryBits[((Orb)obj).player.number];
-			fixtureDef.filter.maskBits = Model.voidMaskBits[((Orb)obj).player.number];
+		if (cls == Void.class) {
+			fixtureDef.filter.categoryBits = Model.voidCategoryBits[playerNum];
+			fixtureDef.filter.maskBits = Model.voidMaskBits[playerNum];
 		} 
-		else if(obj instanceof Star) {
+		else if( cls == Star.class) {
 			fixtureDef.filter.categoryBits = Model.starCat;
 			fixtureDef.filter.maskBits = Model.starMask;
 		}
+        fixtureDef.isSensor = true;
 		Fixture sensor = body.createFixture(fixtureDef);
-		sensor.setUserData(obj);
 		sensor.setSensor(true);
-		shape.dispose();
-	}
 
+        return sensor;
+	}
 }

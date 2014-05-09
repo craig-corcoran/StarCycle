@@ -72,8 +72,8 @@ public class Tutorial1 extends Tutorial {
     int[] basePages;
     int[] launchPages;
 
-    public Tutorial1() {
-        super(Level.LevelType.QUAD2, ScreenType.TUTORIAL1, ScreenType.STARTMENU, ScreenType.TUTORIAL0, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm});
+    public Tutorial1(StarCycle starCycle) {
+        super(Level.LevelType.QUAD2, ScreenType.TUTORIAL1, ScreenType.STARTMENU, ScreenType.TUTORIAL0, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm}, starCycle);
 
         Gdx.input.setInputProcessor(new GameController(this, 1));
 
@@ -88,25 +88,25 @@ public class Tutorial1 extends Tutorial {
         add(transStar0);
         add(transStar1);
 
-        fakeLaunch = players[0].launchPad.getOrbButton(new Vector2(sw,sh + offset), 180f, players[0].colors, false);
+        fakeLaunch = model.players[0].launchPad.getOrbButton(new Vector2(sw,sh + offset), 180f, model.players[0].colors, false);
         add(fakeLaunch);
 
         Vector2 malumaPos = new Vector2(sw-sh/4.2f, sh/4.2f + offset);
-        fakeMaluma = new BaseButton(Base.BaseType.MALUMA, players[0].colors, malumaPos, new Vector2(1f,1f).scl(ModelSettings.getFloatSetting("baseRadius")*StarCycle.pixelsPerMeter));
+        fakeMaluma = new BaseButton(Base.BaseType.MALUMA, model.players[0].colors, malumaPos, new Vector2(1f,1f).scl(ModelSettings.getFloatSetting("baseRadius")*StarCycle.pixelsPerMeter));
         add(fakeMaluma);
 
-        fakeAim0 = players[0].base.getAimer(malumaPos, new Vector2(), players[0].colors);
+        fakeAim0 = model.players[0].base.getAimer(malumaPos, new Vector2(), model.players[0].colors);
         fakeAim0.rotate(90f);
         add(fakeAim0);
 
         Vector2 taketePos = new Vector2(sw/2f-StarCycle.pixelsPerMeter, sh*2f/3f+StarCycle.pixelsPerMeter + offset);
-        fakeTakete = new BaseButton(Base.BaseType.TAKETE, players[1].colors, taketePos, new Vector2(1f,1f).scl(ModelSettings.getFloatSetting("baseRadius")*StarCycle.pixelsPerMeter));
+        fakeTakete = new BaseButton(Base.BaseType.TAKETE, model.players[1].colors, taketePos, new Vector2(1f,1f).scl(ModelSettings.getFloatSetting("baseRadius")*StarCycle.pixelsPerMeter));
         add(fakeTakete);
 
-        fakeAim1 = players[1].base.getAimer(taketePos, new Vector2(), players[1].colors);
+        fakeAim1 = model.players[1].base.getAimer(taketePos, new Vector2(), model.players[1].colors);
         fakeAim1.rotate(-45f);
         for (int i = 0; i < fakeAim0.getLayerNum(); i ++) {
-            fakeAim1.getLayer(i).setRelPosLen(Base.maxAimerLength);
+            fakeAim1.getLayer(i).setRelPosLen(Base.maxPointerLength * StarCycle.pixelsPerMeter);
         }
         add(fakeAim1);
 
@@ -192,26 +192,26 @@ public class Tutorial1 extends Tutorial {
         orbNames.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Novas", new Vector2(row2 - row0, 0f)).rotateText(90f));
         add(orbNames);
 
-        launch0 = players[0].launchPad.getOrbButton(new Vector2(row0+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        launch0 = model.players[0].launchPad.getOrbButton(new Vector2(row0+StarCycle.pixelsPerMeter, lph), 180f, model.players[0].colors, false);
         launch0.getLayer(1).toggleSpecial();
         add(launch0);
 
-        launch1 = players[0].launchPad.getOrbButton(new Vector2(row1+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        launch1 = model.players[0].launchPad.getOrbButton(new Vector2(row1+StarCycle.pixelsPerMeter, lph), 180f, model.players[0].colors, false);
         add(launch1);
 
-        launch1b = players[0].launchPad.getPw1Button(new Vector2(row1+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        launch1b = model.players[0].launchPad.getPw1Button(new Vector2(row1+StarCycle.pixelsPerMeter, lph), 180f, model.players[0].colors, false);
         launch1b.activate();
         launch1b.getLayer(1).toggleSpecial();
         add(launch1b);
 
-        launch2 = players[0].launchPad.getOrbButton(new Vector2(row2+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        launch2 = model.players[0].launchPad.getOrbButton(new Vector2(row2+StarCycle.pixelsPerMeter, lph), 180f, model.players[0].colors, false);
         add(launch2);
 
-        launch2b = players[0].launchPad.getPw1Button(new Vector2(row2+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        launch2b = model.players[0].launchPad.getPw1Button(new Vector2(row2+StarCycle.pixelsPerMeter, lph), 180f, model.players[0].colors, false);
         launch2b.activate();
         add(launch2b);
 
-        launch2c = players[0].launchPad.getPw2Button(new Vector2(row2+StarCycle.pixelsPerMeter, lph), 180f, players[0].colors, false);
+        launch2c = model.players[0].launchPad.getPw2Button(new Vector2(row2+StarCycle.pixelsPerMeter, lph), 180f, model.players[0].colors, false);
         launch2c.activate();
         launch2c.getLayer(1).toggleSpecial();
         add(launch2c);
@@ -225,35 +225,42 @@ public class Tutorial1 extends Tutorial {
         voidText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Voids can destroy enemy orbs", new Vector2(swipeSize.x/8f, 0f)).rotateText(90f));
         add(voidText);
 
-        players[0].base.translateBase(0f, offset);
-        players[0].launchPad.movePos(0f, offset);
+        model.players[0].base.translateBase(0f, offset);
+        model.players[0].launchPad.movePos(0f, offset);
         basePages = new int[]{2, pages-2};
         launchPages = new int[]{2, pages-2};
 
         for (int i = 0; i < 2; i ++) {
-            Star star = model.stars.get(i);
+            Star star = model.stars[i];
             star.moveStar(2f, -1f + i * 2f + offset / StarCycle.pixelsPerMeter);
             star.gravityOff();
             starClamp[i][0] = 2;
             starClamp[i][1] = 3;
         }
         Vector2 orbDist = new Vector2(ModelSettings.getFloatSetting("chargeRadius"), 0f).scl(2f);
-        Vector2 starPos = new Vector2(model.stars.get(0).position);
-        for (int i = 0; i < numPlayers; i ++) {
-            model.stars.get(0).setControlPercent(i, 0.2f + i*0.6f);
-            for (int j = 0; j < 5; j ++) {
-                orbDist.rotate(30f);
-                orbFactory.createLockedOrb(players[i], new Vector2(starPos.x + orbDist.x, starPos.y + orbDist.y), -1f, model.stars.get(0), -120f);
+        Vector2 starPos = new Vector2(model.stars[0].state.x, model.stars[0].state.y);
+        for (int i = 0; i < Model.numPlayers; i ++) {
+            model.stars[0].setControlPercent(i, 0.3f + i * 0.4f);
+            for (int j = 0; j < 7; j ++) {
+                orbDist.rotate(22.5f);
+
+                // create locked orb
+                ChargeOrb orb = (ChargeOrb) model.addOrb(model.players[i].number,
+                        ChargeOrb.class,
+                        starPos.x+orbDist.x,
+                        starPos.y+orbDist.y,
+                        -3f/60f, 0f, true);
+                model.stars[0].addOrb(orb);
             }
-            orbDist.rotate(30f);
+            orbDist.rotate(22.5f);
         }
-        model.stars.get(1).setControlPercent(0, 0.49f);
+        model.stars[1].setControlPercent(0, 0.49f);
         orbClamp[0] = 2;
         orbClamp[1] = 3;
-        Vector2 toStar = model.stars.get(1).position.cpy().sub(players[0].base.origin);
-        Vector2 aimVec = toStar.cpy().rotate(-90f).nor().scl(model.stars.get(0).radius+ ModelSettings.getFloatSetting("chargeRadius")*0.95f);
+        Vector2 toStar = model.stars[1].getPosition().sub(model.players[0].base.origin);
+        Vector2 aimVec = toStar.cpy().rotate(-90f).nor().scl(model.stars[0].radius+ ModelSettings.getFloatSetting("chargeRadius")*0.95f);
         aimVec.add(toStar);
-        players[0].base.setPointer(aimVec);
+        model.players[0].base.setPointer(aimVec);
 
         voidHint = new LayeredButton(new Vector2(sw-sh/12f, sh*7f/12f + offset));
         voidHint.addLayer(new SpriteLayer(StarCycle.tex.fingerRight, new Vector2(swipeSize.x/6f, swipeSize.x/4.5f)), LayerType.ACTIVE);
@@ -270,8 +277,8 @@ public class Tutorial1 extends Tutorial {
         novaText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Novas can instantly capture a star", new Vector2(swipeSize.x/8f, 0f)).rotateText(90f));
         add(novaText);
 
-        model.stars.get(2).moveStar(1f, offset / StarCycle.pixelsPerMeter);
-        model.stars.get(2).gravityOff();
+        model.stars[2].moveStar(1f, offset / StarCycle.pixelsPerMeter);
+        model.stars[2].gravityOff();
         starClamp[2][0] = 3;
         starClamp[2][1] = 3;
 
@@ -292,8 +299,8 @@ public class Tutorial1 extends Tutorial {
         ammoText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Novas use lots of energy, so aim carefully!", new Vector2(swipeSize.x*3f/16f, 0f)).rotateText(90f));
         add(ammoText);
 
-        model.stars.get(3).moveStar(-2f, offset / StarCycle.pixelsPerMeter);
-        model.stars.get(3).gravityOff();
+        model.stars[3].moveStar(-2f, offset / StarCycle.pixelsPerMeter);
+        model.stars[3].gravityOff();
 
         // Fifth Page
         // Win condition and outro:
@@ -361,99 +368,117 @@ public class Tutorial1 extends Tutorial {
         };
 
         if (currentBorder == 2 && !moving && !page2orbLaunched) {
-            orbFactory.setCosts(0f, 0f, 0f);
-            orb = orbFactory.createChargeOrb(players[0], players[0].base.origin, players[0].base.getPointer().scl(ModelSettings.getFloatSetting("velScaleOrbFact")), -1f);
+            Model.setCosts(0f,0f,0f);
+            Vector2 vel = model.players[0].base.getPointer().scl(ModelSettings.getFloatSetting("velScaleOrbFact"));
+            orb = (ChargeOrb) model.addOrb(0, // TODO create locked orb method in Model?
+                    ChargeOrb.class,
+                    model.players[0].base.origin.x,
+                    model.players[0].base.origin.y,
+                    vel.x, vel.y, false);
             page2orbLaunched = true;
         }
         if (page2orbLaunched && !gravityOn) {
-            if (orb.orbiting) {
+            if (((ChargeOrbState)orb.state).star >= 0) { // if orbiting
                 for (int i = 0; i < 3; i ++) {
-                    Star star = model.stars.get(i);
+                    Star star = model.stars[i];
                     star.gravityOn();
                 }
                 gravityOn = true;
-                orb.lockOn(model.stars.get(1), 180f/60f);
+                orb.lockOn(model.stars[1]); // XXX removed angle here..
             }
         }
-        if (page2orbLaunched && players[0].base.level == 0) {
-            if (model.stars.get(1).controlPercents[0] >= 0.5f) {
-                players[0].setLevel(1);
-                players[0].base.setPointerPolar(2f, 150f);
-                players[0].base.manualLvl = false;
-                players[0].launchPad.manualLvl = false;
+        if (page2orbLaunched && model.players[0].base.level == 0) {
+            if (model.stars[1].state.possession[0] >= 0.5f) {
+                model.players[0].setLevel(1);
+                model.players[0].base.setPointerPolar(2f, 150f);
+                model.players[0].base.manualLvl = false;
+                model.players[0].launchPad.manualLvl = false;
                 voidHint.activate();
 
             }
         }
 
         if (currentBorder == 2 && !pageDone.get(2)) {
-            if (model.stars.get(0).getPlayerOrbs(1) == 0) {
+            if (model.stars[0].state.numActiveOrbs[1] == 0) {
                 pageDone.set(2, true);
 
             }
         }
         if (currentBorder == 3 && !pageDone.get(3)) {
-            if (model.stars.get(2).hitByNova) {
+            if (model.stars[2].hitByNova) {
                 pageDone.set(3, true);
             }
         }
-        if (players[0].base.level == 2 && !novaHint.isActive()) {
+        if (model.players[0].base.level == 2 && !novaHint.isActive()) {
             novaHint.activate();
         }
 
-        if (currentBorder == 4 && !moving && !players[0].showIncomeOrbs) {
-            orbFactory.resetCosts();
-            for (int i = 0; i < numPlayers; i ++) {
-                for (int j = 0; j < players[i].orbs.size(); j ++) {
-                    players[i].orbs.get(j).removeIfOff();
+        if (currentBorder == 4 && !moving && !model.players[0].showIncomeOrbs) {
+
+            Model.setCosts();
+            for (int i = 0; i < Model.numPlayers; i ++) {
+                for (Orb orb: model.orbs[i].values()) {
+                    orb.removeIfOff();
                 }
-                for (int j = 0; j < players[i].voids.size(); j ++) {
-                    players[i].voids.get(j).removeIfOff();
+                for (Orb orb: model.voids[i].values()) {
+                    orb.removeIfOff();
                 }
-                for (int j = 0; j < players[i].novas.size(); j ++) {
-                    players[i].novas.get(j).removeIfOff();
+                for (Orb orb: model.novas[i].values()) {
+                    orb.removeIfOff();
                 }
             }
-            players[0].ammo = ModelSettings.getFloatSetting("nukeCost");
-            players[0].showIncomeOrbs = true;
-            players[0].launchPad.showMeter(true);
-            Vector2 starPos = new Vector2(model.stars.get(3).position);
+            model.players[0].state.ammo = ModelSettings.getFloatSetting("nukeCost");
+            model.players[0].showIncomeOrbs = true;
+            model.players[0].launchPad.showMeter(true);
+            Vector2 starPos = new Vector2(model.stars[3].state.x, model.stars[3].state.y);
             Vector2 orbDist = new Vector2(ModelSettings.getFloatSetting("chargeRadius"), 0f).scl(2f);
             for (int i = 0; i < 3; i ++) {
                 orbDist.rotate(120f);
-                orbFactory.createLockedOrb(players[0], new Vector2(starPos.x + orbDist.x, starPos.y + orbDist.y), -1f, model.stars.get(3), -180f);
+                ChargeOrb orb = (ChargeOrb) model.addOrb(model.players[0].number, // TODO create locked orb method in Model?
+                                                        ChargeOrb.class,
+                                                        starPos.x+orbDist.x,
+                                                        starPos.y+orbDist.y,
+                                                        -5/60f, 0f, false);
+                model.stars[3].addOrb(orb);
             }
             pageDone.set(4, true);
         }
 
         if (currentBorder == 4 && !moving && !ammoStarOnly) {
             for (int i = 0; i < 3; i ++) {
-                model.stars.get(i).gravityOff();
+                model.stars[i].gravityOff();
             }
-            model.stars.get(3).gravityOn();
+            model.stars[3].gravityOn();
             ammoStarOnly = true;
         }
         else if (currentBorder != 4 && ammoStarOnly) {
             for (int i = 0; i < 3; i ++) {
-                model.stars.get(i).gravityOn();
+                model.stars[i].gravityOn();
             }
-            model.stars.get(3).gravityOff();
+            model.stars[3].gravityOff();
             ammoStarOnly = false;
         }
     }
 
     @Override
-    void setPlayers() {
-        numPlayers = 2;
-        players = new Player[numPlayers];
-        for (int i = 0; i < numPlayers; i ++) {
-            players[i] = new Player(i, skins[i], colors[i], this, ui, i ==0);
-            players[i].altWin = true;
-            players[i].launchPad.showMeter(false);
-            players[i].showIncomeOrbs = false;
-            players[i].launchPad.manualLvl = true;
-            players[i].base.manualLvl = true;
-        }
+    public Model initModel(Level.LevelType lvl, ModelScreen screen) {
+        // anonymous Model class implementing abstract initPlayers method
+        return new Model(lvl, screen) {
+
+            @Override
+            public Player[] initPlayers(ModelScreen screen) {
+                Player[] players = new Player[numPlayers];
+                for (int i=0; i < numPlayers; i++){
+                    players[i] = new Player(i, ui, skins[i], colors[i], i == 0);
+                    players[i].launchPad.showMeter(false);
+                    players[i].showIncomeOrbs = false;
+                    players[i].launchPad.manualLvl = true;
+                    players[i].base.manualLvl = true;
+
+                }
+                return players;
+            }
+        };
     }
 
     @Override

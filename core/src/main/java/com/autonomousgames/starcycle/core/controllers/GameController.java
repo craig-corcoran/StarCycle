@@ -1,8 +1,7 @@
 package com.autonomousgames.starcycle.core.controllers;
 
 import com.autonomousgames.starcycle.core.StarCycle;
-import com.autonomousgames.starcycle.core.model.Base;
-import com.autonomousgames.starcycle.core.model.Orb;
+import com.autonomousgames.starcycle.core.model.*;
 import com.autonomousgames.starcycle.core.screens.ModelScreen;
 import com.autonomousgames.starcycle.core.screens.MultiPlayer;
 import com.badlogic.gdx.Gdx;
@@ -16,15 +15,15 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 
 public class GameController extends LogController{
 
-	private float controlRadius = 1.1f* Base.maxPointerLength;
-	private float sqrdControlRadius = controlRadius*controlRadius;
-	private ModelScreen screen;
+	private final float controlRadius = 1.1f* Base.maxPointerLength;
+	private final float sqrdControlRadius = controlRadius*controlRadius;
+	private final ModelScreen screen;
 	
-	private int[] activePointer;
-	private Vector2[] origins;
-	private Vector2 vec = new Vector2();
-	private int numActivePlayers;
-	
+	private final int[] activePointer;
+	private final Vector2[] origins;
+	private final Vector2 vec = new Vector2();
+	private final int numActivePlayers;
+
 	public GameController(ModelScreen screen, int numActivePlayers){
 		super(screen, numActivePlayers);
 		Gdx.input.setCatchBackKey(true);
@@ -40,7 +39,7 @@ public class GameController extends LogController{
 		starShape.setRadius(controlRadius);
 		
 		for (int i=0; i < this.numActivePlayers; i++) {
-			origins[i] = screen.players[i].base.origin; // keep
+			origins[i] = screen.model.players[i].base.origin; // keep
 			activePointer[i] = -1;
 			
 			if (screen instanceof MultiPlayer) {
@@ -65,13 +64,13 @@ public class GameController extends LogController{
 	public boolean keyDown(int keycode) {
 		super.keyDown(keycode);
         if (keycode == Keys.Q) {
-        	screen.players[0].launchPad.streamOrbs = true;
+        	screen.model.state.playerStates[0].buttonStates[0] = true;
         }
-        if (keycode == Keys.W) {
-        	screen.players[0].launchPad.launch(Orb.OrbType.VOID);
+        if ((keycode == Keys.W) && (screen.model.players[0].state.starsControlled >= Model.voidStars)) {
+            screen.model.players[0].state.buttonStates[1] = true;
         }
-        if (keycode == Keys.E) {
-        	screen.players[0].launchPad.launch(Orb.OrbType.NOVA);
+        if ((keycode == Keys.E) && (screen.model.players[0].state.starsControlled >= Model.novaStars))  {
+            screen.model.players[0].state.buttonStates[2] = true;
         }
         if (keycode == Keys.BACK){
         	screen.addPauseBanner();
@@ -83,9 +82,15 @@ public class GameController extends LogController{
 	@Override
 	public boolean keyUp(int keycode) {
 		if (keycode == Keys.Q) {
-        	screen.players[0].launchPad.streamOrbs = false;
+        	screen.model.state.playerStates[0].buttonStates[0] = false;
         }
-		        return false;
+        if (keycode == Keys.W) {
+            screen.model.state.playerStates[0].buttonStates[1] = false;
+        }
+        if (keycode == Keys.E) {
+            screen.model.state.playerStates[0].buttonStates[2] = false;
+        }
+		return false;
 	}
 
 	@Override
@@ -99,7 +104,7 @@ public class GameController extends LogController{
 				if (vec.len2() < sqrdControlRadius){
 					activePointer[i] = pointer;
 					vec.x = -vec.x; // y is already negative bc of inverted screen axis
-					screen.players[i].base.setPointer(vec);
+					screen.model.players[i].base.setPointer(vec);
 					return true;
 				}
 			}
@@ -119,7 +124,7 @@ public class GameController extends LogController{
 			if ((activePointer[i] == pointer) | ((activePointer[i] == -1) & (vec.len2() < sqrdControlRadius))){
 				activePointer[i] = pointer;
 				vec.x = -vec.x; // y is already negative bc of inverted screen axis
-				screen.players[i].base.setPointer(vec);
+				screen.model.players[i].base.setPointer(vec);
 				return true;
 			}
 		}

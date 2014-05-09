@@ -6,6 +6,7 @@ import com.autonomousgames.starcycle.core.model.Base.BaseType;
 import com.autonomousgames.starcycle.core.model.Bot;
 import com.autonomousgames.starcycle.core.model.BotType;
 import com.autonomousgames.starcycle.core.model.Level.LevelType;
+import com.autonomousgames.starcycle.core.model.Model;
 import com.autonomousgames.starcycle.core.model.Player;
 import com.autonomousgames.starcycle.core.ui.ScreenDoneClickListener;
 import com.badlogic.gdx.Gdx;
@@ -15,27 +16,40 @@ public class SinglePlayer extends ModelScreen {
 
 	private SinglePlayerLevel leveltype;
 	
-	public SinglePlayer(LevelType lvl, BaseType[] skins, Color[][] colors, SinglePlayerLevel leveltype, BotType botType) {
-		super(lvl, ScreenType.SINGLEPLAYER, skins, colors);
+	public SinglePlayer(LevelType lvl, BaseType[] skins, Color[][] colors, SinglePlayerLevel leveltype, BotType botType, StarCycle starcycle) {
+		super(lvl, ScreenType.SINGLEPLAYER, skins, colors, starcycle);
 		Gdx.input.setInputProcessor(new GameController(this, 1)); // only one active touch interface
 		nextScreen = ScreenType.CAMPAIGNSELECT;
 		this.leveltype = leveltype;
-		((Bot)this.players[1]).setBotType(botType);
+		((Bot)model.players[1]).setBotType(botType);
 	}
+
+    class SinglePlayerModel extends Model {
+
+        public SinglePlayerModel(LevelType lvl, ModelScreen screen) {
+            super(lvl, screen);
+        }
+
+        @Override
+        public Player[] initPlayers(ModelScreen screen) {
+            Player[] players = new Player[numPlayers];
+            for (int i=0; i < numPlayers; i++){
+                if (i==0){
+                    players[i] = new Player(i, ui, skins[i],colors[i], true, true);
+                }
+                else{
+                    players[i] = new Bot(i, skins[i], colors[i], screen, ui, true, true);
+                }
+            }
+            return players;
+        }
+    }
+
+    @Override
+    public Model initModel(LevelType lvl, ModelScreen screen) {
+        return new SinglePlayerModel(lvl, screen);
+    }
 	
-	@Override
-	void setPlayers() {
-		numPlayers = 2;
-		players = new Player[numPlayers];
-		for (int i=0; i < numPlayers; i++){
-			if (i==0){
-				players[i] = new Player(i, skins[i], colors[i], this, ui, true);
-			}
-			else{
-				players[i] = new Bot(i, skins[i], colors[i], this, ui, true, true);
-			}
-		}
-	}
 	void pushLevelCompletion(){
 		StarCycle.progressHandler.setLevelComplete(this.leveltype.toString(), "true");
 	}

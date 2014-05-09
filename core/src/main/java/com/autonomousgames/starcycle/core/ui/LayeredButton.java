@@ -38,7 +38,7 @@ public class LayeredButton extends Group {
 
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
                 if (pointer == pointerNum) {
-                    pressedDown = (touchOn(x, y));
+                    pressedDown = touchOn(x, y);
                 }
                 super.touchDragged(event, x, y, pointer);
             }

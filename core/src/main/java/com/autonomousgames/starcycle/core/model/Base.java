@@ -13,86 +13,73 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class Base {
-	public final Player player;
-	public Vector2 origin;
-	public Vector2 pointer = new Vector2(); // vector pointing from origin to the tip of the rings
-	private float pointerScale;
 
-	// TODO should these be passed into the constructor or just set statically?
-	LayeredButton aimer;
-	public Vector2 handleImDims = new Vector2(1f, 1f).scl(0.54f * StarCycle.pixelsPerMeter);
-	public Vector2 chevronImDims = new Vector2(1f, 1f).scl(0.45f * StarCycle.pixelsPerMeter);
-    public Vector2 baseDims;
-	public float[] baseDiams;
-	public BaseButton baseButton;
-	Vector2 buttonLoc;
-	public float angle;
-	public float angleDeg;
-	private float angleOfBaseRotation = 0;
-	public static float maxPointerLength = 2f;
-	public static float minPointerLength = 1.2f;
-	public static float maxAimerLength = maxPointerLength*StarCycle.pixelsPerMeter;
-	//public static float minSpeed;
-	public static float velScale = (Float) ModelSettings.getFloatSetting("velScale");
-	private boolean UIVisible = true;
-	private float UIScaleFactor;
+    public static final float maxPointerLength = 2f;
+    public static final float minPointerLength = 1.2f;
+    public final Vector2 origin;
+    public int level;
+    public final BaseButton baseButton;
 
-	private static float baseRotationSpeed;
-	
-	public int level;
-    int maxLevel = 2;
-    public boolean manualLvl = false;
+    static final Vector2 handleImDims = new Vector2(1f, 1f).scl(0.54f * StarCycle.pixelsPerMeter);
+    static final Vector2 chevronImDims = new Vector2(1f, 1f).scl(0.45f * StarCycle.pixelsPerMeter);
+    static final float baseRotationSpeed = ModelSettings.getFloatSetting("baseRotationSpeed");
+    public static final Vector2 baseDims = new Vector2(1f, 1f).scl(StarCycle.pixelsPerMeter *
+                                                            ModelSettings.getFloatSetting("baseRadius"));
+
+    static final float[] baseDiams = new float[] { 2f, 2.4f, 2.8f };
+    final Player player;
+    final LayeredButton aimer;
+	final Vector2 pointer = new Vector2(); // vector pointing from origin to the tip of the rings
+
+    final boolean UIVisible;
+    final float UIScaleFactor;
+	final Vector2 buttonLoc;
+
+    public boolean manualLvl; // TODO consolidate with manualLvl in Launchpad
+
+    float pointerScale;
+	float angle;
+	float angleOfBaseRotation = 0;
 
     public enum BaseType {
 		MALUMA, TAKETE, TARGET, DERELICT, CLOCKWORK
 	}
     //constructor with optional ui visible parameter
-	public Base(Player player, Vector2 origin, float baseRadius, Stage ui, boolean UIVisible) {
+	public Base(Player player, Vector2 origin, Stage ui, boolean UIVisible, boolean manualLvl) {
 		
-		baseRotationSpeed = ModelSettings.getFloatSetting("baseRotationSpeed");
 		this.origin = new Vector2(origin.x, origin.y);
 		this.player = player;
 		this.UIVisible = UIVisible;
-		baseDiams = new float[] { 2f, 2.4f, 2.8f };
-		baseDims = new Vector2(1f, 1f).scl(StarCycle.pixelsPerMeter * baseRadius);
-		UIScaleFactor = ui.getHeight()/10f;
+        this.manualLvl = manualLvl;
+		UIScaleFactor = ui.getHeight()/10f; // TODO isn't this (effectively) stored in StarCycle.java?
 		buttonLoc = new Vector2(origin.x, origin.y).scl(UIScaleFactor);
 		
 		if (UIVisible) {
 			baseButton = new BaseButton(player.basetype, player.colors, buttonLoc, baseDims);
 			ui.addActor(baseButton);
 		}
+        else { baseButton = null; }
 
 		if (player.number == 1) {
 			setPointer((maxPointerLength + minPointerLength) / 2f, 0f); // vector to tip of rings
 		} else if (player.number == 0) {
 			setPointer((-maxPointerLength - minPointerLength) / 2f, 0f); // vector to tip of rings
 		}
-
-        // TODO if we keep these square, get rid of separate width and height
-//        float handleSize = 0.54f;
-//        float handleWidth = handleSize;
-//        float handleHeight = handleSize;
-//        float chevronSize = 0.45f;
-//        float chevronWidth = chevronSize;
-//        float chevronHeight = chevronSize;
-//		handleImDims = new Vector2(handleWidth, handleHeight).scl(StarCycle.pixelsPerMeter);
-//		chevronImDims = new Vector2(chevronWidth, chevronHeight).scl(StarCycle.pixelsPerMeter);
 		
 		aimer = getAimer(buttonLoc, baseDims, player.colors);
 	}
-    // basic constructor, assumes UI is visible
+    // basic constructor, assumes UI is visible and we are setting the level manually
 	public Base(Player player, Vector2 origin, float baseRadius, Stage ui) {
-		this(player, origin, baseRadius, ui, true);
+		this(player, origin, ui, true, false);
 	}
 
 	// Called in Player.java
 	public void draw(SpriteBatch batch) {
 		if (UIVisible) {
-			aimer.setRotation(angleDeg);
+			aimer.setRotation(angle);
 			for (int i = 0; i < 3; i ++) {
 				Layer layer = aimer.getLayer(i);
-				layer.setRelPosLen(maxAimerLength * pointerScale);
+				layer.setRelPosLen(maxPointerLength*StarCycle.pixelsPerMeter * pointerScale);
 			}
 				aimer.draw(batch, 1f);
 		}
@@ -106,8 +93,9 @@ public class Base {
 		}
 
         if (!manualLvl) {
-            if (Math.min(maxLevel, player.starsCaptured) != level) {
-                setLvl(Math.min(maxLevel, player.starsCaptured));
+            int num = Math.min(2, player.state.starsControlled);
+            if (num != level) {
+                changeLvl(num);
             }
         }
 	}
@@ -121,16 +109,18 @@ public class Base {
 	}
 	
 	public void setPointer(Vector2 pntr) {
-		pointer = pointer.set(pntr);
+		pointer.set(pntr);
 		if (pointer.len() > maxPointerLength) {
 			pointer.nor().scl(maxPointerLength);
 		} else if (pointer.len() < minPointerLength) {
 			pointer.nor().scl(minPointerLength);
 		}
-		angle = MathUtils.atan2(pointer.y, pointer.x) - MathUtils.PI / 2f;
-		angleDeg = angle * 180f / MathUtils.PI;
+		angle = (MathUtils.atan2(pointer.y, pointer.x) - MathUtils.PI / 2f) * 180f / MathUtils.PI;
 		pointerScale = pointer.len() / maxPointerLength;
-		//Gdx.app.log(angle + "", pointer.angle().toString());
+        if (player.number == 0) {
+            player.state.pointerX = pointer.x;
+            player.state.pointerY = pointer.y;
+        }
 	}
 	
 	public void rotatePointer(float theta) {
@@ -144,7 +134,6 @@ public class Base {
 	public Vector2 getBaseSize() {
 		return baseDims.cpy();
 	}
-
 
     // This takes meters.
 	public void moveBase(Vector2 newPos) {
@@ -169,7 +158,14 @@ public class Base {
         return button;
     }
 
-    public void setLvl(int i) {
+    // just sets vars, no sound effects
+    public void setLevel(int i) {
+        baseButton.setLevel(i);
+        level = i;
+    }
+
+    // plays sound effect
+    public void changeLvl(int i) {
         if (i > level) {
             if (i == 1){
                 StarCycle.audio.levelup1Sound.play(StarCycle.audio.sfxVolume);
@@ -181,7 +177,6 @@ public class Base {
         else if (i < level) {
             StarCycle.audio.leveldownSound.play(StarCycle.audio.sfxVolume);
         }
-        baseButton.setLevel(i);
-        level = i;
+        setLevel(i);
     }
 }

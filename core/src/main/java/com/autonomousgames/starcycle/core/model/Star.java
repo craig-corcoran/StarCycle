@@ -13,80 +13,70 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-
 import java.lang.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 public class Star extends Orbitable implements Collidable {
-	public static float captureRatio;
-	public final float radius;
-	public float mass;
-	public final float maxPop;
-    public boolean targetted;
-	public Body body;
-    private int numPlayers;
-	public float[] populations;
-	public float[] controlPercents = new float[]{0f, 0f};
-	public float popSum = 0;
-    public Float rotSpeed;
 
-    public int[] numOrbs = new int[]{0, 0};
-    public int[] numVoids = new int[]{0, 0};
+    // TODO need index as part of state?
 
-    private final float ammoRate = ModelSettings.getFloatSetting("ammoRate");
-    private final float popRate = ModelSettings.getFloatSetting("popRate");
+    public final StarState state = new StarState(Model.numPlayers);
 
-    private LinkedList<ChargeOrb> activeOrbs = new LinkedList<ChargeOrb>();
-	private HashSet<Void> activeVoids = new HashSet<Void>();
+    static final float popRate = ModelSettings.getFloatSetting("popRate");
+    static final float sideScale = 2f * 0.57735f; // The second value is tand(30deg), but MathUtils doesn't have tangent.
+    static final float scaleRange = (432f - 143f) / 143f; // Scale percent, for maximum side length, over 100% of original size.
 
-	public final int index;
-	private Player[] players;
-	private PathType pathMap = null;
-	private float startPercent;
+    public final float maxPop;
+    public final float radius;
+    public final LinkedList<ChargeOrb> activeOrbs = new LinkedList<ChargeOrb>();
+
+    final Body body;
+    final int maxOrbs;
+    final float orbitSpeed;
+    final float[] populations;
+    final float rotateSpeed = MathUtils.random(0.2f, 0.4f)*(1-2*MathUtils.random(1)); // This is purely visual.
+    final LayeredButton starButton;
+    final Color[][] playerColors = new Color[Model.numPlayers][];
+
+    public float mass;
     public boolean hitByNova = false;
 
+    PathType pathMap;
+    ArrayList<LayeredButton> controlButtons = new ArrayList<LayeredButton>();
+
 	// Drawing stuff
-	LayeredButton starButton;
-//	TextureRegion starImage = StarCycle.tex.hexStar;
-	private Vector2 imageDims;
-	private float rotateSpeed = MathUtils.random(0.2f, 0.4f)*(1-2*MathUtils.random(1)); // This is purely visual.
-	ArrayList<LayeredButton> controlButtons = new ArrayList<LayeredButton>();
-//	TextureRegion conIm = StarCycle.tex.block; // Image for the sides of the control hexes.
-	float apothem; // Inner radius of hexagon.
-	// Ratio of apothem to side length:
-	static float sideScale = 2f * 0.57735f; // The second value is tand(30deg), but MathUtils doesn't have tangent.
-	float minSideLen; // Smallest hexagon side length.
-	static float scaleRange = (432f - 143f) / 143f;; // Scale percent, for maximum side length, over 100% of original size.
-	Vector2 sideDims; // Dimensions of hexagon side length.
-	int quadLayer0; // Starting layer of star image quadrants.
-
-
-    final float maxOrbs;
+    int ownerHalf = -1;
+    int ownerFull = -1;
+    // TODO do we need to store all of these for each star? can some be local or static?
+	final float minSideLen; // Smallest hexagon side length.
+	final Vector2 sideDims; // Dimensions of hexagon side length.
+    final int quadLayer0; // Starting layer of star image quadrants.
+    final Vector2 hexPos;
+	final Vector2 imageDims;
 
 	// constructor for single stars. Constructed in Level.java
-	public Star(float radius, Vector2 position,
-			Player[] players, World world, int index, float rotSpeed) {
-		captureRatio = ModelSettings.getFloatSetting("captureRatio");
-        maxOrbs = ModelSettings.getFloatSetting("maxOrbs");
-		this.radius = radius;
-		this.mass = this.radius * this.radius;
-		this.maxPop = 100 * radius;
-		this.position = position;
-		this.index = index;
-		this.numPlayers = players.length;
-		this.players = players;
-		this.rotSpeed = rotSpeed;
+	public Star(float radius,
+                Vector2 position,
+			    Player[] players,
+                World world,
+                int index,
+                float orbitSpeed) {
 
-		populations = new float[numPlayers]; // populations are initialized to
-		// zero
-
+        this.radius = radius;
+        this.state.x = position.x;
+        this.state.y = position.y;
+        this.orbitSpeed = orbitSpeed;
+        state.index = index;
+        maxOrbs = (int) ModelSettings.getFloatSetting("maxOrbs");
+		mass = this.radius * this.radius;
+		maxPop = 100 * radius;
+		populations = new float[Model.numPlayers]; // populations are initialized to zero
 
 		// create the box2d star body
         BodyDef starBodyDef = new BodyDef();
 		starBodyDef.type = BodyType.StaticBody;
-		starBodyDef.position.set(this.position);
+		starBodyDef.position.set(state.x, state.y);
 		body = world.createBody(starBodyDef);
 
 		CircleShape starShape = new CircleShape();
@@ -97,107 +87,140 @@ public class Star extends Orbitable implements Collidable {
 		starFixtureDef.filter.categoryBits = Model.starCat;
 		starFixtureDef.filter.maskBits = Model.starMask;
 		body.createFixture(starFixtureDef);
-		body.setUserData(this); // add a pointer back to this object in the Body
-		// (box2d returns bodies that collide)
-		starShape.dispose();
 
+        // add charge sensor
 		float chargeRadius = ModelSettings.getFloatSetting("chargeRadius") + this.radius;
+        CircleShape sensShape = new CircleShape();
+        sensShape.setRadius(chargeRadius);
+        FixtureDef sensFixtureDef = new FixtureDef();
+        sensFixtureDef.shape = sensShape;
 
-		// add charge sensor 
-		Sensor.addSensor(this, body, chargeRadius);
+        sensFixtureDef.filter.categoryBits = Model.starCat;
+        sensFixtureDef.filter.maskBits = Model.starMask;
+
+        Fixture sensor = body.createFixture(sensFixtureDef);
+        sensor.setSensor(true);
+
+        sensor.setUserData(this);
+        body.setUserData(this); // add a pointer back to this object in the Body
+
+        starShape.dispose();
+        sensShape.dispose();
 
 		// Create star visual
 		imageDims = new Vector2(radius, radius).scl(StarCycle.pixelsPerMeter);
 		starButton = getButton(position.cpy().scl(StarCycle.pixelsPerMeter), radius);
         quadLayer0 = starButton.getLayerNum()-4;
 		minSideLen = imageDims.x * 142f/512f * sideScale; // This is the minimum hexagon side length.
-		Vector2 hexPos = new Vector2(imageDims.x*142f/512f, 0f); // Starting position (minimum).
+		hexPos = new Vector2(imageDims.x*142f/512f, 0f); // Starting position (minimum).
 		sideDims = new Vector2(imageDims.x/24f, minSideLen); // Minimum dimensions per hexagon side.
-        for (int i = 0; i < players.length; i ++) {
+        for (int i = 0; i < Model.numPlayers; i ++) {
             // Each player gets a "button."
             controlButtons.add(getControlButton(starButton.getCenter(), imageDims.x, players[i].colors[0], i));
+            playerColors[i] = players[i].colors;
         }
 	}
 
-	public Star(float radius, Vector2 center,
-			Player[] players, World world, int index, PathType pathMap,
-			float startPercent, float rotSpeed) {
+	public Star(float radius,
+			Player[] players,
+            Vector2 center,
+            World world,
+            int index,
+            PathType pathMap,
+			float startPercent,
+            float rotSpeed) {
+
 		this(radius, new Vector2(), players, world, index, rotSpeed);
 		this.pathMap = pathMap;
-		this.startPercent = startPercent;
+        this.state.startPercent = startPercent;
 	}
+
+    public void setState(StarState state) {
+        this.state.index = state.index;
+        this.state.x = state.x;
+        this.state.y = state.y;
+        this.state.tValue = state.tValue;
+        this.state.startPercent = state.startPercent;
+
+        for (int i=0; i < Model.numPlayers; i++) {
+            this.state.possession[i] = state.possession[i];
+            this.state.numActiveOrbs[i] = state.numActiveOrbs[i];
+        }
+    }
+
+    public Vector2 getPosition() {
+        return new Vector2(this.state.x, this.state.y);
+    }
 
 	public void draw(SpriteBatch batch) {
 
-		for (int i = 0; i < players.length; i ++) {
-			// The new control percent is calculated and stored for later.
-			float newPercent = populations[i] / maxPop;
+		for (int i = 0; i < Model.numPlayers; i ++) {
+			float newPercent = state.possession[i]; // So that the call doesn't happen each time. Is this needed?
 			// If the button has become active:
 			if (0f < newPercent && newPercent < 1f && !(controlButtons.get(i).isActive())) {
-				controlButtons.get(i).activate();
+				controlButtons.get(i).activate(); // Turn on the hex for this player.
 			}
 			// Else if the button has become inactive:
 			else if ((newPercent == 0f || newPercent == 1f) && controlButtons.get(i).isActive()) {
-				controlButtons.get(i).deactivate();
+				controlButtons.get(i).deactivate(); // Turn off the hex for this player.
 			}
-			// If the the star has become fully controlled:
-			if (newPercent >= 0.99f && controlPercents[i] < 0.99f) {
+			// If the the star has become fully controlled (but isn't already owned by this player):
+			if (newPercent >= 0.99f && ownerFull != i) {
 				// Tint the star image.
 				for (int j = quadLayer0; j < quadLayer0 + 4; j ++) {
-					starButton.getLayer(j).setColor(players[i].colors[0]);
+					starButton.getLayer(j).setColor(playerColors[i][0]);
 				}
-				starButton.activate();
+				starButton.activate(); // Note that someone has full ownership.
+                ownerFull = i; // Note that this player has full ownership.
 			}
-			// If the player has control: 
-			if (captureRatio <= newPercent && controlPercents[i] < captureRatio) {
+			// If the player has control (but didn't perviously):
+			if (Player.captureFrac <= newPercent && ownerHalf != i) {
 				// Tint the inner portion.
-                starButton.getLayer(1).setColor(players[i].colors[0]);
-//				starButton.getLayer(2).setColor(players[i].colors[0]);
-				starButton.lock();
+                starButton.getLayer(1).setColor(playerColors[i][0]);
+				starButton.lock(); // Note that someone has control.
+                ownerHalf = i; // Note that this player has control.
 			}
-			// Update the control percent with the stored value.
-			controlPercents[i] = newPercent;
 		}
 		// If neither player has full control (the 0.99 threshold adds some debounce):
-		if (controlPercents[0] < 0.99f && controlPercents[1] < 0.99f && starButton.isActive()) {
-			starButton.deactivate();
+		if (state.possession[0] < 0.99f && state.possession[1] < 0.99f && starButton.isActive()) {
+			starButton.deactivate(); // Note that the star is no longer fully controlled.
+            ownerFull = -1; // Reset full ownership.
 			for (int i = quadLayer0; i < quadLayer0 + 4; i ++) {
-				starButton.getLayer(i).setColor(Colors.night);
+				starButton.getLayer(i).setColor(Colors.night); // Return the star to neutral color.
 			}
-            for (int i = 0; i < players.length; i ++) {
-                if (captureRatio <= controlPercents[i]) {
-                    starButton.getLayer(1).setColor(players[i].colors[0]);
-                }
+            if (ownerHalf != -1) {
+                starButton.getLayer(1).setColor(playerColors[ownerHalf][0]); // Tint the inner portion.
             }
 		}
 		// If either player has full control, do not draw hexes:
-		if (starButton.isActive() && (0.99f <= controlPercents[0] || 0.99f <= controlPercents[1])) {
-			for (int i = 0; i < players.length; i ++) {
+		if (starButton.isActive() && (0.99f <= state.possession[0] || 0.99f <= state.possession[1])) {
+			for (int i = 0; i < Model.numPlayers; i ++) {
 				controlButtons.get(i).deactivate();
 			}
             starButton.getLayer(1).setColor(Color.BLACK);
 		}
-		// If neither player has control, reset the inner portion:
-		if (controlPercents[0] < captureRatio && controlPercents[1] < captureRatio && starButton.isLocked()) {
-			starButton.unlock();
+		// If neither player has control, reset the inner portion (is this even possible?):
+		if (state.possession[0] < Player.captureFrac && state.possession[1] < Player.captureFrac && starButton.isLocked()) {
+            starButton.unlock(); // Note that the star is no longer controlled at all.
             starButton.getLayer(1).setColor(Color.BLACK);
-//			starButton.getLayer(2).setColor(Color.BLACK);
+            ownerHalf = -1; // Reset half ownership.
 		}
+
 		// Update the button position and angle, then draw:
-		starButton.setCenter(position.cpy().scl(StarCycle.pixelsPerMeter));
+		starButton.setCenter(state.x * StarCycle.pixelsPerMeter, state.y * StarCycle.pixelsPerMeter);
 		starButton.rotate(rotateSpeed);
 		starButton.draw(batch, 1f);
 		// Update the control hexagons:
-		for (int i = 0; i < players.length; i ++) {
+		for (int i = 0; i < Model.numPlayers; i ++) {
 			LayeredButton button = controlButtons.get(i);
 			button.setCenter(starButton.getCenter()); // Update position.
 			button.rotate(rotateSpeed); // Update angle/
 			// Calculate the inner radius of the hexagon:
-			apothem = imageDims.x * (142f + (432f - 142f)*controlPercents[i]) / 512f;
+			float apothem = imageDims.x * (142f + (432f - 142f)*state.possession[i]) / 512f;
 			for (int j = 0; j < 6; j ++) {
 				Layer layer = button.getLayer(j);
 				layer.setCenter(layer.getCenter().nor().scl(apothem)); // Scale the image radius.
-				layer.setScaleY(controlPercents[i]*scaleRange + 1f); // Scale the side length (not width).
+				layer.setScaleY(state.possession[i]*scaleRange + 1f); // Scale the side length (not width).
 			}
 			button.draw(batch,1f);
 		}
@@ -206,7 +229,7 @@ public class Star extends Orbitable implements Collidable {
 	public void addPop(float popUp, int playerNum) {
 		populations[playerNum] += popUp;
 
-		popSum = 0f;
+		float popSum = 0f;
 		for (float pop : populations){
 			popSum += pop;
 		}
@@ -214,7 +237,7 @@ public class Star extends Orbitable implements Collidable {
 		if (popSum > maxPop) {
 			float excess = popSum - maxPop;
 
-			if (numPlayers == 2) {
+			if (Model.numPlayers == 2) {
 				if (populations[1 - playerNum] < excess / 2f) {
 					populations[1 - playerNum] = 0;
 					populations[playerNum] = maxPop;
@@ -222,64 +245,47 @@ public class Star extends Orbitable implements Collidable {
 					populations[playerNum] -= excess / 2f;
 					populations[1 - playerNum] -= excess / 2f;
 				}
-			} else if (numPlayers == 1) {
+			} else if (Model.numPlayers == 1) {
 				populations[playerNum] -= excess;
 			}
-			popSum = maxPop;
 		}
+
+        for (int i=0; i < Model.numPlayers; i++) {
+            state.possession[i] = populations[i] / maxPop;
+        }
 	}
 
-    private Player player;
-    private float rate;
-    private float incAmmoThresh = ModelSettings.getFloatSetting("incAmmoThresh");
-    private float initVelScale = ModelSettings.getFloatSetting("initVelScale");
-    private float incOrbSize = ModelSettings.getFloatSetting("incOrbSize");
-    private float incOrbAlpha = ModelSettings.getFloatSetting("incOrbAlpha");
-    private Vector2 pos = new Vector2();
-    private Vector2 vel = new Vector2();
-    private float nor = 0;
-    private float[] playerIncome = {0f, 0f};
-    private float[] nonlinearIncome = {0f, 0f};
-    public void updateControl() {
-        for (int i = 0; i < players.length; i++) { // TODO iterator
-            player = players[i];
-            addPop(popRate*numOrbs[i], i);
-
-            rate = ammoRate * numOrbs[i];
-            player.ammo += rate;
-            playerIncome[i] += rate;
-            nonlinearIncome[i] += ammoRate * ((float) Math.pow(((double) numOrbs[i]), ((double)2/3)));
-
-            while(player.showIncomeOrbs && (nonlinearIncome[i] > incAmmoThresh)) {
-                // emit fake income orb
-                nonlinearIncome[i] -= incAmmoThresh;
-                Color color = (MathUtils.random(1f) < 0.3f) ? player.colors[0] : player.colors[1];
-
-                vel = new Vector2(MathUtils.random(-initVelScale,initVelScale), MathUtils.random(-initVelScale,initVelScale));
-                pos = this.getButtonCenter();
-                nor = vel.len();
-                pos = pos.add(this.radius*StarCycle.pixelsPerMeter*vel.x/nor, this.radius*StarCycle.pixelsPerMeter*vel.y/nor);
-                player.incomeOrbs.add(new ImageOrb(StarCycle.tex.bgMote, incOrbSize * StarCycle.screenHeight, pos,
-                        StarCycle.screenWidth, StarCycle.screenHeight, vel, new Vector2()).tint(color).set_alpha(incOrbAlpha));
-            }
+    public void update() {
+        for (int i = 0; i < Model.numPlayers; i++) {
+            addPop(popRate*state.numActiveOrbs[i], i);
         }
+        updatePosition(Model.dt);
 
-//
-// TODO sometimes emit (fake) income orb here
+        // TODO add income orbs
+        //nonlinearIncome[i] += ammoRate * ((float) Math.pow(((double) state.numActiveOrbs[i]), ((double)2/3)));
+        //while(showIncomeOrbs && (nonlinearIncome[i] > incAmmoThresh)) {
+        //    // emit fake income orb
+        //    nonlinearIncome[i] -= incAmmoThresh;
+        //    Color color = (MathUtils.random(1f) < 0.3f) ? player.colors[0] : player.colors[1];
+
+        //    vel = new Vector2(MathUtils.random(-initVelScale,initVelScale), MathUtils.random(-initVelScale,initVelScale));
+        //    pos = this.getButtonCenter();
+        //    nor = vel.len();
+        //    pos = pos.add(this.radius*StarCycle.pixelsPerMeter*vel.x/nor, this.radius*StarCycle.pixelsPerMeter*vel.y/nor);
+        //    player.incomeOrbs.add(new ImageOrb(StarCycle.tex.bgMote, incOrbSize * StarCycle.screenHeight, pos,
+        //            StarCycle.screenWidth, StarCycle.screenHeight, vel, new Vector2()).tint(color).set_alpha(incOrbAlpha));
+        //}
     }
 
 	void updatePosition(float delta) {
 
 		if (pathMap != null) {
-			position = pathMap.getPosition(t, startPercent);
-			body.setTransform(position, 0f);
-
-			t += this.rotSpeed * delta;
+		    Vector2 pos = pathMap.getPosition(state.tValue, state.startPercent);
+            state.x = pos.x;
+            state.y = pos.y;
+			body.setTransform(pos.x, pos.y, 0f);
+			state.tValue += orbitSpeed * delta;
 		}
-		else {
-			position = body.getPosition();
-			body.setTransform(position.x, position.y, 0f);
-        }
 	}
 
 	// stars unaffected by contact
@@ -297,56 +303,32 @@ public class Star extends Orbitable implements Collidable {
 	@Override
 	public void collision(Collidable obj) {  }
 
-	public void addOrb(Orb orb) {
-		if (orb.type == Orb.OrbType.ORB) {
-			activeOrbs.add(((ChargeOrb) orb));
-            if (activeOrbs.size() > maxOrbs) {
-                activeOrbs.getFirst().removeSelf(); // if above capacity remove oldest (fifo linked list)
-            }
-            numOrbs[orb.player.number]++;
-		}
-		else if (orb.type == Orb.OrbType.VOID) {
-			activeVoids.add((Void) orb);
-            numVoids[orb.player.number]++; // keep player counts for easy access by bot
-		}
-        assert ((numVoids[0] + numVoids[1]) == getOrbCount(Orb.OrbType.VOID)) : "Wrong value for numVoids after adding.";
-        assert ((numOrbs[0] + numOrbs[1]) == getOrbCount(Orb.OrbType.ORB)) : "Wrong value for numOrbs after adding.";
+	public void addOrb(ChargeOrb orb) {
+        state.numActiveOrbs[orb.playerNum]++;
+        ChargeOrbState orbState = (ChargeOrbState) orb.state;
+        orbState.star = state.index;
+        orbState.lockedOn = true;
+        if (activeOrbs.size() > maxOrbs) {
+            Model.toRemove.add(activeOrbs.getFirst()); // if above capacity remove oldest (fifo linked list)
+        }
 	}
 
-	public void removeOrb(Orb orb) {
-		if (orb.type == Orb.OrbType.ORB) {
-            numOrbs[orb.player.number]--;
-			activeOrbs.remove(orb);
-		}
-		else if (orb.type == Orb.OrbType.VOID) {
-            numVoids[orb.player.number]--;
-			activeVoids.remove(orb);
-		}
-        assert ((numVoids[0] + numVoids[1]) == getOrbCount(Orb.OrbType.VOID)) : "Wrong value for numVoids after removing.";
-        assert ((numOrbs[0] + numOrbs[1]) == getOrbCount(Orb.OrbType.ORB)) : "Wrong value for numOrbs after removing.";
+	public void removeOrb(ChargeOrb orb) {
+        state.numActiveOrbs[orb.playerNum]--;
+        activeOrbs.remove(orb);
 	}
 
-	public int getOrbCount(Orb.OrbType type) {
-		if (type == Orb.OrbType.ORB) {
-			return activeOrbs.size();
-		}
-		else if (type == Orb.OrbType.VOID) {
-			return activeVoids.size();
-		}
-		else {
-			return 0;
-		}
-	}
-	
 	// Return the starButton center (in pixels):
 	public Vector2 getButtonCenter() {
 		return starButton.getCenter();
 	}
 
+    // note: this probably doesn't play nice with stars with motion paths
+    // I believe this is only used in the tutorial, in which the stars don't have motion paths.
     public void moveStar(float x, float y) {
-        position = body.getPosition();
-        body.setTransform(position.x + x, position.y + y, 0f);
-        position = body.getPosition();
+        state.x += x;
+        state.y += y;
+        body.setTransform(state.x, state.y, 0f);
     }
 
     public static LayeredButton getButton(Vector2 position, float radius) {
@@ -393,12 +375,8 @@ public class Star extends Orbitable implements Collidable {
     }
 
     public void setControlPercent(int player, float percent) {
-//        controlPercents[player] = percent;
         populations[player] = maxPop*percent;
-    }
-
-    public int getPlayerOrbs(int player) {
-        return numOrbs[player];
+            state.possession[player] = populations[player] / maxPop;
     }
 
     public void gravityOff() {

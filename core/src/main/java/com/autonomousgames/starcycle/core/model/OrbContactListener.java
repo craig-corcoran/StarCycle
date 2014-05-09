@@ -16,8 +16,6 @@ public class OrbContactListener implements ContactListener {
 		objA = (Collidable) fixtureA.getBody().getUserData();
 		objB = (Collidable) fixtureB.getBody().getUserData();
 
-		// TODO not sure why nulls happen here, might have to do with base star
-		// control radius in db rendered (can be removed in final)
 	    if (objA != null & objB != null) {
             if (fixtureA.isSensor() | fixtureB.isSensor()) {
                 objA.beginSensorContact(objB);
