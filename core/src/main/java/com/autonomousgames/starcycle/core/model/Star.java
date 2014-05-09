@@ -46,6 +46,8 @@ public class Star extends Orbitable implements Collidable {
     ArrayList<LayeredButton> controlButtons = new ArrayList<LayeredButton>();
 
 	// Drawing stuff
+    int ownerHalf = -1;
+    int ownerFull = -1;
     // TODO do we need to store all of these for each star? can some be local or static?
 	final float minSideLen; // Smallest hexagon side length.
 	final Vector2 sideDims; // Dimensions of hexagon side length.
@@ -153,44 +155,41 @@ public class Star extends Orbitable implements Collidable {
 	public void draw(SpriteBatch batch) {
 
 		for (int i = 0; i < Model.numPlayers; i ++) {
-			// The new control percent is calculated and stored for later.
-			float newPercent = state.possession[i];
+			float newPercent = state.possession[i]; // So that the call doesn't happen each time. Is this needed?
 			// If the button has become active:
 			if (0f < newPercent && newPercent < 1f && !(controlButtons.get(i).isActive())) {
-				controlButtons.get(i).activate();
+				controlButtons.get(i).activate(); // Turn on the hex for this player.
 			}
 			// Else if the button has become inactive:
 			else if ((newPercent == 0f || newPercent == 1f) && controlButtons.get(i).isActive()) {
-				controlButtons.get(i).deactivate();
+				controlButtons.get(i).deactivate(); // Turn off the hex for this player.
 			}
-			// If the the star has become fully controlled:
-			if (newPercent >= 0.99f && state.possession[i] > 0.99f) {
+			// If the the star has become fully controlled (but isn't already owned by this player):
+			if (newPercent >= 0.99f && ownerFull != i) {
 				// Tint the star image.
 				for (int j = quadLayer0; j < quadLayer0 + 4; j ++) {
 					starButton.getLayer(j).setColor(playerColors[i][0]);
 				}
-				starButton.activate();
+				starButton.activate(); // Note that someone has full ownership.
+                ownerFull = i; // Note that this player has full ownership.
 			}
-			// If the player has control: 
-			if (Player.captureFrac <= newPercent && state.possession[i]< Player.captureFrac) {
+			// If the player has control (but didn't perviously):
+			if (Player.captureFrac <= newPercent && ownerHalf != i) {
 				// Tint the inner portion.
                 starButton.getLayer(1).setColor(playerColors[i][0]);
-//				starButton.getLayer(2).setColor(players[i].colors[0]);
-				starButton.lock();
+				starButton.lock(); // Note that someone has control.
+                ownerHalf = i; // Note that this player has control.
 			}
-			// Update the control percent with the stored value.
-            state.possession[i] = newPercent;
 		}
 		// If neither player has full control (the 0.99 threshold adds some debounce):
 		if (state.possession[0] < 0.99f && state.possession[1] < 0.99f && starButton.isActive()) {
-			starButton.deactivate();
+			starButton.deactivate(); // Note that the star is no longer fully controlled.
+            ownerFull = -1; // Reset full ownership.
 			for (int i = quadLayer0; i < quadLayer0 + 4; i ++) {
-				starButton.getLayer(i).setColor(Colors.night);
+				starButton.getLayer(i).setColor(Colors.night); // Return the star to neutral color.
 			}
-            for (int i = 0; i < Model.numPlayers; i ++) {
-                if (Player.captureFrac <= state.possession[i]) {
-                    starButton.getLayer(1).setColor(playerColors[i][0]);
-                }
+            if (ownerHalf != -1) {
+                starButton.getLayer(1).setColor(playerColors[ownerHalf][0]); // Tint the inner portion.
             }
 		}
 		// If either player has full control, do not draw hexes:
@@ -200,11 +199,11 @@ public class Star extends Orbitable implements Collidable {
 			}
             starButton.getLayer(1).setColor(Color.BLACK);
 		}
-		// If neither player has control, reset the inner portion:
+		// If neither player has control, reset the inner portion (is this even possible?):
 		if (state.possession[0] < Player.captureFrac && state.possession[1] < Player.captureFrac && starButton.isLocked()) {
-			starButton.unlock();
+            starButton.unlock(); // Note that the star is no longer controlled at all.
             starButton.getLayer(1).setColor(Color.BLACK);
-//			starButton.getLayer(2).setColor(Color.BLACK);
+            ownerHalf = -1; // Reset half ownership.
 		}
 
 		// Update the button position and angle, then draw:

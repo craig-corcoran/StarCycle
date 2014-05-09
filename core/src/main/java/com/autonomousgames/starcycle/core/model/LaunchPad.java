@@ -99,10 +99,20 @@ public class LaunchPad {
         orbButton = getOrbButton(position, angle, player.colors, !(player instanceof Bot));
         if (!(player instanceof Bot)) {
             orbButton.addListener(new InputListener() {
+                int pointerNum;
+
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    pointerNum = pointer;
                     player.state.buttonStates[0]  = true;
                     return true;
+                }
+
+                public void touchDragged(InputEvent event, float x, float y, int pointer) {
+                    if (pointer == pointerNum) {
+                        player.state.buttonStates[0] = orbButton.touchOn(x, y);
+                    }
+                    super.touchDragged(event, x, y, pointer);
                 }
 
                 @Override
@@ -114,18 +124,52 @@ public class LaunchPad {
 
         pw1Button = getPw1Button(position, angle, player.colors, !(player instanceof Bot));
         if (!(player instanceof Bot)) {
-            pw1Button.addListener(new ClickListener() {
-                public void clicked(InputEvent event, float x, float  y) {
-                    player.state.buttonStates[1] = true;
+            pw1Button.addListener(new InputListener() {
+                int pointerNum;
+
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    pointerNum = pointer;
+                    player.state.buttonStates[1]  = true;
+                    return true;
+                }
+
+                public void touchDragged(InputEvent event, float x, float y, int pointer) {
+                    if (pointer == pointerNum) {
+                        player.state.buttonStates[1] = pw1Button.touchOn(x, y);
+                    }
+                    super.touchDragged(event, x, y, pointer);
+                }
+
+                @Override
+                public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                    player.state.buttonStates[1] = false;
                 }
             });
         }
 
         pw2Button = getPw2Button(position, angle, player.colors, !(player instanceof Bot));
         if (!(player instanceof Bot)) {
-            pw2Button.addListener(new ClickListener() {
-                public void clicked(InputEvent event, float x, float y) {
-                    player.state.buttonStates[2] = true;
+            pw2Button.addListener(new InputListener() {
+                int pointerNum;
+
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    pointerNum = pointer;
+                    player.state.buttonStates[2]  = true;
+                    return true;
+                }
+
+                public void touchDragged(InputEvent event, float x, float y, int pointer) {
+                    if (pointer == pointerNum) {
+                        player.state.buttonStates[2] = pw2Button.touchOn(x, y);
+                    }
+                    super.touchDragged(event, x, y, pointer);
+                }
+
+                @Override
+                public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                    player.state.buttonStates[2] = false;
                 }
             });
         }

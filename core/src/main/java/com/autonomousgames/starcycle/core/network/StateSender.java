@@ -3,7 +3,8 @@ package com.autonomousgames.starcycle.core.network;
 import com.autonomousgames.starcycle.core.StarCycle;
 import com.autonomousgames.starcycle.core.model.GameState;
 import com.badlogic.gdx.Gdx;
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -41,7 +42,7 @@ public class StateSender {
     {
         // Basically now push these messages into the queue
         // which is serviced by the thread that talks to a particular client
-        ByteOutputStream byteOutputStream  = new ByteOutputStream();
+        ByteArrayOutputStream byteOutputStream  = new ByteArrayOutputStream();
         Serializable stateOut;
         if (mode == StarCycle.Mode.kServer) {
             stateOut = state;
@@ -60,7 +61,7 @@ public class StateSender {
         {
             Gdx.app.log("StarCycle", "Exception in Object Output Stream");
         }
-        byte[] buf= byteOutputStream.getBytes();
+        byte[] buf= byteOutputStream.toByteArray();
         Iterator<NodeUDPInfo> it = senderSocketVector.iterator();
         while (it.hasNext())
         {
