@@ -250,9 +250,10 @@ public class Tutorial1 extends Tutorial {
                         ChargeOrb.class,
                         starPos.x+orbDist.x,
                         starPos.y+orbDist.y,
-                        -120/60f, 0f, false);
-                ((ChargeOrbState)orb.state).star = 0; // set orbiting the 0th star
-                ((ChargeOrbState)orb.state).lockedOn = true;
+                        -3f/60f, 0f, false);
+                model.stars[0].addOrb(orb);
+//                ((ChargeOrbState)orb.state).star = 0; // set orbiting the 0th star
+//                ((ChargeOrbState)orb.state).lockedOn = true;
             }
             orbDist.rotate(30f);
         }

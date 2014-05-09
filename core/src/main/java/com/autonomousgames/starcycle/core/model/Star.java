@@ -305,6 +305,9 @@ public class Star extends Orbitable implements Collidable {
 
 	public void addOrb(ChargeOrb orb) {
         state.numActiveOrbs[orb.playerNum]++;
+        ChargeOrbState orbState = (ChargeOrbState) orb.state;
+        orbState.star = state.index;
+        orbState.lockedOn = true;
         if (activeOrbs.size() > maxOrbs) {
             Model.toRemove.add(activeOrbs.getFirst()); // if above capacity remove oldest (fifo linked list)
         }
@@ -321,6 +324,7 @@ public class Star extends Orbitable implements Collidable {
 	}
 
     // note: this probably doesn't play nice with stars with motion paths
+    // I believe this is only used in the tutorial, in which the stars don't have motion paths.
     public void moveStar(float x, float y) {
         state.x += x;
         state.y += y;
@@ -372,6 +376,7 @@ public class Star extends Orbitable implements Collidable {
 
     public void setControlPercent(int player, float percent) {
         populations[player] = maxPop*percent;
+            state.possession[player] = populations[player] / maxPop;
     }
 
     public void gravityOff() {
