@@ -34,7 +34,7 @@ public class SettingsScreen extends MenuScreen {
         musIcon.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (musIcon.toggled) {
+                if (musIcon.isToggled()) {
                     musVolSlider.setPercent(0f);
                 }
                 else {
@@ -50,7 +50,7 @@ public class SettingsScreen extends MenuScreen {
                 float p = getPercent();
                 StarCycle.audio.gameMusic.setVolume(p);
                 UserSettings.setFloatSetting("musicVolume", p);
-                musIcon.toggled = (p == 0f);
+                musIcon.toggle(p == 0f);
             }
         };
 
@@ -64,7 +64,7 @@ public class SettingsScreen extends MenuScreen {
         sfxIcon.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (sfxIcon.toggled) {
+                if (sfxIcon.isToggled()) {
                     sfxVolSlider.setPercent(0f);
                 }
                 else {
@@ -84,7 +84,7 @@ public class SettingsScreen extends MenuScreen {
                 float p = getPercent();
                 StarCycle.audio.sfxVolume = p;
                 UserSettings.setFloatSetting("sfxVolume", p);
-                sfxIcon.toggled = (p == 0f);
+                sfxIcon.toggle(p == 0f);
             }
         };
         sfxVolSlider.addListener(new DragListener(){
