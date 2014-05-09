@@ -55,6 +55,7 @@ public abstract class Tutorial extends ModelScreen {
         this.nextScreen = nextScreen;
         this.prevScreen = prevScreen;
         silentSwitch = true;
+        model.altWin = true;
 
         ((SpriteLayer) resumeButton.getLayer(0)).setSpriteAlpha(1f);
         resumeButton.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Resume", new Vector2(pauseButton.getDims().x*3f/8f, 0f), resumeButton.getDims()).rotateText(90f));
