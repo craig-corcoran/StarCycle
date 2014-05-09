@@ -112,11 +112,7 @@ public class UISlider extends Actor {
 	}
 	
 	public void setPercent(float p) {
-		if (xDir) {
-			sliderPos.set(MathUtils.clamp(slideMin+p*slideLength,  slideMin, slideLength), sliderPos.y);
-		}
-		else {
-			sliderPos.set(sliderPos.x, MathUtils.clamp(slideMin+p*slideLength,  slideMin, slideLength));
-		}
+        // Set both x and y, because setSlider will determine which is appropriate.
+        setSlider(p*slideLength, p*slideLength);
 	}
 }
