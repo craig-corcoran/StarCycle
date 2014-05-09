@@ -25,7 +25,7 @@ public class NetworkedPregame extends MenuScreen {
     MultiText statusText;
     LayeredButton levelSelect;
     LayeredButton skinSelect;
-    ToggleButton ready;
+    StandardButton multiPlayerButton;
 
     int winNum = 0;
     CharSequence winStr;
@@ -56,13 +56,13 @@ public class NetworkedPregame extends MenuScreen {
                 if (netMode.isToggled()){
                     search.deactivate();
                     statusText.switchTo(1);
-                    ready.activate();
+                    multiPlayerButton.remove();
+
                 }
                 else {
                     search.activate();
                     statusText.switchTo(0);
-                    ready.toggle(false);
-                    ready.deactivate();
+                    ui.addActor(multiPlayerButton);
                 }
             }
         });
@@ -79,8 +79,7 @@ public class NetworkedPregame extends MenuScreen {
 
         statusText = new MultiText(new Vector2(ui.getWidth()/4f, ui.getHeight()/2f), StarCycle.tex.gridnikMedium);
         statusText.addText("Searching for players on local network...");
-        statusText.addText("Change options or begin search.");
-        statusText.addText("Searching for a player match...");
+        statusText.addText("Only local networks supported at this time.");
         statusText.textRotation(90f);
         statusText.switchTo(0);
 
@@ -88,73 +87,22 @@ public class NetworkedPregame extends MenuScreen {
         search.addLayer(new SpriteLayer(StarCycle.tex.search, new Vector2(0f, ui.getHeight()/10f), new Vector2(1f, 1f).scl(ui.getHeight()/10f)).setRevolutionSpeed(180f), LayerType.ACTIVE);
         search.setRotation(90f);
 
-        ready = new ToggleButton(new Vector2(ui.getWidth()*3f/16f, ui.getHeight()/2f), backSize);
-        ready.addLayer(new SpriteLayer(StarCycle.tex.block, backSize).setSpriteAlpha(0.5f), LayerType.ACTIVEUP);
-        ready.addLayer(new SpriteLayer(StarCycle.tex.block, backSize){
-            @Override
-            public boolean drawCondition() {
-                return ready.isDown() && ready.isToggled();
-            }
-        }.setSpriteAlpha(0.5f).setSpriteColor(Colors.red), LayerType.SPECIAL);
-        ready.addLayer(new SpriteLayer(StarCycle.tex.block, backSize){
-            @Override
-            public boolean drawCondition() {
-                return ready.isDown() && !ready.isToggled();
-            }
-        }.setSpriteAlpha(0.5f).setSpriteColor(Colors.spinach), LayerType.SPECIAL);
-        ready.addLayer(new TextLayer(StarCycle.tex.gridnikSmall, "START", new Vector2(-backSize.y/4f, 0f)){
-            @Override
-            public boolean drawCondition() {
-                return ready.isActive() && !ready.isToggled();
-            }
-        }.setTextColor(Color.BLACK).rotateText(90f), LayerType.SPECIAL);
-        ready.addLayer(new TextLayer(StarCycle.tex.gridnikSmall, "PAUSE", new Vector2(-backSize.y/4f, 0f)){
-            @Override
-            public boolean drawCondition() {
-                return ready.isActive() && ready.isToggled();
-            }
-        }.setTextColor(Color.BLACK).rotateText(90f), LayerType.SPECIAL);
-        ready.addLayer(new TextLayer(StarCycle.tex.gridnikSmall, "SEARCH", new Vector2(backSize.y/4f, 0f)).setTextColor(Color.BLACK).rotateText(90f), LayerType.ACTIVE);
-        ready.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) {
-                if (ready.isToggled()) {
-                    search.activate();
-                    statusText.switchTo(2);
-                }
-                else {
-                    search.deactivate();
-                    statusText.switchTo(1);
-                }
-            }
-        });
-        ready.setRotation(90f);
-        ready.deactivate();
 
         ui.addActor(backButton);
         ui.addActor(netMode);
         ui.addActor(stats);
         ui.addActor(statusText);
         ui.addActor(search);
-        ui.addActor(ready);
-        
-        StandardButton singlePlayerButton = new StandardButton(new Vector2(ui.getWidth()/4f, ui.getHeight()/2f), iconSize, StarCycle.tex.soloIcon, padding);
-        singlePlayerButton.setRotation(90f);
-        singlePlayerButton.addListener(new ScreenDoneClickListener(this, ScreenType.CAMPAIGNSELECT));
 
-        StandardButton multiPlayerButton = new StandardButton(new Vector2(ui.getWidth()/2f, ui.getHeight()/2f), new Vector2(iconSize.x*4f/3f, iconSize.y), StarCycle.tex.multiplayerIcon, padding);
+        multiPlayerButton = new StandardButton(new Vector2(ui.getWidth()*3f/4f, ui.getHeight()/2f), new Vector2(iconSize.x*4f/3f, iconSize.y), StarCycle.tex.multiplayerIcon, padding);
         multiPlayerButton.setRotation(90f);
         multiPlayerButton.addListener(new ScreenDoneClickListener(this, ScreenType.MULTIPLAYERLEVELSELECT));
 
         ui.addActor(multiPlayerButton);
-        ui.addActor(singlePlayerButton);
         // Assume client for now
         // TODO: no more hardcoding ports
         if (mode == StarCycle.Mode.kClient){
             TCPClient client = new TCPClient(nodeVector.get(0).getIp(), nodeVector.get(0).getPort());
-            Vector2 lookingVector = new Vector2((ui.getWidth()*4f)/6f, ui.getHeight()*1f/2f );
-            LayeredButton serverText = new LayeredButton(lookingVector);
-            serverText.addLayer(new TextLayer(StarCycle.tex.latoLightLarge, "Connected to server on port " + client.getPort(), lookingVector).rotateText(90f));
-            ui.addActor(serverText);
         }
     }
 
