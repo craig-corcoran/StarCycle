@@ -470,7 +470,7 @@ public class Tutorial1 extends Tutorial {
             public Player[] initPlayers(ModelScreen screen) {
                 Player[] players = new Player[numPlayers];
                 for (int i=0; i < numPlayers; i++){
-                    players[i] = new Player(i, ui, skins[i], colors[i], true, i == 0);
+                    players[i] = new Player(i, ui, skins[i], colors[i], i == 0);
                     players[i].altWin = true;
                     players[i].launchPad.showMeter(false);
                     players[i].showIncomeOrbs = false;
