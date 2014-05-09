@@ -80,7 +80,7 @@ public abstract class Tutorial extends ModelScreen {
 
             @Override
             public void drag(InputEvent event, float x, float y, int pointer) {
-                if (swiper.touchOn(x,y) == false) {
+                if (!swiper.touchOn(x,y)) {
                     cancel();
                 }
                 else {
@@ -130,7 +130,7 @@ public abstract class Tutorial extends ModelScreen {
 
         if (!moving && currentBorder == pages) {
             isDone = true;
-        };
+        }
 
         for (int i = 0; i < pages; i ++) {
             if (pageDone.get(i) && !ellipses.get(i).isActive()) {
@@ -235,5 +235,9 @@ public abstract class Tutorial extends ModelScreen {
     void add(LayeredButton button) {
         ui.addActor(button);
         draggables.add(button);
+    }
+
+    boolean still() {
+        return !moving && !dragging;
     }
 }

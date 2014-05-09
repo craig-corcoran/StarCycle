@@ -335,20 +335,19 @@ public class Tutorial0 extends Tutorial {
             sinceLastShot = 0f;
         }
 
-        if (((moving || dragging) && model.players[0].state.buttonStates[0]) || (currentBorder == 2 && !moving && !dragging && model.players[0].state.buttonStates[0] == false)) {
+        if ((!still() && model.players[0].state.buttonStates[0]) || (currentBorder == 2 && still() && !model.players[0].state.buttonStates[0])) {
             model.players[0].state.buttonStates[0] = !(model.players[0].state.buttonStates[0]);
         }
 
-        if (((moving || dragging || model.stars[1].activeOrbs.size() >= 10)
-                && model.players[1].state.buttonStates[0]) || (currentBorder == 4
-                && !moving
-                && !dragging
-                && model.stars[1].activeOrbs.size() < 10
-                && model.players[1].state.buttonStates[0] == false)) {
-            model.players[1].state.buttonStates[0] = !(model.players[1].state.buttonStates[0]);
+        if (model.stars[1].state.numActiveOrbs[1] >= 10 && model.players[1].state.buttonStates[0]) {
+            model.players[1].state.buttonStates[0] = false;
         }
 
-        if (currentBorder >= orbKillPage && (dragging || moving)) {
+        if (currentBorder == 4 && still() && model.stars[1].state.numActiveOrbs[1] < 10 && !model.players[1].state.buttonStates[0]) {
+            model.players[1].state.buttonStates[0] = true;
+        }
+
+        if (currentBorder >= orbKillPage && !still()) {
             for (int i = 0; i < model.numPlayers; i ++) {
 
                 for (ChargeOrb orb: model.orbs[i].values()) {

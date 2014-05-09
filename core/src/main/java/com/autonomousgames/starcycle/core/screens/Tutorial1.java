@@ -241,20 +241,19 @@ public class Tutorial1 extends Tutorial {
         Vector2 orbDist = new Vector2(ModelSettings.getFloatSetting("chargeRadius"), 0f).scl(2f);
         Vector2 starPos = new Vector2(model.stars[0].state.x, model.stars[0].state.y);
         for (int i = 0; i < Model.numPlayers; i ++) {
-            model.stars[0].setControlPercent(i, 0.2f + i * 0.6f);
-            for (int j = 0; j < 5; j ++) {
-                orbDist.rotate(30f);
+            model.stars[0].setControlPercent(i, 0.3f + i * 0.4f);
+            for (int j = 0; j < 7; j ++) {
+                orbDist.rotate(22.5f);
 
                 // create locked orb
                 ChargeOrb orb = (ChargeOrb) model.addOrb(model.players[i].number,
                         ChargeOrb.class,
                         starPos.x+orbDist.x,
                         starPos.y+orbDist.y,
-                        -120/60f, 0f, false);
-                ((ChargeOrbState)orb.state).star = 0; // set orbiting the 0th star
-                ((ChargeOrbState)orb.state).lockedOn = true;
+                        -3f/60f, 0f, true);
+                model.stars[0].addOrb(orb);
             }
-            orbDist.rotate(30f);
+            orbDist.rotate(22.5f);
         }
         model.stars[1].setControlPercent(0, 0.49f);
         orbClamp[0] = 2;
@@ -428,23 +427,20 @@ public class Tutorial1 extends Tutorial {
                 for (Orb orb: model.novas[i].values()) {
                     orb.removeIfOff();
                 }
-
             }
             model.players[0].state.ammo = ModelSettings.getFloatSetting("nukeCost");
             model.players[0].showIncomeOrbs = true;
             model.players[0].launchPad.showMeter(true);
             Vector2 starPos = new Vector2(model.stars[3].state.x, model.stars[3].state.y);
             Vector2 orbDist = new Vector2(ModelSettings.getFloatSetting("chargeRadius"), 0f).scl(2f);
-            for (int i = 0; i < 2; i ++) {
+            for (int i = 0; i < 3; i ++) {
                 orbDist.rotate(120f);
-
-                ChargeOrb orb = (ChargeOrb) model.addOrb(model.players[i].number, // TODO create locked orb method in Model?
+                ChargeOrb orb = (ChargeOrb) model.addOrb(model.players[0].number, // TODO create locked orb method in Model?
                                                         ChargeOrb.class,
                                                         starPos.x+orbDist.x,
                                                         starPos.y+orbDist.y,
-                                                        -180/60f, 0f, false);
-                ((ChargeOrbState)orb.state).star = 3; // set orbiting the 3rd star
-                ((ChargeOrbState)orb.state).lockedOn = true;
+                                                        -5/60f, 0f, false);
+                model.stars[3].addOrb(orb);
             }
             pageDone.set(4, true);
         }
@@ -474,7 +470,7 @@ public class Tutorial1 extends Tutorial {
             public Player[] initPlayers(ModelScreen screen) {
                 Player[] players = new Player[numPlayers];
                 for (int i=0; i < numPlayers; i++){
-                    players[i] = new Player(i, ui, skins[i], colors[i], true, i == 0);
+                    players[i] = new Player(i, ui, skins[i], colors[i], i == 0);
                     players[i].altWin = true;
                     players[i].launchPad.showMeter(false);
                     players[i].showIncomeOrbs = false;
