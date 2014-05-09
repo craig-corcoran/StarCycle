@@ -111,7 +111,7 @@ public class Tutorial0 extends Tutorial {
         CharSequence text11 = "The dots indicate a good time to go on,";
         CharSequence text12 = "but feel free to move at your own pace.";
         holdText = new LayeredButton(new Vector2(swipeCenter.x-bw*2.5f, swipeCenter.y + offset));
-        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikJumbo, text10, swipeSize).rotateText(90f));
+        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikJumbo, text10).rotateText(90f));
         holdText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text11, new Vector2(bw*3.5f, 0f)).rotateText(90f));
         holdText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text12, new Vector2(bw*5f, 0f)).rotateText(90f));
         add(holdText);
@@ -196,7 +196,7 @@ public class Tutorial0 extends Tutorial {
         offset = 5f*sh;
 
         controlText = new LayeredButton(new Vector2(swipeSize.x/4f, sh/2f + offset));
-        controlText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture stars to gain abilities", swipeSize).rotateText(90f));
+        controlText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture stars to gain abilities").rotateText(90f));
         add(controlText);
 
         float topRow = swipeCenter.x + swipeSize.x/6f;
