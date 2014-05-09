@@ -51,7 +51,6 @@ public class SettingsScreen extends MenuScreen {
 		musVolSlider.addListener(new DragListener(){
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				if (super.touchDown(event, x, y, pointer, button)) {
-					musVolSlider.setSlider(x, y);
 					StarCycle.audio.gameMusic.setVolume(musVolSlider.getPercent());
 					UserSettings.setFloatSetting("musicVolume", musVolSlider.getPercent());
                     musIcon.toggled = musVolSlider.getPercent() == 0f;
@@ -63,7 +62,6 @@ public class SettingsScreen extends MenuScreen {
 			}
 			
 			public void drag(InputEvent event, float x, float y, int pointer) {
-				musVolSlider.setSlider(x, y);
 				StarCycle.audio.gameMusic.setVolume(musVolSlider.getPercent());
 				UserSettings.setFloatSetting("musicVolume", musVolSlider.getPercent());
                 musIcon.toggled = musVolSlider.getPercent() == 0f;
@@ -103,7 +101,6 @@ public class SettingsScreen extends MenuScreen {
 		sfxVolSlider.addListener(new DragListener(){
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				if (super.touchDown(event, x, y, pointer, button)) {
-					sfxVolSlider.setSlider(x, y);
 					StarCycle.audio.sfxVolume = sfxVolSlider.getPercent();
 					UserSettings.setFloatSetting("sfxVolume", sfxVolSlider.getPercent());
 					if (sfxLastTime + sfxCooldown < System.currentTimeMillis()) {
@@ -119,7 +116,6 @@ public class SettingsScreen extends MenuScreen {
 			}
 			
 			public void drag(InputEvent event, float x, float y, int pointer) {
-				sfxVolSlider.setSlider(x, y);
 				StarCycle.audio.sfxVolume = sfxVolSlider.getPercent();
 				UserSettings.setFloatSetting("sfxVolume", sfxVolSlider.getPercent());
                 sfxIcon.toggled = sfxVolSlider.getPercent() == 0f;
