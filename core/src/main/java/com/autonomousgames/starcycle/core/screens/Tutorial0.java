@@ -51,14 +51,16 @@ public class Tutorial0 extends Tutorial {
     LayeredButton launch2b;
     LayeredButton launch2c;
 
+    // Some elements drag onto the screen, then stay put, and then eventually drag away.
+    // These variables note when the element stops dragging and resumes dragging.
     int[] basePages;
     int[] launchPages;
     int[] taketePages;
 
-    Vector2 tileSize = new Vector2(swipeSize.y/2f-bw, swipeSize.x-bw);
+    Vector2 tileSize = new Vector2(swipeSize.y/2f-bw, swipeSize.x-bw); // For split images.
 
-    float starRadius = 1.5f * ModelSettings.getFloatSetting("starRadius");
-
+    float starRadius = 1.5f * ModelSettings.getFloatSetting("starRadius"); // To avoid repeated calls of getFloatSettings.
+    // Where fakeOrbs come out in the demos:
     Vector2 fakeBasePos0 = new Vector2(tileSize.y*153f/420f, bw+tileSize.x*270/420f);
     Vector2 fakeBasePos1 = new Vector2(fakeBasePos0);
     Vector2 orbVel0 = new Vector2(-2f, 1.9f);
@@ -67,8 +69,8 @@ public class Tutorial0 extends Tutorial {
     float coolDown = ModelSettings.getFloatSetting("coolDown");
     float sinceLastShot;
 
-    int orbKillPage = 4;
-    boolean gravityOn = false;
+    int orbKillPage = 4; // Existing orbs are cleared at this point.
+    boolean gravityOn = false; // Track changes to gravity.
 
     public Tutorial0(boolean startAtEnd, StarCycle starcycle) {
         super(Level.LevelType.DOUBLE, ScreenType.TUTORIAL0, ScreenType.TUTORIAL1, ScreenType.STARTMENU, new Base.BaseType[]{Base.BaseType.MALUMA, Base.BaseType.TAKETE}, new Color[][]{Colors.cool, Colors.warm}, starcycle);
@@ -81,6 +83,7 @@ public class Tutorial0 extends Tutorial {
         // Welcome, pausing, and swiping:
         offset = 0f;
 
+        // Starting page text:
         CharSequence text00 = "Welcome to StarCycle!";
         CharSequence text01 = "Swipe within the upper area";
         CharSequence text02 = "to progress through this tutorial.";
@@ -94,10 +97,12 @@ public class Tutorial0 extends Tutorial {
         welcomeText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text04, new Vector2(7.25f * StarCycle.pixelsPerMeter, 0f)).rotateText(90f));
         add(welcomeText);
 
+        // Indicator of pause touch area:
         pauseArea = new LayeredButton(pauseButton.getCenter());
         pauseArea.addLayer(new SpriteLayer(StarCycle.tex.block, pauseButton.getDims()).setSpriteColor(Colors.navy).setSpriteAlpha(0.25f));
         add(pauseArea);
 
+        // Drag hint:
         dragHand = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y+sh*0.3f));
         Vector2 slideVec = new Vector2(0f, -sh*0.6f);
         dragHand.addLayer(new SpriteLayer(StarCycle.tex.fingerRight, new Vector2(swipeSize.x / 4f, swipeSize.x / 3f)).rotateSprite(90f).slideAndReturn(slideVec, 2f));
@@ -111,7 +116,7 @@ public class Tutorial0 extends Tutorial {
         CharSequence text11 = "The dots indicate a good time to go on,";
         CharSequence text12 = "but feel free to move at your own pace.";
         holdText = new LayeredButton(new Vector2(swipeCenter.x-bw*2.5f, swipeCenter.y + offset));
-        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikJumbo, text10, swipeSize).rotateText(90f));
+        holdText.addLayer(new TextLayer(StarCycle.tex.gridnikJumbo, text10).rotateText(90f));
         holdText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text11, new Vector2(bw*3.5f, 0f)).rotateText(90f));
         holdText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, text12, new Vector2(bw*5f, 0f)).rotateText(90f));
         add(holdText);
@@ -124,10 +129,10 @@ public class Tutorial0 extends Tutorial {
         // Second page
         // Aiming:
         offset = 2f*sh;
-        basePages = new int[]{2, pages-1};
+        basePages = new int[]{2, pages-1}; // Maluma base stationary from this point until the transition page.
 
-        model.players[0].base.translateBase(0f, offset);
-        fakeBasePos0.add(0f, offset);
+        model.players[0].base.translateBase(0f, offset); // Start Maluma on this page.
+        fakeBasePos0.add(0f, offset); // First FakeOrb origin.
 
         aim = new LayeredButton(new Vector2(swipeCenter.x-bw/2f, swipeCenter.y + offset));
         aim.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[1], new Vector2(0f, -tileSize.x/2f), tileSize));
@@ -136,6 +141,7 @@ public class Tutorial0 extends Tutorial {
         aim.rotateLayers(90f);
         add(aim);
 
+        // Targets for demonstrating the touch behind to aim forwards concept:
         Vector2 targetDims = new Vector2(0.5f,0.5f).scl(StarCycle.pixelsPerMeter);
         Vector2 bo = model.players[0].base.baseButton.getCenter();
         Vector2 targetVec = new Vector2(-Base.maxPointerLength * StarCycle.pixelsPerMeter, 0f).scl(1.75f).rotate(-25f);
@@ -160,10 +166,10 @@ public class Tutorial0 extends Tutorial {
         // Third page
         // Shooting:
         offset = 3f*sh;
-        launchPages = new int[]{3, pages-1};
+        launchPages = new int[]{3, pages-1}; // Maluma LaunchPad stationary from this point until the transition page.
 
-        model.players[0].launchPad.movePos(0f, offset);
-        fakeBasePos1.add(0f, offset);
+        model.players[0].launchPad.movePos(0f, offset); // Start the LaunchPad here.
+        fakeBasePos1.add(0f, offset); // Second FakeOrb origin.
 
         shoot = new LayeredButton(new Vector2(swipeCenter.x-bw/2f, swipeCenter.y + offset));
         shoot.addLayer(new SpriteLayer(StarCycle.tex.tutorialImages[1], new Vector2(0f, -tileSize.x/2f), tileSize));
@@ -175,12 +181,14 @@ public class Tutorial0 extends Tutorial {
         // Fourth page
         // Orbiting:
         offset = 4f*sh;
-        taketePages = new int[]{4, pages-1};
+        taketePages = new int[]{4, pages-1}; // Takete base stationary from this point until the transition page.
 
+        // Start Takete on this page, below the swiper, and aiming toward the demo star:
         model.players[1].base.moveBase(new Vector2(StarCycle.meterWidth/2f-1f, StarCycle.meterHeight*2f/3f+1f));
         model.players[1].base.translateBase(0f, offset);
         model.players[1].base.setPointer(2f, 2f);
 
+        // Gravity starts off; stars start on this page:
         for (int i = 0; i < model.stars.length; i ++) {
             Star star = model.stars[i];
             star.gravityOff();
@@ -199,6 +207,7 @@ public class Tutorial0 extends Tutorial {
         controlText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture stars to gain abilities", swipeSize).rotateText(90f));
         add(controlText);
 
+        // Lots of fake stars, fake launchpads, and text:
         float topRow = swipeCenter.x + swipeSize.x/6f;
 
         topStar0 = Star.getButton(new Vector2(topRow, sh/6f + offset), starRadius*0.70f);
@@ -293,8 +302,8 @@ public class Tutorial0 extends Tutorial {
         launch2c.getLayer(1).toggleSpecial();
         add(launch2c);
 
-        borders(pages + 1);
-        pageDone.set(1, true);
+        borders(pages + 1); // Generate the borders.
+        pageDone.set(1, true); // The page
 
         ui.addActor(swiper);
 
