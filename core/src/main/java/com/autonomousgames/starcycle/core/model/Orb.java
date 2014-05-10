@@ -184,9 +184,9 @@ public class Orb implements Collidable, Pool.Poolable {
     }
 
     boolean isOnScreen() {
-        return ((state.x > -radius*2f) & (state.y > -radius*2f)
-                & (state.x < StarCycle.meterWidth + radius)
-                & (state.y < StarCycle.meterHeight + radius));
+        return ((state.x > -radius*1.5f) & (state.y > -radius*1.5f)
+                & (state.x < StarCycle.meterWidth + radius*1.5f)
+                & (state.y < StarCycle.meterHeight + radius*1.5f));
     }
 
     public void removeIfOff() {

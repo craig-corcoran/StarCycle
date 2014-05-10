@@ -55,7 +55,7 @@ public class Void extends ChargeOrb implements Collidable {
         AtlasRegion[] textures = getTextures(player);
 
         LinkedList<SpriteLayerLite> spriteLayers = new LinkedList<SpriteLayerLite>();
-        spriteLayers.add(new SpriteLayerLite(StarCycle.tex.voidRing, new Vector2(), ((Void) this).voidRingDims.cpy().scl(StarCycle.pixelsPerMeter), player.colors[0]));
+        spriteLayers.add(new SpriteLayerLite(StarCycle.tex.voidRing, new Vector2(), voidRingDims.cpy().scl(StarCycle.pixelsPerMeter), player.colors[0]));
         SpriteLayerLite activeGrad = new SpriteLayerLite(StarCycle.tex.gradientRound, new Vector2(), imageDims.cpy().scl(3f), player.colors[0]);
         activeGrad.activateable = true;
         spriteLayers.add(activeGrad);
@@ -85,4 +85,11 @@ public class Void extends ChargeOrb implements Collidable {
 			super.beginSensorContact(obj);
 		}
 	}
+
+    @Override
+    boolean isOnScreen() {
+        return ((state.x > -voidRingDims.x*0.75f) & (state.y > -voidRingDims.y*0.75f)
+                & (state.x < StarCycle.meterWidth + radius*0.75f)
+                & (state.y < StarCycle.meterHeight + radius*0.75f));
+    }
 }
