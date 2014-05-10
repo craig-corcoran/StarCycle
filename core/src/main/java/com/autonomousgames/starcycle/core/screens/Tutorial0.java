@@ -204,7 +204,7 @@ public class Tutorial0 extends Tutorial {
         offset = 5f*sh;
 
         controlText = new LayeredButton(new Vector2(swipeSize.x/4f, sh/2f + offset));
-        controlText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture stars to gain abilities", swipeSize).rotateText(90f));
+        controlText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture stars to gain abilities").rotateText(90f));
         add(controlText);
 
         // Lots of fake stars, fake launchpads, and text:

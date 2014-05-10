@@ -119,7 +119,7 @@ public class Tutorial1 extends Tutorial {
         offset = sh;
 
         controlText = new LayeredButton(new Vector2(swipeSize.x/4f, sh/2f + offset));
-        controlText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture stars to gain abilities", swipeSize).rotateText(90f));
+        controlText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture stars to gain abilities").rotateText(90f));
         add(controlText);
 
         float topRow = swipeCenter.x + swipeSize.x/6f;
@@ -307,11 +307,11 @@ public class Tutorial1 extends Tutorial {
         offset = 5f*sh;
 
         winText = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y + offset));
-        winText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture all stars to win!", swipeSize).rotateText(90f));
+        winText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture all stars to win!").rotateText(90f));
         add(winText);
 
         outroText = new LayeredButton(new Vector2(sw/2f, sh/2f + offset));
-        outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "This concludes the tutorial.", swipeSize).rotateText(90f));
+        outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "This concludes the tutorial.").rotateText(90f));
         outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Now you are ready to play StarCycle!", new Vector2(bw*1.5f, 0f)).rotateText(90f));
         outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Jump into the solo campaign,", new Vector2(bw*4f, 0f)).rotateText(90f));
         outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "or challenge a friend in multiplayer!", new Vector2(bw*5.5f, 0f)).rotateText(90f));

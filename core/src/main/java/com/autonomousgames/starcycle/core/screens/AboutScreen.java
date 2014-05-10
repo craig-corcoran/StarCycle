@@ -20,19 +20,19 @@ public class AboutScreen extends MenuScreen {
 		
 		Vector2 versionVector = new Vector2((ui.getWidth()*1f)/8f, ui.getHeight()*1f/2f);
 		LayeredButton versionText = new LayeredButton(versionVector);
-		versionText.addLayer(new TextLayer(StarCycle.tex.latoLightLarge,"StarCycle V" + StarCycle.version, versionVector).rotateText(90f));
+		versionText.addLayer(new TextLayer(StarCycle.tex.latoLightLarge,"StarCycle V" + StarCycle.version).rotateText(90f));
 		
 		Vector2 copyrightVector = new Vector2((ui.getWidth()*2f)/8f, ui.getHeight()*1f/2f);
 		LayeredButton copyrightText = new LayeredButton(copyrightVector);
-		copyrightText.addLayer(new TextLayer(StarCycle.tex.latoLightLarge,"Copyright Autonomous Games", copyrightVector).rotateText(90f));
+		copyrightText.addLayer(new TextLayer(StarCycle.tex.latoLightLarge,"Copyright Autonomous Games").rotateText(90f));
 		
 		Vector2 websiteVector = new Vector2((ui.getWidth()*3f)/8f, ui.getHeight()*1f/2f);
 		LayeredButton websiteText = new LayeredButton(websiteVector);
-		websiteText.addLayer(new TextLayer(StarCycle.tex.latoLightLarge, "autonomousgames.com",websiteVector).rotateText(90f));
+		websiteText.addLayer(new TextLayer(StarCycle.tex.latoLightLarge, "autonomousgames.com").rotateText(90f));
 		
 		Vector2 kubatkoVector = new Vector2((ui.getWidth()*4f)/8f, ui.getHeight()*1f/2f);
 		LayeredButton kubatkoText = new LayeredButton(kubatkoVector);
-		kubatkoText.addLayer(new TextLayer(StarCycle.tex.latoLightLarge, "Original Music by Kubatko",kubatkoVector).rotateText(90f));
+		kubatkoText.addLayer(new TextLayer(StarCycle.tex.latoLightLarge, "Original Music by Kubatko").rotateText(90f));
 		
 		ui.addActor(backButton);
 		ui.addActor(versionText);
