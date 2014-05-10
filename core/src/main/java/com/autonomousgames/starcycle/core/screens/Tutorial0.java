@@ -303,57 +303,67 @@ public class Tutorial0 extends Tutorial {
         add(launch2c);
 
         borders(pages + 1); // Generate the borders.
-        pageDone.set(1, true); // The page
+        pageDone.set(1, true); // Turn on ellipsis on this page.
 
         ui.addActor(swiper);
 
         Model.setCosts(0f, 0f, 0f);
         Orb.useLifeSpan = false;
 
+        // When swiping back from Tutorial1 to Tutorial0, move to the final page:
         if (startAtEnd) {
+            // Do not replace this loop with a single command!
             for (int i = 0; i < pages-1; i ++) {
                 moveDraggables(-sh);
                 currentBorder++;
             }
         }
-        startAtEnd = false; // The warning is a lie. StarCycle.java will check this value before disposing of the screen.
+        startAtEnd = false; // The warning is a lie. StarCycle.java will check the value before disposing of the screen.
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
 
-        sinceLastShot = Math.min(sinceLastShot + delta, coolDown);
+        // Cooldown for FakeOrbs:
+        sinceLastShot = sinceLastShot + delta;
         if (sinceLastShot >= coolDown) {
+            // Choose where to aim:
             if (aim.getLayer(1).drawCondition()) {
-                vel.set(orbVel1);
+                vel.set(orbVel1); // Angled.
             }
             else {
-                vel.set(orbVel0);
+                vel.set(orbVel0); // Straight up.
             }
+            // If the "aim" fake base is visible:
             if (0f < fakeBasePos0.y && fakeBasePos0.y < sh) {
                 fakeOrbs.add(new ImageOrb(StarCycle.tex.fakeorbTextures[0], fakeOrbRad, fakeBasePos0, StarCycle.screenWidth,
                         StarCycle.screenHeight, vel, new Vector2(0, 0)));
             }
+            // If the "shoot" fake base is visible and launching:
             if (shoot.getLayer(2).drawCondition() && 0f < fakeBasePos1.y && fakeBasePos1.y < sh) {
                 fakeOrbs.add(new ImageOrb(StarCycle.tex.fakeorbTextures[0], fakeOrbRad, fakeBasePos1, StarCycle.screenWidth,
                         StarCycle.screenHeight, orbVel0, new Vector2(0, 0)));
             }
-            sinceLastShot = 0f;
+            sinceLastShot = 0f; //Reset.
         }
 
+        // Maluma streams automatically on the "aim" page only:
         if ((!still() && model.players[0].state.buttonStates[0]) || (currentBorder == 2 && still() && !model.players[0].state.buttonStates[0])) {
             model.players[0].state.buttonStates[0] = !(model.players[0].state.buttonStates[0]);
         }
 
-        if (model.stars[1].state.numActiveOrbs[1] >= 10 && model.players[1].state.buttonStates[0]) {
-            model.players[1].state.buttonStates[0] = false;
-        }
-
+        // Takete starts streaming on the "orbit" page or if he has fewer than 10 orbs locked on:
         if (currentBorder == 4 && still() && model.stars[1].state.numActiveOrbs[1] < 10 && !model.players[1].state.buttonStates[0]) {
             model.players[1].state.buttonStates[0] = true;
         }
 
+        // Takete stops streaming once 10 orbs lock onto the star or when off the screen:
+        if (((currentBorder != 4 && still()) || model.stars[1].state.numActiveOrbs[1] >= 10) && model.players[1].state.buttonStates[0]) {
+            model.players[1].state.buttonStates[0] = false;
+        }
+
+        // Clean up existing orbs:
         if (currentBorder >= orbKillPage && !still()) {
             for (int i = 0; i < model.numPlayers; i ++) {
 
@@ -369,6 +379,7 @@ public class Tutorial0 extends Tutorial {
             }
         }
 
+        // Turn on gravity for the "orbit" page:
         if (currentBorder >= 4 && !gravityOn) {
             for (int i = 0; i < model.stars.length; i ++) {
                 Star star = model.stars[i];
@@ -377,6 +388,7 @@ public class Tutorial0 extends Tutorial {
             gravityOn = true;
         }
 
+        // Turn off gravity when moving back from the "orbit" page:
         if (currentBorder < 4 && !moving && gravityOn) {
             for (int i = 0; i < model.stars.length; i ++) {
                 model.stars[i].gravityOff();
@@ -385,6 +397,7 @@ public class Tutorial0 extends Tutorial {
         }
 
 
+        // Always remove off-screen orbs:
         for (int i = 0; i < model.numPlayers; i ++) {
 
             for (ChargeOrb orb: model.orbs[i].values()) {
@@ -398,6 +411,7 @@ public class Tutorial0 extends Tutorial {
             }
         }
 
+        // Targets turn green after Maluma aims at them:
         if (currentBorder == 2 && !pageDone.get(2)) {
             float aimAng = model.players[0].base.getPointer().angle();
             if (152.5f < aimAng && aimAng < 157.5f && !target0.isActive()) {
@@ -409,17 +423,20 @@ public class Tutorial0 extends Tutorial {
             if (112.5f < aimAng && aimAng < 117.5f && !target2.isActive()) {
                 target2.activate();
             }
+            // Aiming at all three targets completes the page:
             if (target0.isActive() && target1.isActive() && target2.isActive()) {
                 pageDone.set(2, true);
             }
         }
 
+        // Touching the orb button completes the page:
         if (currentBorder == 3 && !pageDone.get(3)) {
             if (model.players[0].state.buttonStates[0]) {
                 pageDone.set(3, true);
             }
         }
 
+        // Getting five orbs to charge completes the page:
         if (currentBorder == 4 && !pageDone.get(4)) {
             if (model.stars[0].state.numActiveOrbs[0] >= 5) { // getOrbCount(Orb.OrbType.ORB) >= 5) {
                 pageDone.set(4, true);
