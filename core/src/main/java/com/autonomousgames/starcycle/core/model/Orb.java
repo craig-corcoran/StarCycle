@@ -96,7 +96,7 @@ public class Orb implements Collidable, Pool.Poolable {
     public void draw(SpriteBatch batch, LayeredSprite[] layers) {
         drawAngle += rotVel; // This must happen here, because update doesn't get called for charging orbs.
         if (isOnScreen()) {
-
+            // TODO Do we really want this isnstanceof check for every orb for each frame? Shouldn't we just override in ChargeOrb?
             boolean active = (this instanceof ChargeOrb) ? ((ChargeOrbState) state).lockedOn : true;
             layers[playerNum].draw(batch, 1f, state.x*StarCycle.pixelsPerMeter, state.y*StarCycle.pixelsPerMeter, drawAngle, active);
         }
