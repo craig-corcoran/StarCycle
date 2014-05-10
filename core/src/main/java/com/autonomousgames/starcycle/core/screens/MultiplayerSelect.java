@@ -60,7 +60,9 @@ public class MultiplayerSelect extends LevelSelectScreen{
 	public MultiplayerSelect(LevelType lvl, BaseType[] skins, Color[][] colors) {
 		
 		super();
-		
+
+        backButton.addListener(new ScreenDoneClickListener(this, ScreenType.MULTIPLAYERMODESELECT));
+
 		Vector2 buttonDims = new Vector2(ui.getHeight()/6f, ui.getHeight()/6f);
 		
 		ready0 = new ToggleButton(new Vector2(ui.getWidth()*8f/9f, ui.getHeight()/7f), buttonDims);
@@ -163,7 +165,7 @@ public class MultiplayerSelect extends LevelSelectScreen{
 			onButton = trefoilButton;
 			break;
 		}
-		onButton.toggled = true;
+		onButton.toggle(true);
 		onButton.deactivate();
 		
 		maluma0 = new ToggleButton(new Vector2(ui.getWidth()*3f/4f, ui.getHeight()*3f/10f), buttonDims);
@@ -363,7 +365,7 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		skinSelect0.setRotation(90f);
 		skinSelect0.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				if (!skinSelect0.toggled) {
+				if (!skinSelect0.isToggled()) {
 					skinRadio0.removeAll();
 				}
 				else {
@@ -385,7 +387,7 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		skinSelect1.setRotation(270f);
 		skinSelect1.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				if (!skinSelect1.toggled) {
+				if (!skinSelect1.isToggled()) {
 					skinRadio1.removeAll();
 				}
 				else {
@@ -404,7 +406,7 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		colorSelect0.addLayer(new SpriteLayer(StarCycle.tex.swatchIcon, buttonDims.cpy().scl(0.75f)).rotateSprite(90f));
 		colorSelect0.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				if (!colorSelect0.toggled) {
+				if (!colorSelect0.isToggled()) {
 					colorRadio0.removeAll();
 				}
 				else {
@@ -421,7 +423,7 @@ public class MultiplayerSelect extends LevelSelectScreen{
 		colorSelect1.addLayer(new SpriteLayer(StarCycle.tex.swatchIcon, buttonDims.cpy().scl(0.75f)).rotateSprite(270f));
 		colorSelect1.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				if (!colorSelect1.toggled){
+				if (!colorSelect1.isToggled()){
 					colorRadio1.removeAll();
 				}
 				else {
@@ -462,7 +464,7 @@ public class MultiplayerSelect extends LevelSelectScreen{
 			break;
 		}
 		
-		onButton.toggled = true;
+		onButton.toggle(true);
 		onButton.deactivate();
 		
 		if (skins[1] == null) {
@@ -487,7 +489,7 @@ public class MultiplayerSelect extends LevelSelectScreen{
 			break;
 		}
 		
-		onButton.toggled = true;
+		onButton.toggle(true);
 		onButton.deactivate();
 		
 		ToggleButton offButton;
@@ -520,7 +522,7 @@ public class MultiplayerSelect extends LevelSelectScreen{
 			offButton = cool1;
 		}
 		
-		onButton.toggled = true;
+		onButton.toggle(true);
 		onButton.deactivate();
 		offButton.lock();
 		
@@ -552,7 +554,7 @@ public class MultiplayerSelect extends LevelSelectScreen{
 			offButton = (colors0 != Colors.warm) ? warm1 : cool1;
 		}
 		
-		onButton.toggled = true;
+		onButton.toggle(true);
 		onButton.deactivate();
 		offButton.lock();
 		

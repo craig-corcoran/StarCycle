@@ -18,8 +18,8 @@ public class TextLayer extends Layer{
     boolean changed = false;
 	Vector2 buttonCenter = new Vector2(0f, 0f);
 
-	public TextLayer(BitmapFont font, java.lang.CharSequence text, Vector2 relPos, Vector2 dims) {
-		super(relPos, dims);
+	public TextLayer(BitmapFont font, java.lang.CharSequence text, Vector2 relPos) {
+		super(relPos, new Vector2(0f, 0f));
 		originalTexture = font.getRegion().getTexture();
 		textSprite = new Sprite(originalTexture); 
 		cache = new TransformText(new BitmapFont(font.getData(), textSprite, font.usesIntegerPositions()));
@@ -28,12 +28,12 @@ public class TextLayer extends Layer{
 		cache.setPosition(MathUtils.round(- cacheDims.x/2f), MathUtils.round(cacheDims.y/2f));
 	}
 	
-	public TextLayer(BitmapFont font, java.lang.CharSequence text, Vector2 dims) {
-		this(font, text, new Vector2(0f, 0f), dims);
+	public TextLayer(BitmapFont font, java.lang.CharSequence text) {
+		this(font, text, new Vector2(0f, 0f));
 	}
 	
-	public TextLayer(BitmapFont font, java.lang.CharSequence text, Vector2 relPos, Vector2 dims, Color color, float angle) {
-		this(font, text, relPos, dims);
+	public TextLayer(BitmapFont font, java.lang.CharSequence text, Vector2 relPos, Color color, float angle) {
+		this(font, text, relPos);
 		setLayerColor(color);
 		setRotation(angle);
 	}

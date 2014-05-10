@@ -17,7 +17,7 @@ public class MainMenu extends MenuScreen {
 		ScreenType startDestination = StarCycle.virgin ? ScreenType.TUTORIAL0 : ScreenType.STARTMENU;
 		
 		StandardButton startButton = new StandardButton(new Vector2(ui.getWidth()/3f, ui.getHeight()/2f), startButtonDims, StarCycle.tex.genericLogo, padding);
-		startButton.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Start", startButtonDims));
+		startButton.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Start"));
 		startButton.rotateLayers(90f);
 		startButton.addListener(new ScreenDoneClickListener(this,startDestination));
 		

@@ -101,12 +101,16 @@ public class Texturez {
     public final AtlasRegion splashTexture;
     public final AtlasRegion genericLogo;
     public final AtlasRegion questionIcon;
+    public final AtlasRegion warningIcon;
     public final AtlasRegion settingsIcon;
     public final AtlasRegion soloIcon;
     public final AtlasRegion multiplayerIcon; // 4:3
-    public final AtlasRegion tablet; //3:4
+    public final AtlasRegion tablet; // 3:4
     public final AtlasRegion network;
     public final AtlasRegion globe;
+    public final AtlasRegion wifi; // 4:3
+    public final AtlasRegion stats;
+    public final AtlasRegion search;
     public final AtlasRegion musicIcon;
     public final AtlasRegion soundIcon;
     public final AtlasRegion noIcon;
@@ -271,12 +275,16 @@ public class Texturez {
         splashTexture = atlas.findRegion("ag-logo");
         genericLogo = atlas.findRegion("generic-starcycle-logo");
         questionIcon = atlas.findRegion("icon-question");
+        warningIcon = atlas.findRegion("icon-warning");
         settingsIcon = atlas.findRegion("icon-tools");
         soloIcon = atlas.findRegion("icon-solo");
         multiplayerIcon = atlas.findRegion("icon-multi"); // 4:3
         tablet= atlas.findRegion("icon-tablet"); // 3:4
         network = atlas.findRegion("icon-antenna");
         globe = atlas.findRegion("icon-globe");
+        wifi = atlas.findRegion("icon-wifi"); // 4:3
+        stats = atlas.findRegion("icon-stats");
+        search = atlas.findRegion("icon-search");
         musicIcon = atlas.findRegion("icon-music");
         soundIcon = atlas.findRegion("icon-bell");
         noIcon = atlas.findRegion("icon-no");

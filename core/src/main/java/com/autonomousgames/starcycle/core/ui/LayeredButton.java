@@ -205,6 +205,10 @@ public class LayeredButton extends Group {
         return layers.get(i);
     }
 
+    public Layer getLast() {
+        return layers.get(layers.size()-1);
+    }
+
     public Color getLayerColor(int index) {
         return layers.get(index).getColor();
     }
@@ -215,6 +219,10 @@ public class LayeredButton extends Group {
             colors[i] = getLayerColor(i);
         }
         return colors;
+    }
+
+    public void removeLayer(int i) {
+        layers.remove(i);
     }
 
     public void flip(boolean x, boolean y) {
@@ -233,6 +241,10 @@ public class LayeredButton extends Group {
 
     public boolean touchOn(float x, float y) {
         return (0 <= x && x <= touchSize.x && 0 <= y && y <= touchSize.y);
+    }
+
+    public boolean isDown() {
+        return pressedDown;
     }
 
     // Enable the button.
