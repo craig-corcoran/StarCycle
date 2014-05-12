@@ -88,6 +88,7 @@ public class Tutorial1 extends Tutorial {
         add(transStar0);
         add(transStar1);
 
+        // Create a purely graphical copy of the "orbit" page from Tutorial0:
         fakeLaunch = model.players[0].launchPad.getOrbButton(new Vector2(sw,sh + offset), 180f, model.players[0].colors, false);
         add(fakeLaunch);
 
@@ -119,9 +120,10 @@ public class Tutorial1 extends Tutorial {
         offset = sh;
 
         controlText = new LayeredButton(new Vector2(swipeSize.x/4f, sh/2f + offset));
-        controlText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture stars to gain abilities", swipeSize).rotateText(90f));
+        controlText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture stars to gain abilities").rotateText(90f));
         add(controlText);
 
+        // Lots of fake stars, fake launchpads, and text:
         float topRow = swipeCenter.x + swipeSize.x/6f;
 
         topStar0 = Star.getButton(new Vector2(topRow, sh/6f + offset), starRadius*0.70f);
@@ -225,11 +227,12 @@ public class Tutorial1 extends Tutorial {
         voidText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Voids can destroy enemy orbs", new Vector2(swipeSize.x/8f, 0f)).rotateText(90f));
         add(voidText);
 
-        model.players[0].base.translateBase(0f, offset);
-        model.players[0].launchPad.movePos(0f, offset);
-        basePages = new int[]{2, pages-2};
-        launchPages = new int[]{2, pages-2};
+        model.players[0].base.translateBase(0f, offset); // Start Maluma on this page.
+        model.players[0].launchPad.movePos(0f, offset); // Start the LaunchPad here.
+        basePages = new int[]{2, pages-2}; // Stationary pages.
+        launchPages = new int[]{2, pages-2}; // Stationary pagesf.
 
+        // Position the stars, turn off gravity, and set up the stationary pages:
         for (int i = 0; i < 2; i ++) {
             Star star = model.stars[i];
             star.moveStar(2f, -1f + i * 2f + offset / StarCycle.pixelsPerMeter);
@@ -237,10 +240,11 @@ public class Tutorial1 extends Tutorial {
             starClamp[i][0] = 2;
             starClamp[i][1] = 3;
         }
+        // The "void" page starts out with orbs for both players:
         Vector2 orbDist = new Vector2(ModelSettings.getFloatSetting("chargeRadius"), 0f).scl(2f);
         Vector2 starPos = new Vector2(model.stars[0].state.x, model.stars[0].state.y);
         for (int i = 0; i < Model.numPlayers; i ++) {
-            model.stars[0].setControlPercent(i, 0.3f + i * 0.4f);
+            model.stars[0].setControlPercent(i, 0.3f + i * 0.4f); // Starting control chosen for effect.
             for (int j = 0; j < 7; j ++) {
                 orbDist.rotate(22.5f);
 
@@ -254,9 +258,11 @@ public class Tutorial1 extends Tutorial {
             }
             orbDist.rotate(22.5f);
         }
-        model.stars[1].setControlPercent(0, 0.49f);
+        model.stars[1].setControlPercent(0, 0.49f); // This star is at the threshold of control by player 0.
+        // Orb stationary pages:
         orbClamp[0] = 2;
         orbClamp[1] = 3;
+        // Initial target vector:
         Vector2 toStar = model.stars[1].getPosition().sub(model.players[0].base.origin);
         Vector2 aimVec = toStar.cpy().rotate(-90f).nor().scl(model.stars[0].radius+ ModelSettings.getFloatSetting("chargeRadius")*0.95f);
         aimVec.add(toStar);
@@ -277,6 +283,7 @@ public class Tutorial1 extends Tutorial {
         novaText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Novas can instantly capture a star", new Vector2(swipeSize.x/8f, 0f)).rotateText(90f));
         add(novaText);
 
+        // Set this star's position, gravity, and stationary pages:
         model.stars[2].moveStar(1f, offset / StarCycle.pixelsPerMeter);
         model.stars[2].gravityOff();
         starClamp[2][0] = 3;
@@ -299,6 +306,7 @@ public class Tutorial1 extends Tutorial {
         ammoText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Novas use lots of energy, so aim carefully!", new Vector2(swipeSize.x*3f/16f, 0f)).rotateText(90f));
         add(ammoText);
 
+        // Set this star's position, gravity, and stationary pages:
         model.stars[3].moveStar(-2f, offset / StarCycle.pixelsPerMeter);
         model.stars[3].gravityOff();
 
@@ -307,11 +315,11 @@ public class Tutorial1 extends Tutorial {
         offset = 5f*sh;
 
         winText = new LayeredButton(new Vector2(swipeCenter.x, swipeCenter.y + offset));
-        winText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture all stars to win!", swipeSize).rotateText(90f));
+        winText.addLayer(new TextLayer(StarCycle.tex.gridnikLarge, "Capture all stars to win!").rotateText(90f));
         add(winText);
 
         outroText = new LayeredButton(new Vector2(sw/2f, sh/2f + offset));
-        outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "This concludes the tutorial.", swipeSize).rotateText(90f));
+        outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "This concludes the tutorial.").rotateText(90f));
         outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Now you are ready to play StarCycle!", new Vector2(bw*1.5f, 0f)).rotateText(90f));
         outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "Jump into the solo campaign,", new Vector2(bw*4f, 0f)).rotateText(90f));
         outroText.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "or challenge a friend in multiplayer!", new Vector2(bw*5.5f, 0f)).rotateText(90f));
@@ -322,6 +330,7 @@ public class Tutorial1 extends Tutorial {
         // Transition:
         offset = 6*sh;
 
+        // Create the appearance of swiping back to the menu:
         Vector2 fakeIconsize = new Vector2(sh/5f, sh/5f);
 
         fakeBack = new LayeredButton(new Vector2(backPosition.x, backPosition.y + offset));
@@ -346,6 +355,7 @@ public class Tutorial1 extends Tutorial {
         ui.addActor(swiper);
 
         if (startAtEnd) {
+            // This currently shouldn't happen, but leave this here until we are certain that there will be no Tutorial2:
             for (int i = 0; i < pages-1; i ++) {
                 moveDraggables(-sh);
                 currentBorder++;
@@ -353,6 +363,7 @@ public class Tutorial1 extends Tutorial {
             startAtEnd = false;
         }
         else {
+            // If we decide to remove the above conditional when finalizing the tutorial, these actions should remain:
             moveDraggables(-sh);
             currentBorder = 1;
         }
@@ -361,12 +372,14 @@ public class Tutorial1 extends Tutorial {
     @Override
     public void update(float delta) {
         super.update(delta);
+        // Swiping back to Tutorial0:
         if (!moving && currentBorder == 0) {
             nextScreen = prevScreen;
-            startAtEnd = true;
+            startAtEnd = true; // Setting this.startAtEnd to true actually makes the next screen start at the end.
             isDone = true;
         };
 
+        // Launch an orb upon reaching the "void" page:
         if (currentBorder == 2 && !moving && !page2orbLaunched) {
             Model.setCosts(0f,0f,0f);
             Vector2 vel = model.players[0].base.getPointer().scl(ModelSettings.getFloatSetting("velScaleOrbFact"));
@@ -375,46 +388,51 @@ public class Tutorial1 extends Tutorial {
                     model.players[0].base.origin.x,
                     model.players[0].base.origin.y,
                     vel.x, vel.y, false);
-            page2orbLaunched = true;
+            page2orbLaunched = true; // Only do this once.
         }
+        // While track the orb until it reaches the star:
         if (page2orbLaunched && !gravityOn) {
             if (((ChargeOrbState)orb.state).star >= 0) { // if orbiting
                 for (int i = 0; i < 3; i ++) {
                     Star star = model.stars[i];
-                    star.gravityOn();
+                    star.gravityOn(); // Turn the star gravity back on.
                 }
-                gravityOn = true;
+                gravityOn = true; // Track this action.
                 orb.lockOn(model.stars[1]); // XXX removed angle here..
             }
         }
+        // Since the base is being manually leveled, track the targeted star directly:
         if (page2orbLaunched && model.players[0].base.level == 0) {
             if (model.stars[1].state.possession[0] >= 0.5f) {
-                model.players[0].setLevel(1);
-                model.players[0].base.setPointerPolar(2f, 150f);
+                model.players[0].setLevel(1); // Level up.
+                model.players[0].base.setPointerPolar(2f, 150f); // Suggest the upcoming void target.
+                // Revert to normal leveling:
                 model.players[0].base.manualLvl = false;
                 model.players[0].launchPad.manualLvl = false;
-                voidHint.activate();
-
+                voidHint.activate(); // Suggest a void.
             }
         }
 
+        // Removing enemy orbs completes the page:
         if (currentBorder == 2 && !pageDone.get(2)) {
             if (model.stars[0].state.numActiveOrbs[1] == 0) {
                 pageDone.set(2, true);
 
             }
         }
+        // Hitting the third star with a nova completes the page:
         if (currentBorder == 3 && !pageDone.get(3)) {
             if (model.stars[2].hitByNova) {
                 pageDone.set(3, true);
             }
         }
+        // Suggest a nova:
         if (model.players[0].base.level == 2 && !novaHint.isActive()) {
             novaHint.activate();
         }
 
         if (currentBorder == 4 && !moving && !model.players[0].showIncomeOrbs) {
-
+            // Remove off-screen orbs:
             Model.setCosts();
             for (int i = 0; i < Model.numPlayers; i ++) {
                 for (Orb orb: model.orbs[i].values()) {
@@ -427,9 +445,10 @@ public class Tutorial1 extends Tutorial {
                     orb.removeIfOff();
                 }
             }
-            model.players[0].state.ammo = ModelSettings.getFloatSetting("nukeCost");
-            model.players[0].showIncomeOrbs = true;
-            model.players[0].launchPad.showMeter(true);
+            model.players[0].state.ammo = ModelSettings.getFloatSetting("nukeCost"); // Give the player some ammo.
+            model.players[0].showIncomeOrbs = true; // Turn on income orbs.
+            model.players[0].launchPad.showMeter(true); // Turn on the ammo meter.
+            // Create orbs to demonstrate income:
             Vector2 starPos = new Vector2(model.stars[3].state.x, model.stars[3].state.y);
             Vector2 orbDist = new Vector2(ModelSettings.getFloatSetting("chargeRadius"), 0f).scl(2f);
             for (int i = 0; i < 3; i ++) {
@@ -441,9 +460,10 @@ public class Tutorial1 extends Tutorial {
                                                         -5/60f, 0f, false);
                 model.stars[3].addOrb(orb);
             }
-            pageDone.set(4, true);
+            pageDone.set(4, true); // This page is just a demo.
         }
 
+        // Only one star has gravity for the "income" page:
         if (currentBorder == 4 && !moving && !ammoStarOnly) {
             for (int i = 0; i < 3; i ++) {
                 model.stars[i].gravityOff();
@@ -451,6 +471,7 @@ public class Tutorial1 extends Tutorial {
             model.stars[3].gravityOn();
             ammoStarOnly = true;
         }
+        // The last star only has gravity for the "income" page:
         else if (currentBorder != 4 && ammoStarOnly) {
             for (int i = 0; i < 3; i ++) {
                 model.stars[i].gravityOn();
