@@ -9,7 +9,7 @@ public class ModelSettings {
 	static {
 		userPrefs = Gdx.app.getPreferences("StarCycle-model-settings");
 		int clientSettingsVersion = userPrefs.getInteger("settingsVersion");
-		int currentSettingsVersion = 61;
+		int currentSettingsVersion = 62;
 		if (clientSettingsVersion != currentSettingsVersion) {
 			Gdx.app.log("ModelSettings", "rewriting settings file");
 			userPrefs.putInteger("settingsVersion", currentSettingsVersion);
@@ -27,7 +27,7 @@ public class ModelSettings {
 
             //
 			userPrefs.putFloat("gravScalar", 0.6f);
-            userPrefs.putFloat("orbitScal" , 0.1f);
+            userPrefs.putFloat("orbitScal" , 0.2f);
 
 			userPrefs.putFloat("orbitSpeed", 0.02f);
 			userPrefs.putFloat("starRadius", 0.45f);
