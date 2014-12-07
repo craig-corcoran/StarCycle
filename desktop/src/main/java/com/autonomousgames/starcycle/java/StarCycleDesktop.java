@@ -15,8 +15,8 @@ public class StarCycleDesktop {
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
         cfg.title = "Starcycle";
         cfg.useGL20 = false;
-        cfg.width = 1024;
-        cfg.height = 768;
+        cfg.width = 1280;
+        cfg.height = 800;
         StarCycle.Mode mode = StarCycle.Mode.kClient;
         Vector<NodeUDPInfo> v = new Vector<NodeUDPInfo>();
 

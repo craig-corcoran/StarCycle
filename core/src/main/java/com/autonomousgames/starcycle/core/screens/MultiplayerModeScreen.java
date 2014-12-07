@@ -18,12 +18,12 @@ public class MultiplayerModeScreen extends MenuScreen {
 		backButton.addListener(new ScreenDoneClickListener(this, ScreenType.STARTMENU));
 
         LayeredButton network = new LayeredButton(new Vector2(ui.getWidth()/3f, ui.getHeight()/2f), touchSize);
-        network.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, touchSize), LayerType.DOWN);
-        network.addLayer(new SpriteLayer(StarCycle.tex.globe, new Vector2(ui.getHeight()*0.125f, 0f), iconSize.cpy().scl(0.8f)));
-        network.addLayer(new SpriteLayer(StarCycle.tex.soloIcon, new Vector2(-ui.getHeight()*0.125f, 0f), iconSize));
+//        network.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, touchSize), LayerType.DOWN);
+        network.addLayer(new SpriteLayer(StarCycle.tex.globe, new Vector2(ui.getHeight()*0.125f, 0f), iconSize.cpy().scl(0.8f)).setSpriteColor(Colors.smoke));
+        network.addLayer(new SpriteLayer(StarCycle.tex.soloIcon, new Vector2(-ui.getHeight()*0.125f, 0f), iconSize).setSpriteColor(Colors.smoke));
         network.addLayer(new SpriteLayer(StarCycle.tex.network, iconSize.cpy().scl(0.4f)).setSpriteColor(Colors.smoke));
         network.setRotation(90f);
-        network.addListener(new ScreenDoneClickListener(this, ScreenType.NETWORKEDPREGAME));
+//        network.addListener(new ScreenDoneClickListener(this, ScreenType.NETWORKEDPREGAME));
 
         LayeredButton local = new LayeredButton(new Vector2(ui.getWidth()*2f/3f, ui.getHeight()/2f), touchSize);
         local.addLayer(new SpriteLayer(StarCycle.tex.gradientRound, touchSize), LayerType.DOWN);

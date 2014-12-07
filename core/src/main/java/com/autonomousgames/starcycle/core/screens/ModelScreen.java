@@ -19,7 +19,6 @@ import com.badlogic.gdx.utils.JsonWriter;
 
 public abstract class ModelScreen extends GameScreen{
 
-    final long delay = 30;
     public final Model model;
 	public boolean gameOver = false;
 	public boolean paused = false;

@@ -53,17 +53,17 @@ public class NetworkedPregame extends MenuScreen {
         netMode.addLayer(new TextLayer(StarCycle.tex.gridnikMedium, "GLOBAL", new Vector2(netVec.y, 0f), Colors.cyan, 90f), LayerType.TOGGLED);
         netMode.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y) {
-                if (netMode.isToggled()){
-                    search.deactivate();
-                    statusText.switchTo(1);
-                    multiPlayerButton.remove();
+            if (netMode.isToggled()){
+                search.deactivate();
+                statusText.switchTo(1);
+                multiPlayerButton.remove();
 
-                }
-                else {
-                    search.activate();
-                    statusText.switchTo(0);
-                    ui.addActor(multiPlayerButton);
-                }
+            }
+            else {
+                search.activate();
+                statusText.switchTo(0);
+                ui.addActor(multiPlayerButton);
+            }
             }
         });
         netMode.setRotation(90f);
@@ -86,7 +86,6 @@ public class NetworkedPregame extends MenuScreen {
         search = new LayeredButton(new Vector2(ui.getWidth()*7f/16f, ui.getHeight()/2f));
         search.addLayer(new SpriteLayer(StarCycle.tex.search, new Vector2(0f, ui.getHeight()/10f), new Vector2(1f, 1f).scl(ui.getHeight()/10f)).setRevolutionSpeed(180f), LayerType.ACTIVE);
         search.setRotation(90f);
-
 
         ui.addActor(backButton);
         ui.addActor(netMode);
